@@ -1,0 +1,6 @@
+Name: odb
+Version: 2.5.0-b.13+1
+Description: ODB compiler
+URL: https://www.codesynthesis.com/products/odb/
+Cflags: -I/root/build2-build/odb-build/build-out/include
+Libs: -L/root/build2-build/odb-build/build-out/lib -lodb
