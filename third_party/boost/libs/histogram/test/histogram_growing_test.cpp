@@ -5,11 +5,16 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/core/lightweight_test.hpp>
-#include <boost/histogram.hpp>
+#include <boost/histogram/algorithm/sum.hpp>
+#include <boost/histogram/axis.hpp>
+#include <boost/histogram/axis/ostream.hpp>
+#include <boost/histogram/histogram.hpp>
+#include <boost/histogram/ostream.hpp>
 #include <string>
 #include <utility>
+#include "throw_exception.hpp"
 #include "utility_histogram.hpp"
-#include "utility_meta.hpp"
+#include "std_ostream.hpp"
 
 using namespace boost::histogram;
 

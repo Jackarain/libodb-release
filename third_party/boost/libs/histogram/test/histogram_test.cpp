@@ -5,18 +5,26 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/core/lightweight_test.hpp>
-#include <boost/histogram.hpp>
+#include <boost/histogram/accumulators.hpp>
 #include <boost/histogram/accumulators/ostream.hpp>
+#include <boost/histogram/algorithm/sum.hpp>
+#include <boost/histogram/axis.hpp>
+#include <boost/histogram/axis/ostream.hpp>
+#include <boost/histogram/histogram.hpp>
+#include <boost/histogram/literals.hpp>
+#include <boost/histogram/make_histogram.hpp>
+#include <boost/histogram/ostream.hpp>
 #include <sstream>
 #include <stdexcept>
 #include <tuple>
 #include <utility>
 #include <vector>
 #include "is_close.hpp"
+#include "throw_exception.hpp"
 #include "utility_allocator.hpp"
 #include "utility_axis.hpp"
 #include "utility_histogram.hpp"
-#include "utility_meta.hpp"
+#include "std_ostream.hpp"
 
 using namespace boost::histogram;
 using namespace boost::histogram::literals; // to get _c suffix
@@ -96,8 +104,8 @@ void run_tests() {
     h(0, 0);
     auto h2 = decltype(h)(h);
     BOOST_TEST_EQ(h2, h);
-    auto h3 = histogram<std::tuple<axis::integer<>, axis::integer<>>,
-                        storage_adaptor<std::vector<double>>>(h);
+    auto h3 =
+        histogram<std::tuple<axis::integer<>, axis::integer<>>, dense_storage<double>>(h);
     BOOST_TEST_EQ(h3, h);
   }
 
@@ -109,8 +117,8 @@ void run_tests() {
     BOOST_TEST_NE(h, h2);
     h2 = h;
     BOOST_TEST_EQ(h, h2);
-    auto h3 = histogram<std::tuple<axis::integer<>, axis::integer<>>,
-                        storage_adaptor<std::vector<double>>>();
+    auto h3 =
+        histogram<std::tuple<axis::integer<>, axis::integer<>>, dense_storage<double>>();
     h3 = h;
     BOOST_TEST_EQ(h, h3);
   }
@@ -470,7 +478,7 @@ void run_tests() {
     };
 
     struct axis2d {
-      auto index(std::tuple<double, double> x) const {
+      auto index(const std::tuple<double, double>& x) const {
         return axis::index_type{std::get<0>(x) == 1 && std::get<1>(x) == 2};
       }
       auto size() const { return axis::index_type{2}; }
@@ -504,10 +512,14 @@ void run_tests() {
 
     // iterable out
     int j11[] = {1, 1};
-    int j111[] = {1, 1, 1};
     BOOST_TEST_EQ(h.at(j11), 1);
     BOOST_TEST_EQ(h[j11], 1);
+#ifndef BOOST_NO_EXCEPTIONS
+    int j111[] = {1, 1, 1};
     BOOST_TEST_THROWS((void)h.at(j111), std::invalid_argument);
+    int j13[] = {1, 3};
+    BOOST_TEST_THROWS((void)h.at(j13), std::out_of_range);
+#endif
 
     // tuple with weight
     h(std::make_tuple(weight(2), 0, 2.0));
@@ -523,8 +535,6 @@ void run_tests() {
     auto h1 = make(Tag(), axis::integer<>(0, 2));
     h1(std::make_tuple(0));                      // as if one had passed 0 directly
     BOOST_TEST_EQ(h1.at(std::make_tuple(0)), 1); // as if one had passed 0 directly
-    // passing 2d tuple is an invalid argument
-    BOOST_TEST_THROWS(h1(std::make_tuple(0, 0)), std::invalid_argument);
 
     struct axis2d {
       auto index(std::tuple<int, int> x) const {
@@ -569,14 +579,14 @@ void run_tests() {
     }
 
     // int allocation for std::vector
-    BOOST_TEST_EQ(db[&BOOST_CORE_TYPEID(int)].first, db[&BOOST_CORE_TYPEID(int)].second);
-    BOOST_TEST_EQ(db[&BOOST_CORE_TYPEID(int)].first, 1002u);
+    BOOST_TEST_EQ(db.at<int>().first, 0);
+    BOOST_TEST_EQ(db.at<int>().second, 1002);
 
     if (Tag()) { // axis::variant allocation, only for dynamic histogram
       using T = axis::variant<axis::integer<>>;
-      BOOST_TEST_EQ(db[&BOOST_CORE_TYPEID(T)].first, db[&BOOST_CORE_TYPEID(T)].second);
-      BOOST_TEST_LE(db[&BOOST_CORE_TYPEID(T)].first,
-                    1u); // zero if vector uses small-vector-optimisation
+      BOOST_TEST_EQ(db.at<T>().first, 0);
+      // may be zero if vector uses small-vector-optimisation
+      BOOST_TEST_LE(db.at<T>().second, 1);
     }
   }
 }

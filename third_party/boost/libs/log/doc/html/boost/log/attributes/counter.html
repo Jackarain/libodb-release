@@ -37,31 +37,31 @@
   <span class="keyword">class</span> <a class="link" href="counter/impl.html" title="Class impl">impl</a> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">attribute</span><span class="special">::</span><span class="identifier">impl</span> <span class="special">{</span>
   <span class="keyword">public</span><span class="special">:</span>
     <span class="comment">// <a class="link" href="counter/impl.html#boost.log.attributes.counter.implconstruct-copy-destruct">construct/copy/destruct</a></span>
-    <a class="link" href="counter/impl.html#idm46093048371344-bb"><span class="identifier">impl</span></a><span class="special">(</span><span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">value_type</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span>
+    <a class="link" href="counter/impl.html#idm45349313232064-bb"><span class="identifier">impl</span></a><span class="special">(</span><span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">value_type</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span>
 
-    <span class="comment">// <a class="link" href="counter/impl.html#idm46093048374400-bb">public member functions</a></span>
-    <span class="keyword">virtual</span> <a class="link" href="../attribute_value.html" title="Class attribute_value">attribute_value</a> <a class="link" href="counter/impl.html#idm46093048373840-bb"><span class="identifier">get_value</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+    <span class="comment">// <a class="link" href="counter/impl.html#idm45349313235120-bb">public member functions</a></span>
+    <span class="keyword">virtual</span> <a class="link" href="../attribute_value.html" title="Class attribute_value">attribute_value</a> <a class="link" href="counter/impl.html#idm45349313234560-bb"><span class="identifier">get_value</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span><span class="special">;</span>
 
   <span class="comment">// <a class="link" href="counter.html#boost.log.attributes.counterconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <span class="keyword">explicit</span> <a class="link" href="counter.html#idm46093048363824-bb"><span class="identifier">counter</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">1</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">explicit</span> <a class="link" href="counter.html#idm46093048359648-bb"><span class="identifier">counter</span></a><span class="special">(</span><a class="link" href="cast_source.html" title="Class cast_source">cast_source</a> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="counter.html#idm45349313224544-bb"><span class="identifier">counter</span></a><span class="special">(</span><span class="identifier">value_type</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">1</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="counter.html#idm45349313220368-bb"><span class="identifier">counter</span></a><span class="special">(</span><a class="link" href="cast_source.html" title="Class cast_source">cast_source</a> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="counter.html#idm46093048368272-bb">private member functions</a></span>
-   <a class="link" href="counter.html#idm46093048367696-bb"><span class="identifier">BOOST_STATIC_ASSERT_MSG</span></a><span class="special">(</span><span class="identifier">is_integral</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">,</span> 
+  <span class="comment">// <a class="link" href="counter.html#idm45349313228992-bb">private member functions</a></span>
+   <a class="link" href="counter.html#idm45349313228416-bb"><span class="identifier">BOOST_STATIC_ASSERT_MSG</span></a><span class="special">(</span><span class="identifier">is_integral</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">,</span> 
                            <span class="string">"Boost.Log: Only integral types are supported by the </span><a class="link" href="counter.html" title="Class template counter">counter</a> <a class="link" href="../attribute.html" title="Class attribute">attribute</a><span class="string">"</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idm45736191084992"></a><h2>Description</h2>
+<a name="idm46415121299648"></a><h2>Description</h2>
 <p>This attribute acts as a counter - it returns a monotonously changing value each time requested. The attribute value type can be specified as a template parameter. The type must be an integral type. </p>
 <div class="refsect2">
-<a name="idm45736191084112"></a><h3>
+<a name="idm46415121298768"></a><h3>
 <a name="boost.log.attributes.counterconstruct-copy-destruct"></a><code class="computeroutput">counter</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="idm46093048363824-bb"></a><span class="identifier">counter</span><span class="special">(</span><span class="identifier">value_type</span> initial <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">0</span><span class="special">,</span> 
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idm45349313224544-bb"></a><span class="identifier">counter</span><span class="special">(</span><span class="identifier">value_type</span> initial <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">0</span><span class="special">,</span> 
                  <span class="identifier">value_type</span> step <span class="special">=</span> <span class="special">(</span><span class="identifier">value_type</span><span class="special">)</span> <span class="number">1</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Constructor</p>
 <p>
@@ -93,15 +93,15 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="idm46093048359648-bb"></a><span class="identifier">counter</span><span class="special">(</span><a class="link" href="cast_source.html" title="Class cast_source">cast_source</a> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idm45349313220368-bb"></a><span class="identifier">counter</span><span class="special">(</span><a class="link" href="cast_source.html" title="Class cast_source">cast_source</a> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">)</span><span class="special">;</span></pre>
 <p>Constructor for casting support </p>
 </li>
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idm45736191057824"></a><h3>
-<a name="idm46093048368272-bb"></a><code class="computeroutput">counter</code> private member functions</h3>
-<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"> <a name="idm46093048367696-bb"></a><span class="identifier">BOOST_STATIC_ASSERT_MSG</span><span class="special">(</span><span class="identifier">is_integral</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">,</span> 
+<a name="idm46415121272640"></a><h3>
+<a name="idm45349313228992-bb"></a><code class="computeroutput">counter</code> private member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><pre class="literallayout"> <a name="idm45349313228416-bb"></a><span class="identifier">BOOST_STATIC_ASSERT_MSG</span><span class="special">(</span><span class="identifier">is_integral</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">,</span> 
                          <span class="string">"Boost.Log: Only integral types are supported by the </span><a class="link" href="counter.html" title="Class template counter">counter</a> <a class="link" href="../attribute.html" title="Class attribute">attribute</a><span class="string">"</span><span class="special">)</span><span class="special">;</span></pre></li></ol></div>
 </div>
 </div>

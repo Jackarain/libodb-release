@@ -6,14 +6,22 @@
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/histogram/axis/category.hpp>
+#include <boost/histogram/axis/ostream.hpp>
+#include <boost/histogram/detail/cat.hpp>
 #include <limits>
 #include <sstream>
 #include <string>
+#include <type_traits>
+#include "std_ostream.hpp"
+#include "throw_exception.hpp"
 #include "utility_axis.hpp"
 
 using namespace boost::histogram;
 
 int main() {
+  BOOST_TEST(std::is_nothrow_move_assignable<axis::category<int>>::value);
+  BOOST_TEST(std::is_nothrow_move_assignable<axis::category<std::string>>::value);
+
   // bad_ctors
   {
     auto empty = std::vector<int>(0);
@@ -23,7 +31,25 @@ int main() {
   // axis::category
   {
     std::string A("A"), B("B"), C("C"), other;
-    axis::category<std::string> a({A, B, C});
+
+    axis::category<std::string> a({A, B, C}, "foo");
+    BOOST_TEST_EQ(a.metadata(), "foo");
+    BOOST_TEST_EQ(static_cast<const axis::category<std::string>&>(a).metadata(), "foo");
+    a.metadata() = "bar";
+    BOOST_TEST_EQ(static_cast<const axis::category<std::string>&>(a).metadata(), "bar");
+    BOOST_TEST_EQ(a.size(), 3);
+    BOOST_TEST_EQ(a.index(A), 0);
+    BOOST_TEST_EQ(a.index(B), 1);
+    BOOST_TEST_EQ(a.index(C), 2);
+    BOOST_TEST_EQ(a.index(other), 3);
+    BOOST_TEST_EQ(a.value(0), A);
+    BOOST_TEST_EQ(a.value(1), B);
+    BOOST_TEST_EQ(a.value(2), C);
+    BOOST_TEST_THROWS(a.value(3), std::out_of_range);
+
+    BOOST_TEST_EQ(detail::cat(a),
+                  "category(\"A\", \"B\", \"C\", metadata=\"bar\", options=overflow)");
+
     axis::category<std::string> b;
     BOOST_TEST_NE(a, b);
     b = a;
@@ -38,15 +64,6 @@ int main() {
     BOOST_TEST_NE(c, d);
     d = std::move(c);
     BOOST_TEST_EQ(d, a);
-    BOOST_TEST_EQ(a.size(), 3);
-    BOOST_TEST_EQ(a.index(A), 0);
-    BOOST_TEST_EQ(a.index(B), 1);
-    BOOST_TEST_EQ(a.index(C), 2);
-    BOOST_TEST_EQ(a.index(other), 3);
-    BOOST_TEST_EQ(a.value(0), A);
-    BOOST_TEST_EQ(a.value(1), B);
-    BOOST_TEST_EQ(a.value(2), C);
-    BOOST_TEST_THROWS(a.value(3), std::out_of_range);
   }
 
   // axis::category with growth
@@ -61,6 +78,8 @@ int main() {
     BOOST_TEST_EQ(a.size(), 3);
     BOOST_TEST_EQ(a.update(10), std::make_pair(2, 0));
     BOOST_TEST_EQ(a.size(), 3);
+
+    BOOST_TEST_EQ(detail::cat(a), "category(5, 1, 10, options=growth)");
   }
 
   // iterators

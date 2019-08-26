@@ -12,7 +12,6 @@
 #include <boost/config.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/detail/workaround.hpp>
-#include <boost/type_erasure/any_cast.hpp>
 #include <boost/type_erasure/relaxed.hpp>
 #include <scoped_allocator>
 #include <utility>
@@ -70,6 +69,14 @@ void test_allocator_aware_construction()
 #if BOOST_WORKAROUND(BOOST_MSVC,<=1900)
   /* std::unordered_map allocator move ctor does not work when source and
    * and target allocators are not equal.
+   */
+
+  if(AlwaysEqual)
+#endif
+#if BOOST_WORKAROUND(_MSVC_STL_UPDATE,==201811L)
+  /* This particular version of VS2019 has a bug in std::unordered_map
+   * allocator move ctor when source and target allocators are not equal.
+   * After private communication from Billy O'Neal.
    */
 
   if(AlwaysEqual)
@@ -286,6 +293,13 @@ void test_construction()
 
 void test_scoped_allocator()
 {
+#if BOOST_WORKAROUND(BOOST_LIBSTDCXX_VERSION,<50000)&&\
+    BOOST_WORKAROUND(BOOST_LIBSTDCXX_VERSION,>40704)
+  /* std::scoped_allocator_adaptor not assignable, see
+   * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65279 .
+   * The bug prevents poly_collection below from creating any segment.
+   */
+#else
   using vector_allocator=rooted_allocator<char>;
   using vector=std::vector<char,vector_allocator>;
   using concept_=boost::type_erasure::relaxed;
@@ -305,15 +319,16 @@ void test_scoped_allocator()
   poly_collection      p{al};
 
   p.emplace<vector>();
-  auto& s=boost::type_erasure::any_cast<vector&>(*p.begin());
+  auto& s=*p.begin<vector>();
   BOOST_TEST(p.get_allocator().comes_from(roote));
 
-#if BOOST_WORKAROUND(BOOST_MSVC,>=1910)
+#if BOOST_WORKAROUND(BOOST_MSVC,>=1910)&&BOOST_WORKAROUND(BOOST_MSVC,<1916)
   /* https://developercommunity.visualstudio.com/content/problem/246251/
    *   3136309.html
    */
 #else
   BOOST_TEST(s.get_allocator().comes_from(rootv));  
+#endif
 #endif
 }
 

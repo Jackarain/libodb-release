@@ -27,6 +27,104 @@
 </h2></div></div></div>
 <h4>
 <a name="histogram.history.h0"></a>
+      <span class="phrase"><a name="histogram.history.boost_1_71"></a></span><a class="link" href="history.html#histogram.history.boost_1_71">Boost
+      1.71</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          New features
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                Thread-safe accumulators boost::histogram::accumulators::thread_safe
+                based on std::atomics
+              </li>
+<li class="listitem">
+                Support for thread-safe storages
+              </li>
+<li class="listitem">
+                Support for compiling without exceptions/RTTI (increases performance
+                by 10-20 %) [with contributions from Glen Fernandez]
+              </li>
+<li class="listitem">
+                Performance improvements for 1D and 2D histograms
+              </li>
+<li class="listitem">
+                boost::histogram::indexed now returns forward iterator range instead
+                of input iterator range
+              </li>
+<li class="listitem">
+                boost::histogram::indexed_range::accessor is now non-copyable and
+                acts like reference to cell value, making most algorithms from the
+                stdlib work
+              </li>
+<li class="listitem">
+                boost::histogram::algorithm::reduce
+                <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; ">
+<li class="listitem">
+                      New slice option
+                    </li>
+<li class="listitem">
+                      Fuse shrink, slice, and rebin options passed for the same axis
+                    </li>
+<li class="listitem">
+                      Support histograms with some axis types with reduction support
+                    </li>
+</ul></div>
+              </li>
+<li class="listitem">
+                boost::histogram::algorithm::project accepts runtime indices for
+                static histograms
+              </li>
+</ul></div>
+        </li>
+<li class="listitem">
+          Fixes
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                boost::histogram::algorithm::reduce also works on histograms that
+                have some axis types without reduction support
+              </li>
+<li class="listitem">
+                boost::histogram::axis::traits::update now works correctly for boost::histogram::axis::variant
+              </li>
+</ul></div>
+        </li>
+<li class="listitem">
+          Other
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                100 % test coverage
+              </li>
+<li class="listitem">
+                Drastically reduced internal Boost dependencies
+              </li>
+<li class="listitem">
+                Improved documentation and examples
+              </li>
+<li class="listitem">
+                Internally replaced boost::variant with boost::variant2
+              </li>
+<li class="listitem">
+                boost::histogram::axis::traits::is_reducible detects reducible axis
+                types
+              </li>
+<li class="listitem">
+                Cleanup and refactoring of internals
+              </li>
+<li class="listitem">
+                Guarantee no-throw moves for all builtin axis types
+              </li>
+<li class="listitem">
+                Improved internal benchmarks
+              </li>
+<li class="listitem">
+                Compile cleanly at higher warning levels
+              </li>
+</ul></div>
+        </li>
+</ul></div>
+<h4>
+<a name="histogram.history.h1"></a>
       <span class="phrase"><a name="histogram.history.boost_1_70"></a></span><a class="link" href="history.html#histogram.history.boost_1_70">Boost
       1.70</a>
     </h4>
@@ -109,7 +207,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="histogram.history.h1"></a>
+<a name="histogram.history.h2"></a>
       <span class="phrase"><a name="histogram.history.3_2_not_in_boost"></a></span><a class="link" href="history.html#histogram.history.3_2_not_in_boost">3.2
       (not in Boost)</a>
     </h4>
@@ -122,7 +220,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="histogram.history.h2"></a>
+<a name="histogram.history.h3"></a>
       <span class="phrase"><a name="histogram.history.3_1_not_in_boost"></a></span><a class="link" href="history.html#histogram.history.3_1_not_in_boost">3.1
       (not in Boost)</a>
     </h4>
@@ -159,7 +257,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="histogram.history.h3"></a>
+<a name="histogram.history.h4"></a>
       <span class="phrase"><a name="histogram.history.3_0_not_in_boost"></a></span><a class="link" href="history.html#histogram.history.3_0_not_in_boost">3.0
       (not in Boost)</a>
     </h4>
@@ -199,7 +297,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="histogram.history.h4"></a>
+<a name="histogram.history.h5"></a>
       <span class="phrase"><a name="histogram.history.2_0_not_in_boost"></a></span><a class="link" href="history.html#histogram.history.2_0_not_in_boost">2.0
       (not in Boost)</a>
     </h4>
@@ -234,7 +332,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="histogram.history.h5"></a>
+<a name="histogram.history.h6"></a>
       <span class="phrase"><a name="histogram.history.1_0_not_in_boost"></a></span><a class="link" href="history.html#histogram.history.1_0_not_in_boost">1.0
       (not in Boost)</a>
     </h4>

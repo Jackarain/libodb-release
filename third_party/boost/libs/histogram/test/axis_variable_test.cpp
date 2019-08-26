@@ -5,15 +5,22 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/core/lightweight_test.hpp>
+#include <boost/histogram/axis/ostream.hpp>
 #include <boost/histogram/axis/variable.hpp>
+#include <boost/histogram/detail/cat.hpp>
 #include <limits>
+#include <type_traits>
 #include <vector>
 #include "is_close.hpp"
+#include "std_ostream.hpp"
+#include "throw_exception.hpp"
 #include "utility_axis.hpp"
 
 using namespace boost::histogram;
 
 int main() {
+  BOOST_TEST(std::is_nothrow_move_assignable<axis::variable<>>::value);
+
   // bad_ctors
   {
     auto empty = std::vector<double>(0);
@@ -24,8 +31,12 @@ int main() {
 
   // axis::variable
   {
-    axis::variable<> a{-1, 0, 1};
+    axis::variable<> a{{-1, 0, 1}, "foo"};
     BOOST_TEST_EQ(a.size(), 2);
+    BOOST_TEST_EQ(a.metadata(), "foo");
+    BOOST_TEST_EQ(static_cast<const axis::variable<>&>(a).metadata(), "foo");
+    a.metadata() = "bar";
+    BOOST_TEST_EQ(static_cast<const axis::variable<>&>(a).metadata(), "bar");
     BOOST_TEST_EQ(a.bin(-1).lower(), -std::numeric_limits<double>::infinity());
     BOOST_TEST_EQ(a.bin(a.size()).upper(), std::numeric_limits<double>::infinity());
     BOOST_TEST_EQ(a.value(0), -1);
@@ -33,6 +44,18 @@ int main() {
     BOOST_TEST_EQ(a.value(1), 0);
     BOOST_TEST_EQ(a.value(1.5), 0.5);
     BOOST_TEST_EQ(a.value(2), 1);
+    BOOST_TEST_EQ(a.index(-10), -1);
+    BOOST_TEST_EQ(a.index(-1), 0);
+    BOOST_TEST_EQ(a.index(0), 1);
+    BOOST_TEST_EQ(a.index(1), 2);
+    BOOST_TEST_EQ(a.index(10), 2);
+    BOOST_TEST_EQ(a.index(-std::numeric_limits<double>::infinity()), -1);
+    BOOST_TEST_EQ(a.index(std::numeric_limits<double>::infinity()), 2);
+    BOOST_TEST_EQ(a.index(std::numeric_limits<double>::quiet_NaN()), 2);
+
+    BOOST_TEST_EQ(detail::cat(a),
+                  "variable(-1, 0, 1, metadata=\"bar\", options=underflow | overflow)");
+
     axis::variable<> b;
     BOOST_TEST_NE(a, b);
     b = a;
@@ -45,14 +68,6 @@ int main() {
     BOOST_TEST_EQ(d, a);
     axis::variable<> e{-2, 0, 2};
     BOOST_TEST_NE(a, e);
-    BOOST_TEST_EQ(a.index(-10), -1);
-    BOOST_TEST_EQ(a.index(-1), 0);
-    BOOST_TEST_EQ(a.index(0), 1);
-    BOOST_TEST_EQ(a.index(1), 2);
-    BOOST_TEST_EQ(a.index(10), 2);
-    BOOST_TEST_EQ(a.index(-std::numeric_limits<double>::infinity()), -1);
-    BOOST_TEST_EQ(a.index(std::numeric_limits<double>::infinity()), 2);
-    BOOST_TEST_EQ(a.index(std::numeric_limits<double>::quiet_NaN()), 2);
   }
 
   // axis::variable circular

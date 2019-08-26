@@ -7,23 +7,34 @@
 
 import common ;
 
+project
+    : requirements
+    <implicit-dependency>/boost//headers
+    <include>$(BOOST_ROOT)
+    <toolset>clang:<cxxflags>"-pedantic -Wextra -Wsign-compare -Wstrict-aliasing -fstrict-aliasing"
+    <toolset>gcc:<cxxflags>"-pedantic -Wextra -Wsign-compare -Wstrict-aliasing -fstrict-aliasing"
+    : default-build
+    <warnings>all
+    ;
+
 path-constant THIS_PATH : . ;
 
 # only works with clang because of -fsanitize-blacklist
 variant histogram_ubasan : debug :
     <cxxflags>"-fno-omit-frame-pointer -O0 -fno-inline -fsanitize=address,leak,undefined -fno-sanitize-recover=all -fsanitize-blacklist=$(THIS_PATH)/tools/blacklist.supp"
-    # correct linkflags don't work on travis, use workaround
     <linkflags>"-fsanitize=address,leak,undefined"
-    # <linkflags>"-lasan -lubsan"
     ;
 
-project
-    : requirements
-    <implicit-dependency>/boost//headers
-    <include>$(BOOST_ROOT)
-    : default-build
-    <warnings>all
-    #<warnings-as-errors>on
+# only works with gcc-5
+variant histogram_coverage : debug :
+    <cxxflags>"--coverage"
+    <linkflags>"--coverage"
+    ;
+
+# for restricted environments without rtti and exceptions
+variant histogram_restricted : debug :
+    <exception-handling>off
+    <rtti>off
     ;
 
 build-project test ;

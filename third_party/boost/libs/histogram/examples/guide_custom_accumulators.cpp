@@ -27,7 +27,7 @@ int main() {
   h1(0.5, sample(4)); // sample 4 goes to second bin
 
   std::ostringstream os1;
-  for (auto x : indexed(h1)) {
+  for (auto&& x : indexed(h1)) {
     // Accumulators usually have methods to access their state. Use the arrow
     // operator to access them. Here, `count()` gives the number of samples,
     // `value()` the mean, and `variance()` the variance estimate of the mean.
@@ -46,11 +46,10 @@ int main() {
     void operator()(double x) {
       if (x > value) value = x;
     }
-    double value = 0;
+    double value = 0; // value is initialized to zero
   };
 
-  // Create a histogram with the custom accumulator, initialize the accumulators
-  // to 1.
+  // Create a histogram that uses the custom accumulator.
   auto h2 = make_histogram_with(dense_storage<max>(), axis);
   h2(0.0, sample(2));   // sample 2 goes to first bin
   h2(0.1, sample(2.5)); // sample 2.5 goes to first bin
@@ -58,7 +57,7 @@ int main() {
   h2(0.5, sample(4));   // sample 4 goes to second bin
 
   std::ostringstream os2;
-  for (auto x : indexed(h2)) {
+  for (auto&& x : indexed(h2)) {
     os2 << boost::format("%i value %.1f\n") % x.index() % x->value;
   }
   std::cout << os2.str() << std::flush;

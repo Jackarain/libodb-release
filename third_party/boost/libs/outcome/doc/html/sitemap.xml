@@ -4,7 +4,7 @@
   
   <url>
     <loc>/requirements.html</loc>
-    <lastmod>2019-02-11T15:13:33+00:00</lastmod>
+    <lastmod>2019-06-20T22:20:02+01:00</lastmod>
   </url>
   
   <url>
@@ -34,7 +34,7 @@
   
   <url>
     <loc>/motivation.html</loc>
-    <lastmod>2019-03-22T13:58:05-07:00</lastmod>
+    <lastmod>2019-06-27T16:00:40+01:00</lastmod>
   </url>
   
   <url>
@@ -224,7 +224,7 @@
   
   <url>
     <loc>/faq.html</loc>
-    <lastmod>2019-03-03T00:11:47+00:00</lastmod>
+    <lastmod>2019-06-25T17:14:43+01:00</lastmod>
   </url>
   
   <url>
@@ -329,7 +329,7 @@
   
   <url>
     <loc>/tutorial/advanced/constructors.html</loc>
-    <lastmod>2019-02-08T22:18:08+00:00</lastmod>
+    <lastmod>2019-06-24T21:48:18+01:00</lastmod>
   </url>
   
   <url>
@@ -354,7 +354,7 @@
   
   <url>
     <loc>/motivation/plug_error_code.html</loc>
-    <lastmod>2018-11-12T10:00:22+01:00</lastmod>
+    <lastmod>2019-06-21T22:46:55+01:00</lastmod>
   </url>
   
   <url>
@@ -378,6 +378,11 @@
   </url>
   
   <url>
+    <loc>/motivation/plug_error_code2.html</loc>
+    <lastmod>2019-06-21T22:46:55+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/reference/aliases.html</loc>
     <lastmod>2018-12-13T21:10:19+00:00</lastmod>
   </url>
@@ -394,7 +399,7 @@
   
   <url>
     <loc>/motivation/narrow_contract.html</loc>
-    <lastmod>2018-11-21T09:20:22+00:00</lastmod>
+    <lastmod>2019-04-26T17:43:41+02:00</lastmod>
   </url>
   
   <url>
@@ -409,7 +414,7 @@
   
   <url>
     <loc>/changelog.html</loc>
-    <lastmod>2019-04-02T20:17:32+01:00</lastmod>
+    <lastmod>2019-06-25T17:01:21+01:00</lastmod>
   </url>
   
   <url>
@@ -848,6 +853,11 @@
   </url>
   
   <url>
+    <loc>/reference/types/basic_result/has_lost_consistency.html</loc>
+    <lastmod>2019-06-23T16:48:29+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/reference/types/basic_outcome/assume_value_lvalue.html</loc>
     <lastmod>2019-02-12T16:36:24+00:00</lastmod>
   </url>
@@ -1124,12 +1134,12 @@
   
   <url>
     <loc>/reference/types/basic_outcome/swap.html</loc>
-    <lastmod>2019-03-03T00:11:47+00:00</lastmod>
+    <lastmod>2019-06-25T17:01:21+01:00</lastmod>
   </url>
   
   <url>
     <loc>/reference/types/basic_result/swap.html</loc>
-    <lastmod>2019-03-03T00:11:47+00:00</lastmod>
+    <lastmod>2019-06-25T17:01:21+01:00</lastmod>
   </url>
   
   <url>
@@ -1162,7 +1172,12 @@
   
   <url>
     <loc>/recipes/asio-integration.html</loc>
-    <lastmod>2019-02-13T21:00:49+00:00</lastmod>
+    <lastmod>2019-08-06T10:42:06+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/recipes/asio-integration-1-70.html</loc>
+    <lastmod>2019-08-06T10:42:06+01:00</lastmod>
   </url>
   
   <url>
@@ -1178,7 +1193,7 @@
   
   <url>
     <loc>/tags/asio.html</loc>
-    <lastmod>2019-02-13T21:00:49+00:00</lastmod>
+    <lastmod>2019-08-06T10:42:06+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -1219,7 +1234,7 @@
   
   <url>
     <loc>/tags/constructors.html</loc>
-    <lastmod>2019-02-08T22:18:08+00:00</lastmod>
+    <lastmod>2019-06-24T21:48:18+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -1302,6 +1317,11 @@
   </url>
   
   <url>
+    <loc>/recipes/foreign-try.html</loc>
+    <lastmod>2019-06-22T21:22:42+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/has_error_code.html</loc>
     <lastmod>2019-02-08T22:18:08+00:00</lastmod>
     <priority>0</priority>
@@ -1344,7 +1364,7 @@
   
   <url>
     <loc>/categories/modifiers.html</loc>
-    <lastmod>2019-03-03T00:11:47+00:00</lastmod>
+    <lastmod>2019-06-25T17:01:21+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -1368,7 +1388,7 @@
   
   <url>
     <loc>/tags/networking-ts.html</loc>
-    <lastmod>2019-02-13T21:00:49+00:00</lastmod>
+    <lastmod>2019-08-06T10:42:06+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -1499,17 +1519,17 @@
   
   <url>
     <loc>/reference/macros/try.html</loc>
-    <lastmod>2019-01-21T18:00:41+00:00</lastmod>
+    <lastmod>2019-06-21T21:45:08+01:00</lastmod>
   </url>
   
   <url>
     <loc>/reference/macros/tryv.html</loc>
-    <lastmod>2019-01-24T01:15:16+00:00</lastmod>
+    <lastmod>2019-06-21T21:45:08+01:00</lastmod>
   </url>
   
   <url>
     <loc>/reference/macros/tryx.html</loc>
-    <lastmod>2019-01-21T18:00:41+00:00</lastmod>
+    <lastmod>2019-06-21T21:45:08+01:00</lastmod>
   </url>
   
   <url>
@@ -1553,11 +1573,6 @@
   </url>
   
   <url>
-    <loc>/reference/functions/try_operation_return_as_t.html</loc>
-    <lastmod>2019-01-21T18:00:41+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/reference/types/bad_outcome_access.html</loc>
     <lastmod>2019-01-25T01:51:37+00:00</lastmod>
   </url>
@@ -1585,6 +1600,11 @@
   <url>
     <loc>/reference/types/basic_result.html</loc>
     <lastmod>2019-01-31T01:07:35+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/reference/functions/try_operation_has_value.html</loc>
+    <lastmod>2019-06-20T11:14:48+01:00</lastmod>
   </url>
   
   <url>
@@ -1620,6 +1640,16 @@
   <url>
     <loc>/reference/functions/policy/exception_ptr.html</loc>
     <lastmod>2019-01-23T01:27:31+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/reference/functions/try_operation_extract_value.html</loc>
+    <lastmod>2019-06-20T11:14:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/reference/functions/try_operation_return_as.html</loc>
+    <lastmod>2019-06-20T11:14:48+01:00</lastmod>
   </url>
   
   <url>
@@ -1718,11 +1748,6 @@
   </url>
   
   <url>
-    <loc>/reference/functions/try_operation_return_as_expected.html</loc>
-    <lastmod>2019-01-21T18:00:41+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/reference/functions/iostream/outcome_operator_in.html</loc>
     <lastmod>2019-03-03T21:04:29+00:00</lastmod>
   </url>
@@ -1785,11 +1810,6 @@
   <url>
     <loc>/reference/policies/throw_bad_result_access.html</loc>
     <lastmod>2019-01-23T01:27:31+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/reference/converters/try_operation_return_as.html</loc>
-    <lastmod>2019-01-21T18:00:41+00:00</lastmod>
   </url>
   
   <url>
@@ -1895,6 +1915,11 @@
   <url>
     <loc>/reference/functions/hooks/set_spare_storage.html</loc>
     <lastmod>2019-01-21T18:00:41+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/reference/functions/strong_swap.html</loc>
+    <lastmod>2019-06-24T21:09:37+01:00</lastmod>
   </url>
   
   <url>

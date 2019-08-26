@@ -1,6 +1,6 @@
 : 1
 name: odb
-version: 2.5.0-b.13+1
+version: 2.5.0-b.15
 summary: ODB compiler
 license: GPLv3
 tags: c++, orm, database, relational, object, persistence, sql
@@ -16,7 +16,7 @@ builds: -( +windows -gcc ) ; Requires MinGW GCC.
 builds: &gcc               ; Requires GCC with plugin support enabled.
 builds: &gcc-5+            ; Requires GCC 5 or later.
 requires: c++11
-depends: * build2 >= 0.9.0
-depends: * bpkg >= 0.9.0
+depends: * build2 >= 0.10.0
+depends: * bpkg >= 0.10.0
 depends: libstudxml ^1.1.0-
 depends: libcutl ^1.11.0-

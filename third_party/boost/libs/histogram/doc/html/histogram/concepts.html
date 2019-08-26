@@ -26,6 +26,14 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="histogram.concepts"></a><a class="link" href="concepts.html" title="Concepts">Concepts</a>
 </h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="concepts.html#histogram.concepts.Axis">Axis</a></span></dt>
+<dt><span class="section"><a href="concepts.html#histogram.concepts.DiscreteAxis">DiscreteAxis</a></span></dt>
+<dt><span class="section"><a href="concepts.html#histogram.concepts.IntervalAxis">IntervalAxis</a></span></dt>
+<dt><span class="section"><a href="concepts.html#histogram.concepts.Transform">Transform</a></span></dt>
+<dt><span class="section"><a href="concepts.html#histogram.concepts.Storage">Storage</a></span></dt>
+<dt><span class="section"><a href="concepts.html#histogram.concepts.Accumulator">Accumulator</a></span></dt>
+</dl></div>
 <p>
       Users can extend the library with various new types whose concepts are defined
       here.
@@ -37,8 +45,9 @@
 <p>
         An <span class="bold"><strong>Axis</strong></span> maps input values to indices. It
         holds state specific to that axis, like the number of bins and any metadata.
-        Must be <a href="https://en.cppreference.com/w/cpp/named_req/CopyConstructible" target="_top">CopyConstructible</a>
-        and <a href="https://en.cppreference.com/w/cpp/named_req/CopyAssignable" target="_top">CopyAssignable</a>.
+        Must be <a href="https://en.cppreference.com/w/cpp/named_req/CopyConstructible" target="_top">CopyConstructible</a>,
+        <a href="https://en.cppreference.com/w/cpp/named_req/CopyAssignable" target="_top">CopyAssignable</a>,
+        and <span class="bold"><strong>nothrow</strong></span> <a href="https://en.cppreference.com/w/cpp/named_req/MoveAssignable" target="_top">MoveAssignable</a>.
       </p>
 <h5>
 <a name="histogram.concepts.Axis.h0"></a>
@@ -68,7 +77,7 @@
             <code class="computeroutput"><span class="identifier">A</span></code>
           </li>
 <li class="listitem">
-            <code class="computeroutput"><span class="identifier">I</span></code> is an alias for <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::index_type</a></code>
+            <code class="computeroutput"><span class="identifier">I</span></code> is an alias for <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::axis::index_type</a></code>
           </li>
 </ul></div>
 <div class="table">
@@ -87,7 +96,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -180,9 +189,14 @@
             are values of type <code class="computeroutput"><span class="identifier">A</span></code>
           </li>
 <li class="listitem">
+            <code class="computeroutput"><span class="identifier">i</span></code> and <code class="computeroutput"><span class="identifier">j</span></code>
+            are indices of type <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::axis::index_type</a></code>
+          </li>
+<li class="listitem">
             <code class="computeroutput"><span class="identifier">M</span></code> is a metadata type
             that is <a href="https://en.cppreference.com/w/cpp/named_req/CopyConstructible" target="_top">CopyConstructible</a>
             and <a href="https://en.cppreference.com/w/cpp/named_req/CopyAssignable" target="_top">CopyAssignable</a>
+            and <span class="bold"><strong>nothrow</strong></span> <a href="https://en.cppreference.com/w/cpp/named_req/MoveAssignable" target="_top">MoveAssignable</a>.
           </li>
 </ul></div>
 <div class="table">
@@ -201,7 +215,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -239,6 +253,29 @@
                   <span class="special">-</span> <span class="identifier">new_size</span></code>.
                   If the value is outside, but the axis is not enlarged, then return
                   an index equivalent to <code class="computeroutput"><span class="identifier">a</span><span class="special">.</span><span class="identifier">index</span><span class="special">(</span><span class="identifier">v</span><span class="special">)</span></code> and offset <code class="computeroutput"><span class="number">0</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">A</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span>
+                  <span class="identifier">i</span><span class="special">,</span>
+                  <span class="identifier">j</span><span class="special">,</span>
+                  <span class="identifier">n</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  Special constructor used by the reduce algorithm. <code class="computeroutput"><span class="identifier">a</span></code> is the original axis instance,
+                  <code class="computeroutput"><span class="identifier">i</span></code> and <code class="computeroutput"><span class="identifier">j</span></code> are the index range to keep
+                  in the reduced axis. If <code class="computeroutput"><span class="identifier">n</span></code>
+                  is larger than 1, <code class="computeroutput"><span class="identifier">n</span></code>
+                  adjacent bins are merged into one larger cell. If this constructor
+                  is not implemented, <code class="computeroutput"><a class="link" href="../boost/histogram/algorithm/reduce_idm45598516417488.html" title="Function template reduce">boost::histogram::algorithm::reduce</a></code>
+                  throws an exception on an attempt to reduce this axis.
                 </p>
               </td>
 </tr>
@@ -452,7 +489,7 @@
           </li>
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">i</span></code> is a value of type
-            <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::index_type</a></code>
+            <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::axis::index_type</a></code>
           </li>
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">AxisIter</span></code> is an <span class="emphasis"><em>RandomAccessIterator</em></span>
@@ -479,7 +516,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -678,11 +715,11 @@
           </li>
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">i</span></code> is a value of type
-            <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::index_type</a></code>
+            <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::axis::index_type</a></code>
           </li>
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">j</span></code> is a value of type
-            <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::real_index_type</a></code>
+            <code class="computeroutput"><a class="link" href="reference.html#header.boost.histogram.fwd_hpp" title="Header &lt;boost/histogram/fwd.hpp&gt;">boost::histogram::axis::real_index_type</a></code>
           </li>
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">AxisIter</span></code> is an <span class="emphasis"><em>RandomAccessIterator</em></span>
@@ -709,7 +746,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -931,7 +968,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -1042,7 +1079,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -1136,7 +1173,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -1216,6 +1253,26 @@
 <td>
                 <p>
                   Returns an STL-compliant iterator type which dereferences to <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">const_reference</span></code>.
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">has_threading_support</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  bool
+                </p>
+              </td>
+<td>
+                <p>
+                  Static constexpr member. True, if storage supports parallel read-write
+                  access to all cells. False, if such parallel access would either
+                  cause data corruption or require synchronization so that effectively
+                  only one cell can be accessed at a time, making cell-access single-threaded.
                 </p>
               </td>
 </tr>
@@ -1445,7 +1502,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -1564,7 +1621,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Returns
                 </p>
               </th>
 <th>
@@ -1664,7 +1721,7 @@
               </th>
 <th>
                 <p>
-                  Return type
+                  Return
                 </p>
               </th>
 <th>

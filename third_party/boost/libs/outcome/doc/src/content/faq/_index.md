@@ -58,27 +58,24 @@ throws, value and status bits would be as if the failure had not occurred, same
 as for aborting the construction of any `struct` type.
 
 It is recognised that these weak guarantees may be unsuitable for some people,
-so Outcome implements `swap()` with much stronger guarantees, as one can refine,
-without too much work, one's own classes from `result` and `outcome` implementing
-stronger guarantees using `swap()` as the primitive building block.
+so Outcome implements `swap()` with much stronger guarantees, as one can locally refine,
+without too much work, one's own custom classes from `result` and `outcome` implementing
+stronger guarantees for construction and assignment using `swap()` as the primitive
+building block.
 
-Therefore for the Swap operation only, 
-if no more than **one** of the underlying types has a throwing swap, `result` and
-`outcome` perform that operation *first* before all others. This implements the strong
-exception guarantee.
+The core ADL discovered implementation of strong guarantee swap is {{% api "strong_swap(bool &all_good, T &a, T &b)" %}}.
+This can be overloaded by third party code with custom strong guarantee swap
+implementations, same as for `std::swap()`. Because strong guarantee swap may fail
+when trying to restore input state during handling of failure to swap, the
+`all_good` boolean becomes false if restoration fails, at which point both
+results/outcomes get marked as tainted via {{% api "has_lost_consistency()" %}}.
 
-If *two or more* of the underlying types has a throwing swap, then only the basic
-exception guarantee is provided. Be aware that values and errors may become mismatched
-in this situation e.g. the value might get swapped, but if the error fails to swap,
-and then the value fails to get swapped back, the two results or outcomes would end
-up with mismatched values and errors. In that situation, the flags are forced into
-a consistent state i.e. there cannot be a valued *and* errored result, nor a result
-with neither value nor error. In this sense the basic guarantee is met, however
-correct program operation when values and errors have become mismatched is unlikely.
-
-The simple solution to avoiding this situation, or indeed to ensure the strong exception
-guarantee for all operations, is to always choose your error and exception types to
-have non-throwing constructors, assignments and swaps e.g. `error_code` and `exception_ptr`.
+It is **up to you** to check this flag to see if known good state has been lost,
+as Outcome never does so on your behalf. The simple solution to avoiding having
+to deal with this situation is to always choose your value, error and exception
+types to have non-throwing move constructors and move assignments. This causes
+the strong swap implementation to no longer be used, as it is no longer required,
+and standard swap is used instead.
 
 
 ## Does Outcome have a stable ABI and API?
@@ -416,3 +413,108 @@ party libraries each using incommensurate Outcome (or Expected) configurations. 
 not do any of this, but subsequent WG21 papers do propose various interoperation
 mechanisms, [one of which](https://wg21.link/P0786) Outcome implements so code using Expected will seamlessly
 interoperate with code using Outcome.
+
+
+## Is Outcome riddled with undefined behaviour for const, const-containing and reference-containing types?
+
+The short answer is yes, but it probably won't matter to you in practice.
+
+The longer answer is that the same problem affects lots of C++ out there,
+so lots of production code will break if Outcome ever breaks on this. The
+potentially sometime-in-the-future affected code sequence would be:
+
+```c++
+struct const_containing_type
+{
+  const int no;                        // only concerns const and reference types
+  const_containing_type(int n) : no(n) {}
+};
+
+extern void external_function(int, const result<const_containing_type> &);
+
+int example_const_propagation2()
+{
+  result<const_containing_type> a{5};
+  const int &x = a.value().no;
+  external_function(x, a);             // might call an outcome function which calls placement new!
+  return x;                            // does this reload x, or assume it hasn't changed?
+}
+```
+
+GCCs up to v10, clangs up to v9 and MSVCs up to VS2019.1 <u><b>do</b></u> reload `x` after
+the call of an unknown function, even though it has constant type. This may change
+in future compilers due to changes in the C++ standard to encourage such
+optimisations.
+
+### Brief history of C++ standard changes
+
+Before the C++ 14 standard, placement new into storage which used to contain
+a const type was straight out always undefined behaviour, period. Thus all use of
+placement new within a `result<const_containing_type>`, or indeed an `optional<const_containing_type>`, is always
+undefined behaviour before C++ 14. From `[basic.life]` for the C++ 11 standard:
+
+> Creating a new object at the storage location that a const object with static, 
+> thread, or automatic storage duration occupies or, at the storage location
+> that such a const object used to occupy before its lifetime ended results
+> in undefined behavior. 
+
+This being excessively restrictive, from C++ 14 onwards, `[basic_life]` now states:
+
+> If, after the lifetime of an object has ended and before the storage which
+> the object occupied is reused or released, a new object is created at the
+> storage location which the original object occupied, a pointer that
+> pointed to the original object, a reference that referred to the original
+> object, or the name of the original object will automatically refer to the
+> new object and, once the lifetime of the new object has started, can be
+> used to manipulate the new object, if:
+>
+>   — the storage for the new object exactly overlays the storage location which
+>     the original object occupied, and
+>
+>   — the new object is of the same type as the original object (ignoring the
+>     top-level cv-qualifiers), and
+>
+>   — the type of the original object is not const-qualified, and, if a class type,
+>     does not contain any non-static data member whose type is const-qualified
+>     or a reference type, and
+>
+>   — neither the original object nor the new object is a potentially-overlapping
+>     subobject
+
+Leaving aside my personal objections to giving placement new of non-const
+non-reference types magical pointer renaming powers, the upshot is that if
+you want defined behaviour for placement new of types containing const types
+or references, you must store the pointer returned by placement new, and use
+that pointer for all further reference to the newly created object. This
+obviously adds eight bytes of storage to a `result<const_containing_type>`, which is highly
+undesirable given all the care and attention paid to keeping it small. The alternative
+is to use {{% api "std::launder" %}}, which was added in C++ 17, to 'launder'
+the storage into which we placement new before each and every use of that
+storage. This forces the compiler to reload the object stored by placement
+new on every occasion, and not assume it is can be constant propagated, which
+impacts codegen quality.
+
+As neither situation is obviously desirable, after much thought I have
+decided to simply do nothing apart from add this FAQ entry. I would say that
+because Outcome is 100% header-only, the compiler can always see the
+calls of placement new, and thus the compiler always knows that the
+preceding const or reference object is dead, and there is now a new const
+or reference object in its place. I appreciate that this is a hand waving
+response, and code using Outcome will still contain undefined behaviour if
+you use it with a const type, or a type containing const or reference types.
+
+However the reality on the ground is that a ton of production C++ code does
+placement new of types potentially containing const or reference types, and
+it is highly unlikely that C++ compilers will, in practice, break all that
+production code, especially as the template type supplied to library code is often
+outside one's control. If, however, compilers do end up moving ahead on
+optimising this aggressively, Outcome will need to add laundering for any
+type containing const or reference types, for which one needs Reflection
+into the language in any case. We shall thus wait until later to see what
+happens.
+
+### Summary
+
+If you wish to be kept abreast of changes on this topic, please add yourself
+to https://github.com/ned14/outcome/issues/185 which is the issue tracking
+this bug.
