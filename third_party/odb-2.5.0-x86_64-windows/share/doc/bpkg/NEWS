@@ -1,0 +1,258 @@
+Version 0.11.0
+
+  * The 'tags' package manifest value has been deprecated and replaced with
+    'keywords' (list of space-separated words) and 'topics' (list of comma-
+    separated, potentially multi-word concepts). For example:
+
+    topics: xml parser, xml serializer
+    keywords: sax dom
+
+  * New 'description-type' package manifest value allows specifying the
+    content type of the 'description' or 'description-file' value. Currently
+    recognized values are:
+
+    text/plain
+    text/markdown
+    text/markdown;variant=GFM
+    text/markdown;variant=CommonMark
+
+  * New 'upstream-version' package manifest value allows preserving the
+    original version for information.
+
+  * The pkg-build command can now "build" a system package that doesn't have a
+    stub provided its version is specified explicitly. For example:
+
+    $ bpkg build ... ?sys:libsqlite3/* ?sys:libcurl/7.47.0
+
+  * New cfg-create --existing|-e option allows initializing a bpkg
+    configuration based on an existing build system configuration instead of
+    creating a new one from scratch. For example:
+
+    $ b create: build-clang/,cc config.cxx=clang++
+    $ bpkg create -d build-clang --existing
+
+  * New rep-info --deep option triggers the replacement of '*-file' package
+    manifest values with the contents of the referenced files.
+
+Version 0.10.0
+
+  * Only minor improvements and bug fixes.
+
+Version 0.9.0
+
+  * Support for the ssh:// protocol in the git repository URLs.
+
+  * The repository type can now be specified in the repository URL's scheme
+    component. For example:
+
+    $ bpkg build git+https://example.org/project
+
+  * New 'builds' package manifest value for specifying the build configuration
+    classes the package should or should not be built for. For example:
+
+    builds: -windows
+
+    Note also that the 'build-include' and 'build-exclude' pattern matching
+    semantics has been adjusted to distinguish between single-component ('*')
+    and multi-component ('**') matches. See the manual for details.
+
+  * Support for the '$' dependent package's version special value in the
+    package manifest dependency constraints.
+
+    This mechanism is primarily useful when developing related packages that
+    should track each other's versions exactly or closely. For example:
+
+    name: sqlite3
+    version: 3.18.2
+    depends: libsqlite3 == $
+
+    See the 'depends' package manifest value in the manual for details.
+
+  * Support for passing configuration variables in the bpkg-pkg-build command.
+
+  * New 'build-warning-email' and 'build-error-email' package manifest values
+    for specifying alternative emails for different diagnostics levels. See
+    the manual for details.
+
+  * New --jobs|-j option for specifying the number of jobs to perform in
+    parallel.
+
+  * New --no-progress option for suppressing progress indicators.
+
+  * New --deep option for the bpkg-pkg-verify command. See the command's man
+    pages for details.
+
+  * Values to the --openssl* options can now be qualified with the command
+    they should apply to.
+
+Version 0.8.0
+
+  * New optional 'project' manifest value that specifies the project the
+    package belongs to. See the manual for details.
+
+  * Make package manifest 'url' and 'email' values optional.
+
+  * Make default versioning epoch 1 instead of 0 (0 is now reserved for
+    "foreign" packages).
+
+  * New --manifest option for the pkg-verify command that allows extracting
+    package's manifest file.
+
+  * New --{repositories|packages}-file options for the rep-info command.
+
+    This allows saving both manifests with a single invocation (which is the
+    only way to guarantee they are consistent).
+
+Version 0.7.0
+
+  * Support for using git repositories as package repositories. See the
+    bpkg-repository-types(1) help topic for details (structure, URL format).
+
+  * Support for ~ and ^ version constraint operators. See the 'depends'
+    package manifest value documentation in the manual for details.
+
+  * The pkg-build command has been significantly reworked. In particular, it
+    allows "building" repositories in addition to packages (primarily useful
+    with version control-based repositories) and upgrading (--upgrade|-u) or
+    patching (--patch|-p) immediate (--immediate|-i) or all (--recursive|-r)
+    dependencies of a package. See bpkg-pkg-build(1) for details.
+
+  * The pkg-status has been significantly reworked. In particular, it allows
+    querying the status of immediate (--immediate|-i) or all (--recursive|-r)
+    dependencies of a package. See bpkg-pkg-status(1) for details.
+
+  * New commands: rep-list, rep-remove, and pkg-checkout. See their respective
+    man pages for details.
+
+  * The pkg-{test,install,uninstall} commands now also support --immediate|-i
+    and --recursive|-r options (testing/installation of dependencies).
+
+  * The pkg-{update,clean,test,install,uninstall} commands now support the
+    --all|-a option.
+
+  * The rep-fetch command now supports shallow fetching and fetching only a
+    specific repository. See bpkg-rep-fetch(1) for details.
+
+  * New --for|-f <operation> option to the pkg-update and pkg-build commands.
+
+    This allows executing build2 *-for-X operations (e.g., update-for-install
+    or update-for-test) in order to minimize the amount of stuff to be
+    updated.
+
+  * New --fetch-timeout common option.
+
+  * The repositories, packages, and signature files now use the .manifest
+    extension.
+
+Version 0.6.0
+
+  * Add doc-url and src-url manifest values.
+
+  * Support for repository certificate wildcards.
+
+    A wildcard in the *.example.com form matches any single-level subdomain
+    while **.example.com -- any subdomains. See the bpkg-repository-signing(1)
+    help topic for details.
+
+Version 0.5.0
+
+  * Multiple usability fixes and improvements.
+
+  * The test suite has been rewritten in Testscript and can now be used on all
+    supported platforms.
+
+Version 0.4.0
+
+  * Support for repository signing and authentication.
+
+    The rep-create command can now sign the repository with rep-fetch(fetch)
+    and rep-info authenticating it. See the bpkg-repository-signing(1) help
+    topic for details.
+
+  * Support for system packages.
+
+    Now a package can be "built" as available from the system rather than
+    compiling it from source. To specify a system package the new sys: package
+    scheme is used, for example:
+
+    bpkg build sys:libsqlite3
+
+    Currently, if no version is specified for a system package, then it is
+    considered to be unknown but satisfying any dependency constraint (such a
+    wildcard version is displayed as '*'). In the future bpkg will support
+    querying system package managers (rpm, dpkg, pkg-config) for the installed
+    version.
+
+    See the pkg-build(build) man page for details.
+
+  * Support for stub packages.
+
+    A stub is a package without source code. It has the special upstream
+    version 0 (with a possible revision, for example 0+1) and can only be
+    built as a system package.
+
+  * Support for build-time dependencies.
+
+    Now a depends: value in the package manifest that starts with '*' is
+    recognized as a built-time dependency.  Currently, build-time dependencies
+    are treated in the same way as normal (run-time) ones except that the
+    'build2' and 'bpkg' names are recognized as special. They can be used to
+    specify a constraint (usually the required minimum version) on the build2
+    build system and package manager, respectively. In the future, the
+    semantics for build-time dependencies will be extended, for example, to
+    verify that they can be executed on the build machine and/or to build them
+    in a separate configuration in case of cross-compilation.
+
+  * The pkg-build(build) command now offers to automatically update dependent
+    packages that were reconfigured.
+
+    It also supports the following new options:
+
+    --drop-prerequisite|-D
+    --update-dependent|-U
+    --leave-dependent|-L
+
+     As well as the -K alias for --keep-prerequisite. See the command's man
+     page for details.
+
+  * The pkg-drop(drop) command now supports the following new options:
+
+    --keep-dependent|-K,
+    --drop-prerequisite|-D
+    --keep-prerequisite
+
+    See the command's man page for details.
+
+  * The cfg-add command was renamed to rep-add (the add alias stays the same)
+    and cfg-fetch to rep-fetch (the fetch alias stays the same).
+
+  * The new -V option is an alias for --verbose 3 (show all commands).
+
+Version 0.3.0
+
+  * Command line options and arguments can now be specified in any order. This
+    is especially useful if you want to re-run the previous command with -v:
+
+    bpkg update libfoo -v
+
+  * The pkg-build command now offers to drop prerequisite packages that are no
+    longer necessary. This can happen if a package that is being upgraded or
+    downgraded changes its prerequisite set. You can use the
+    --keep-prerequisite option to suppress this behavior.
+
+  * The pkg-build command now updates all packages at once (that is, with a
+    single build system invocation) instead of sequentially one at a time.
+    This should improve performance, especially once parallelism is supported.
+
+  * The rep-create command now loads the description-file and changes-file
+    files from the package archives and includes their contents inline into
+    the 'packages' manifest file.
+
+Version 0.2.1
+
+  * The pkg-build command no longer considers an argument as a potential
+    package directory unless it ends with a directory separator.
+
+Version 0.2.0
+
+  * First public release.

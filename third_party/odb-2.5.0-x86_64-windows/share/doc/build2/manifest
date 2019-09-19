@@ -1,0 +1,22 @@
+: 1
+name: build2
+version: 0.11.0
+summary: build2 build system
+license: MIT
+topics: build system, build toolchain
+keywords: native cross-platform
+description-file: README
+changes-file: NEWS
+url: https://build2.org
+doc-url: https://build2.org/doc.xhtml
+src-url: https://git.build2.org/cgit/build2/tree/
+email: users@build2.org
+build-email: builds@build2.org
+builds: all
+requires: c++14
+depends: * build2 >= 0.10.0
+depends: * bpkg >= 0.10.0
+# @@ Should probably become conditional dependency.
+requires: ? cli ; Only required if changing .cli files.
+depends: libbutl ^0.11.0
+depends: libpkgconf [1.4.2 1.6.0-)

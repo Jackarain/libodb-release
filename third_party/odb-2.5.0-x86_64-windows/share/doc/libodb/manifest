@@ -1,0 +1,19 @@
+: 1
+name: libodb
+version: 2.5.0-b.15
+project: odb
+summary: Common ODB runtime library
+license: GPLv2
+license: proprietary
+tags: c++, orm, database, relational, object, persistence, sql
+description-file: README
+changes-file: NEWS
+url: https://www.codesynthesis.com/products/odb/
+doc-url: https://www.codesynthesis.com/products/odb/doc/manual.xhtml
+src-url: https://git.codesynthesis.com/cgit/odb/libodb/
+email: odb-users@codesynthesis.com
+build-email: odb-builds@codesynthesis.com
+builds: all
+requires: c++11
+depends: * build2 >= 0.10.0
+depends: * bpkg >= 0.10.0

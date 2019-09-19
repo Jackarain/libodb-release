@@ -1,0 +1,132 @@
+Version 0.11.0
+
+  * The bdep-new command now by default adds a README.md template. This can be
+    suppressed with the new no-readme project type sub-option. For example:
+
+    $ bdep new -t exe,no-readme hello
+
+  * New license=<name> bdep-new project type sub-option allows specifying a
+    project license. For example:
+
+    $ bdep new -t exe,license=MIT hello
+
+    Commonly used license names are 'MIT', 'ASLv2' (Apache License 2.0),
+    'GPLv3', and 'proprietary' (see the 'license' package manifest value
+    documentation for a more extensive list of names). Note that if the
+    license is not specified, the default is now 'proprietary' instead of
+    'TODO'.
+
+  * New bdep-new --post-hook option allows execution of customization commands
+    in the newly created project. For example:
+
+    $ bdep new --post-hook "echo .idea/ >>.gitignore" hello
+
+    See the bdep-new(1) man pages for details.
+
+  * The bdep-ci command now allows overriding certain manifest values in
+    packages being submitted for testing. This is primarily useful for
+    specifying alternative build configurations and/or build notification
+    emails. For example:
+
+    $ bdep ci --builds gcc
+
+    See the bdep-ci(1) man pages for details.
+
+  * New bdep-release --amend and --squash options allow releasing a revision
+    by squashing and amending one or more existing commits.
+
+  * New --existing|-e option for bdep-{init,new} --config-create|-C and
+    bdep-config create modes. With this option bdep initializes a bpkg
+    configuration based on an existing build system configuration instead of
+    creating a new one from scratch. For example:
+
+    $ b create: build-clang/,cc config.cxx=clang++
+    $ bdep new -C build-clang --existing hello
+
+Version 0.10.0
+
+  * New bdep-new --subdirectory mode.
+
+    This mode can be used to create a new source subdirectory in an already
+    existing project.
+
+  * Support for more granular C++ source file extension specification in
+    bdep-new.
+
+    For example:
+
+    $ bdep new -t lib -l c++,hxx=h,cxx=cpp libhello  # .h & .cpp
+    $ bdep new -t lib -l c++,extension=?++ libhello  # .h++, .c++, etc
+
+    See the bdep-new(1) man pages for details.
+
+  * Support for suppressing the generation of the library version header.
+
+    Specifically, the bdep-new --type|-t=lib option now has the new no-version
+    sub-option.
+
+  * Support for the alternative build file/directory naming scheme.
+
+    Specifically, the bdep-new --type|-t option now has the new alt-naming
+    sub-option that can be used to create projects with the alternative
+    naming.
+
+  * New bdep-release --[no]-edit options.
+
+    Now in all the bdep-release modes that perform a commit, if the project's
+    repository index already contains other changes, then the commit message
+    is automatically opened for editing unless --no-edit is specified. The
+    editing of the commit message in the absence of other changes can be
+    requested with the --edit option.
+
+Version 0.9.0
+
+  * New bdep-release command for managing a project's version during release.
+
+    This command can be used to automatically change the project's version
+    from snapshot to release (or the other way around), commit this change,
+    tag this commit, and push everything to the remote.
+
+    See the "Versioning and Release Management" in The build2 Toolchain
+    Introduction for usage examples as well as the bdep-release(1) man pages
+    for details.
+
+  * New 'binless' option for the bdep-new 'c++' language parameter.
+
+    This option allows creation of a simpler buildfile for header-only (and,
+    in the future, for module-only) libraries. For example:
+
+    $ bdep new -l c++,binless ...
+
+  * New --jobs|-j option for specifying the number of jobs to perform in
+    parallel.
+
+  * CI requests from the staged toolchain are now by default sent to
+    ci.stage.build2.org.
+
+  * New --no-progress option for suppressing progress indicators.
+
+Version 0.8.0
+
+  * New bdep-ci command for submitting package test requests to CI servers.
+    See the bdep-ci(1) man pages for details.
+
+  * New bdep-publish command for publishing packages to archive-based
+    repositories. See the bdep-publish(1) man pages for details.
+
+  * New unit-tests project type option for the bdep-new command.
+
+    If specified (-t exe,unit-tests or -t lib,unit-tests) then generate build
+    infrastructure for unit testing.
+
+  * Ability to suppress auto-synchronization via the BDEP_SYNC environment
+    variable.
+
+    If BDEP_SYNC is set, auto-synchronization will only be performed if its
+    value is true or 1. So to suppress, run:
+
+    $ BDEP_SYNC=0 b
+
+Version 0.7.0
+
+  * First public release.

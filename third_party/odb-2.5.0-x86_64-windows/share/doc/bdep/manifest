@@ -1,0 +1,24 @@
+: 1
+name: bdep
+version: 0.11.0
+project: build2
+summary: build2 project dependency manager
+license: MIT
+topics: package dependency management, build toolchain
+description-file: README
+changes-file: NEWS
+url: https://build2.org
+doc-url: https://build2.org/doc.xhtml
+src-url: https://git.build2.org/cgit/bdep/tree/
+email: users@build2.org
+build-email: builds@build2.org
+builds: all
+requires: c++14
+depends: * build2 >= 0.10.0
+depends: * bpkg >= 0.10.0
+# @@ Should probably become conditional dependency.
+requires: ? cli ; Only required if changing .cli files.
+depends: libodb ^2.5.0-b.15
+depends: libodb-sqlite ^2.5.0-b.15
+depends: libbutl ^0.11.0
+depends: libbpkg ^0.11.0

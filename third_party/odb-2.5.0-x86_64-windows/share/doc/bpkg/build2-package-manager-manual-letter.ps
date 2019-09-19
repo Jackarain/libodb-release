@@ -1,0 +1,2335 @@
+%!PS
+%%Title: The build2 Package Manager
+%%Creator: html2ps version 1.0 beta7
+%%EndComments
+save
+2000 dict begin
+/d {bind def} bind def
+/D {def} d
+/t true D
+/f false D
+/FL [/Times-Roman
+/Times-Italic
+/Times-Bold
+/Times-BoldItalic
+/Courier
+/Courier-Oblique
+/Courier-Bold
+/Courier-BoldOblique
+/Helvetica
+/Helvetica-Oblique
+/Helvetica-Bold
+/Helvetica-BoldOblique] D
+/WF t D
+/WI 0 D
+/F 1 D
+/IW 471 F div D
+/IL 621 F div D
+/PS 791 D
+/EF [0 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 2 2] D
+/EZ [12 9 19 17 15 13 12 11 12 12 12 12 12 12 12 12 12 12 12 12 12 12 8 8] D
+/Ey [0 0 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] D
+/EG [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1] D
+/Tm [1 1 0.8 0.8 0.8 0.8 0.8 0.8 0 0 0 0 0 0 0.5 1 1 1 1 0 0 1.3 0 0] D
+/Bm [1 1 0.5 0.5 0.5 0.5 0.5 0.5 0 0 0 0 0 0 0.5 1 1 1 1 0 0 1 0 0] D
+/Lm [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 0 0 2 0 0 0] D
+/Rm [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0] D
+/EU [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 0] D
+/NO f D
+/YY [[{()}{ h }][{ h }{()}][{()}{()}]] D
+/ZZ [[{ (Revision ) ME 0 get join(, June 2019)join }{ Pn }][{ Pn }{ (Revision ) ME 0 get join(, June 2019)join }][{ Ti }{ Ti }]] D
+/Ts EZ 0 get D
+/TU f D
+/Xp t D
+/AU f D
+/SN 0 D
+/Cf t D
+/Tp t D
+/Fe f D
+/TI 2 Ts mul D
+/Fm 14 D
+/xL 71 D
+/xR 71 D
+/yL 706 D
+/yR 706 D
+/Wl 471 F div D
+/Wr 471 F div D
+/hL 621 F div D
+/hR 621 F div D
+/FE {newpath Fm neg Fm M CP BB IW Fm add Fm L IW Fm add IL Fm add neg L CP BB
+ Fm neg IL Fm add neg L closepath} D
+/LA {PM 0 eq{/IW Wl D /IL hL D}{/IW Wr D /IL hR D}ie /W IW D /LL W D /LS W D
+ TU PM 0 eq and{IW 56 F div add SA{Sf div}if 0 translate}
+ {PM 0 eq{xL yL}{xR yR}ie translate F SA{Sf mul}if dup scale
+ CS CF FS Cf{CA CL get VC}if /Bb f D}ie 0 0 M
+ TF not Tc or {Cf{gsave SA{1 Sf div dup scale}if Cb VC FE fill grestore}if}if}D
+/Pi 0 Ts mul D
+/SG [0.8 1 1] D
+/Ab 15 D
+/J 0 D
+/Tc t D
+/NH 6 D
+/Nf f D
+/Pa f D
+/LH 1.2 D
+/XR f D
+/Xr {/pN E D ( [p ) WB pN WB (] )WB} D
+/Db [16#FF 16#FF 16#FF] D
+/Dt [16#00 16#00 16#00] D
+/eA f D
+/Fi f D
+/bT f D
+/Lc t D
+/Dl [16#00 16#00 16#00] D
+/LX f D
+/Br 0.25 D
+/IA ([IMAGE]) D
+/DS {/PF f D()WB NL NP()pop RC ZF} D
+/Gb f D
+/Mb t D
+/Hc [16#00 16#00 16#00] D
+/Bl 3 D
+/MI -15.6 D
+/DX (DRAFT) D
+/Di 0 D
+/Tt 113.385826771654 D
+/Th { (
+) 2 Al()BR (
+  ) 0 1 -1 H()4 FZ (The ) SM (build2) ES ( ) ME 1 get join ES()EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+  ) 0 1 -1 H ( ) EH (
+) Ea()BR (
+  ) 0 P (Copyright © 2014-2019 Code Synthesis Ltd) BR (  Permission is granted to copy, distribute and/or modify this document under
+  the terms of the MIT License.) EP (
+
+  ) 0 P (Revision ) SM() ME 0 get join ES (, June 2019) BR (  This revision of the document describes the ) SM (build2) ES ( ) ME 2 get join(
+  )join SM() ME 0 get join(.x)join ES ( series.) EP()} D
+/tH {()0 1 -1 H (Table of Contents) EH()} D
+/FD 2 D
+/Dy 2 D
+/cD [16#F0 16#F0 16#F0] D
+/FW 0.6 D
+/FU [16#00 16#00 16#00] D
+/ET {/RM f D /A0 3 D /PN SN D /OU t D /Ou t D /W IW D /LL W D D1
+ Ms not TP and{Ip}if /TF f D} D
+
+%-- End of variable part --
+/MySymbol 10 dict dup begin
+ /FontType 3 D /FontMatrix [.001 0 0 .001 0 0 ] D /FontBBox [25 -10 600 600] D
+ /Encoding 256 array D 0 1 255{Encoding exch /.notdef put}for
+ Encoding (e) 0 get /euro put
+ /Metrics 2 dict D Metrics begin
+  /.notdef 0 D
+  /euro 651 D
+ end
+ /BBox 2 dict D BBox begin
+  /.notdef [0 0 0 0] D
+  /euro [25 -10 600 600] D
+ end
+ /CharacterDefs 2 dict D CharacterDefs begin
+  /.notdef {} D
+  /euro{newpath 114 600 moveto 631 600 lineto 464 200 lineto 573 200 lineto
+   573 0 lineto -94 0 lineto 31 300 lineto -10 300 lineto closepath clip
+   50 setlinewidth newpath 656 300 moveto 381 300 275 0 360 arc stroke
+   -19 350 moveto 600 0 rlineto -19 250 moveto 600 0 rlineto stroke}d
+ end
+ /BuildChar{0 begin
+  /char E D /fontdict E D /charname fontdict /Encoding get char get D
+  fontdict begin
+   Metrics charname get 0 BBox charname get aload pop setcachedevice
+   CharacterDefs charname get exec
+  end
+ end}D
+ /BuildChar load 0 3 dict put /UniqueID 1 D
+end
+definefont pop
+
+/Cd {aload length 2 idiv dup dict begin {D} repeat currentdict end} D
+/EX {EC cvx exec} D
+/DU {} d
+/BB {pop pop}d
+/ie {ifelse} d
+/E {exch} d
+/M {moveto} d
+/R {rmoveto} d
+/L {lineto} d
+/RL {rlineto} d
+/CP {currentpoint} d
+/SW {stringwidth} d
+/GI {getinterval} d
+/PI {putinterval} d
+/Sg {setgray} d
+/LW {setlinewidth} d
+/S {dup () ne OU and{0 Co R AT 3 eq LB and HF not and A1 0 ne A2 0 ne or and
+ {A2 0 32 A1 0 6 -1 roll awidthshow}{show}ie 0 Co neg R}{pop}ie
+ OU PH 3 eq or{/Ms t D}if} D
+/U {OU{gsave CP currentfont /FontInfo get /UnderlinePosition get
+ 0 E currentfont /FontMatrix get dtransform E pop add newpath M dup SW pop
+ CJ 0 RL stroke grestore}if} D
+/B {OU Br 0 gt and{CP Ts neg Ts .33 mul R gsave 0 Sg
+ CP newpath Ts Br mul 0 360 arc closepath UI 2 mod 0 eq{stroke}{fill}ie
+ grestore M CP E Ts Br 1 add mul sub E BB /Ms t D}if}D
+/NP {Ms TP not or PA and OU and{TP{OR}if f1{mF k2 /mF E D /YC 0 D}if
+ TP TU not PM 0 eq or and{showpage}if DU Ip TE not{LA}if 0.6 LW
+ /CI 0 D /TP t D /Hs f D /hl 6 D /Hv 6 D /HI hi D /Ms f D}if Bs XO BO M} D
+/Np {LE sub CP E pop gt PL 0 eq and{NP}if}D
+/Ip {/PN PN 1 add D /Pn RM{1}{4}ie PN Ns D /PM PN SN sub 2 mod D} D
+/GP {E dup 3 -1 roll get PN 1 add 2 mod get dup type /integertype eq
+ {get 0 get}{E pop}ie}d
+/Fc {dup 2 GP exec SW pop /S1 E D dup 1 GP exec SW pop /S2 E D 0 GP exec SW
+ pop /S3 E D S1 0 gt{S2 2 mul S1 add S3 2 mul S1 add 2 copy lt{E}if pop}{0}ie
+ S2 S3 add 2 copy lt{E}if pop IW .9 mul div dup 1 gt{1 E div}{pop 1}ie}D
+/OR {Df{Sd}if tp not{gsave SA{1 Sf div dup scale}if Fe{Cf{FU VC}if FW LW
+ 1 setlinejoin FE stroke}if /YO {60 F div dup 40 gt{pop 40}if}D /cs CS D
+ /cf CF D /CF 0 D /pf PF D /PF f D /Fn FN D /At AT D /AT 0 D /FN EF Hf 1 add
+ get D Fz Fs FS ZZ Fc Fz mul Fs FS EU Hf 1 add get dup type /arraytype eq
+ Cf and{VC}{pop 0 Sg}ie IW IL neg YO sub M ZZ 1 GP exec dup SW pop neg 0 R Sh
+ 0 IL neg YO sub M ZZ 0 GP exec Sh ZZ 2 GP exec dup SW pop IW E sub 2 div
+ IL neg YO sub M Sh Fz Fs FS NO{/AW IW Pn SW pop sub D AW 2 div IL neg YO sub
+ S1 0 gt S2 AW .45 mul gt or S3 AW .45 mul gt or{Fz 2 mul sub}if M Pn Sh}if
+ EU Hf get dup type /arraytype eq Cf and{VC}{pop 0 Sg}ie YY Fc /FN EF Hf get D
+ Hz mul HS FS IW YO M YY 1 GP exec dup SW pop neg 0 R Sh 0 YO M YY 0 GP exec Sh
+ YY 2 GP exec dup SW pop IW E sub 2 div YO M Sh /FN Fn D /AT At D t Pb XO SZ
+ SL get neg R /PF pf D grestore /CF 0 D cs cf FS}if}D
+/Sh {dup () ne{CP Hz 4 div sub BB show CP CS add BB}{pop}ie}D
+/Pb {/OU E D /Ou OU D /PB t D 0 0 M Ba{/Sa save D /BP t D /Fl t D RC /PL 0 D
+ /PH 0 D /W IW D /LE IL .7 mul D /EO 0 D SI ZF /YA 0 D /BO 0 D /C1 () D
+ BA 0 Ts neg R Bb{Xl Yl Xh Yh}if Bb CP Sa restore M
+ {/Yh E D /Xh E D /Yl E D /Xl E D}if /Fl t D}if
+ BL /OU t D /HM f D /Ou t D /PB f D} D
+/Bs {/BP Ba not D}D
+/reencodeISO {
+ dup dup findfont dup length dict begin{1 index /FID ne{D}{pop pop}ie}forall
+ /Encoding ISOLatin1Encoding D currentdict end definefont} D
+/ISOLatin1Encoding [
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/space/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright
+/parenleft/parenright/asterisk/plus/comma/hyphen/period/slash
+/zero/one/two/three/four/five/six/seven/eight/nine/colon/semicolon
+/less/equal/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N
+/O/P/Q/R/S/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright
+/asciicircum/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m
+/n/o/p/q/r/s/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/space/exclamdown/cent/sterling/currency/yen/brokenbar
+/section/dieresis/copyright/ordfeminine/guillemotleft/logicalnot
+/hyphen/registered/macron/degree/plusminus/twosuperior/threesuperior
+/acute/mu/paragraph/periodcentered/cedilla/onesuperior/ordmasculine
+/guillemotright/onequarter/onehalf/threequarters/questiondown
+/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE/Ccedilla
+/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex
+/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis
+/multiply/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute
+/Thorn/germandbls/agrave/aacute/acircumflex/atilde/adieresis
+/aring/ae/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave
+/iacute/icircumflex/idieresis/eth/ntilde/ograve/oacute/ocircumflex
+/otilde/odieresis/divide/oslash/ugrave/uacute/ucircumflex/udieresis
+/yacute/thorn/ydieresis
+] D
+[128/backslash 129/parenleft 130/parenright 141/circumflex 142/tilde
+143/perthousand 144/dagger 145/daggerdbl 146/Ydieresis 147/scaron 148/Scaron
+149/oe 150/OE 151/guilsinglleft 152/guilsinglright 153/quotesinglbase
+154/quotedblbase 155/quotedblleft 156/quotedblright 157/endash 158/emdash
+159/trademark]
+aload length 2 idiv 1 1 3 -1 roll{pop ISOLatin1Encoding 3 1 roll put}for
+/colorimage where{pop}{
+ /colorimage {
+  pop pop /Pr E D {/Cv Pr D /Gr Cv length 3 idiv string D 0 1 Gr length 1 sub
+   {Gr E dup /i E 3 mul D Cv i get 0.299 mul Cv i 1 add get 0.587 mul add
+    Cv i 2 add get 0.114 mul add cvi put}for Gr} image} D
+}ie
+/pdfmark where{pop}{userdict /pdfmark /cleartomark load put}ie
+WF{FL{reencodeISO D}forall}{4 1 FL length 1 sub{FL E get reencodeISO D}for}ie
+/Symbol dup dup findfont dup length dict begin
+ {1 index /FID ne{D}{pop pop}ie}forall /Encoding [Encoding aload pop]
+ dup 128 /therefore put D currentdict end definefont D
+
+/SF {/CS E D SZ SL CS put FO SL FN put /YI CS LH neg mul D dup ST cvs ( ) join
+ CS ST cvs join C1 E join ( NF ) join /C1 E D CS NF /Wf WF FN 0 gt or D
+ /BW Wf{( ) SW pop}{0}ie D}D
+/NF {/cS E D /cF E D cF 0 ge{FL cF get}{cF -1 eq{/Symbol}{/MySymbol}ie}ie
+ findfont cS scalefont setfont} D
+/FS {CF or /CF E D FR SL CF put CF CF 0 ge{FN 4 mul add}if E SF} D
+/PC {SH /BP f D fin not GL not and{NL}if /HM t D /LL LS D} D
+/BS {/TX E D Wf{/fin f D /CW 0 D /LK 0 D /SC 0 D
+ /RT TX D {RT ( ) search{/NW E D pop /RT E D /WH NW SW pop D CW WH add LL gt
+ {TX SC LK SC sub 1 sub NN GI GL{SH cF cS OC
+ 2 copy cS ne E cF ne or{NF}{pop pop}ie}{PC /CW WH BW add D}ie
+ /SC LK D}
+ {GL{JC}if
+ /CW CW WH add BW add D /HM t D}ie /GL f D /Ph f D
+ /LK LK NW length 1 add add D}{pop exit}ie}loop
+ /fin t D TX SC LK SC sub GI SH RT () ne{GL not{CC}if}if
+ /LC TX length D /WH RT SW pop D CW WH add Hy{HC SW pop add}if LL gt
+ {RT GL{SH cF cS OC 2 copy cS ne E cF ne or{NF}{pop pop}ie
+ Hy{/Ph t D}if /LL LS D}{NL /LL LS D SH}ie}
+ {RT PC Hy{CC}if /Ph Ph Hy or D}ie RT () ne{/GL t D /HM t D}if}
+ {TX SW pop LL le{TX SH}{/NW () D 0 2 TX length 1 sub
+ {/CW E D TX 0 CW GI dup SW pop LL gt{pop NW SH /HM t D NL/LL W XO sub MR sub D
+ /CW CW 2 sub NN D /TX TX CW TX length CW sub GI D TX BS exit}
+ {/NW E D}ie}for}ie}ie /HM t D}D
+/CC {C0 length 0 gt{JC}if /C0 [C1 L1 YA YB Mf NS NB TB AF Bw] D
+ /C1 () D /L0 L1 D /YA 0 D /YB 0 D /Mf 0 D /NS 0 D /NB 0 D}D
+/JC {C0 aload length 0 gt{pop pop pop NB add /NB E D NS add /NS E D
+ dup Mf gt{/Mf E D}{pop}ie dup YB gt{/YB E D}{pop}ie
+ dup YA gt{/YA E D}{pop}ie pop C1 join /C1 E D /C0 [] D}if}D
+/OC {C0 length 0 gt{C1 L1 L0 sub YA YB Mf NS NB TB AF Bw GL C0 aload pop
+ /Bw E D /AF E D /TB E D /NB E D /NS E D /Mf E D /YB E D /YA E D /C0 [] D
+ /L1 E D /C1 E D Ph{HC SH}if NL /GL E D /Bw E D /AF E D /TB E D /NB E D /NS E D
+ /Mf E D /YB E D /YA E D /L1 E D /LL W L1 sub XO sub MR sub WH sub D /CW 0 D
+ C1 E join /C1 E D}if}D
+/BT {/LB t D dup length string copy RS dup dup () ne E ( ) ne and
+ {/CI 0 D /LS LL D /LL W L1 sub XO sub MR sub D BS}
+ {dup ( ) eq{/GL f D}if dup () eq L1 0 eq or{pop}{SH /BP f D /Ph f D}ie}ie
+ /LB f D} D
+/BL {CP E pop XO E M} D
+/NL {JC /GL f D /SK W XO sub MR sub L1 sub TB{Bw add}if D
+ /YA LF{Mf HM Fl not and PF or{LH mul}if}{0 /LF t D}ie YA 2 copy lt{E}if pop D
+ C1 () ne{/FB YB Mf SA{Sf mul}if 4 div 2 copy lt{E}if pop D}if Fl{/Ya YA D}if
+ CP E pop YA sub YB sub LE neg lt Fl not and PB not and{NP}if NT TL BL
+ OU PF not and PB or{/RE L1 TB{Bw sub}if
+ W XO sub MR sub div YA YB add LE BO add div 2 copy lt{E}if pop D
+ RE 1 gt{BL 1 RE div dup scale}if}if
+ AT 2 le{SK AT mul 2 div YA neg R}if
+ AT 3 eq{0 YA neg R TB{/NB NB 1 sub D /NS NS 1 sub D}if /NB NB 1 sub NN D
+ /A3 NS 6 mul NB add D NS NB add 0 eq
+  {/A1 0 D /A2 0 D}
+  {NS 0 eq{/A1 SK NB div dup J gt{pop 0}if D /A2 0 D}{J A3 mul SK lt
+   {/A1 J D /A2 SK J NB mul sub NS div dup Ab gt{/A1 0 D pop 0}if D}
+   {/A1 SK A3 div D /A2 A1 6 mul D}ie}ie}ie /A1 A1 NN D /A2 A2 NN D}if
+ AT 4 eq{0 YA neg R PH 2 le{PD 0 lt{/PD L1 D}if PD M1 gt{/M1 PD D}if
+ L1 PD sub M2 gt{/M2 L1 PD sub D}if}{DV ID 1 sub get 0 ge{Lo 0 R}if}ie}if
+ F0 cF ne Cs cS ne or{F0 Cs NF}if
+ /ms Ms D /Ms f D CP FB sub
+ C1 cvx exec XO EO sub L1 add TB{BW sub}if dup LM gt{/LM E D}{pop}ie
+ PH 0 eq PH 4 eq or Ms and{HF not{/PO t D /AH t D}if
+ BB CP YA add E AT 3 eq LB and{A1 sub}if TB{BW sub}if E BB}
+ {pop pop}ie Ms HM PH 3 eq and or{/BP f D /Fl f D}if
+ /Lo 0 D /L1 0 D /F0 cF D /Cs cS D BP not{0 YB NN neg R}if
+ OU f1 and mF not and{k2 /f1 f D}if
+ OU PF not and PB or{RE 1 gt{RE dup scale}if}if /Ms ms Ms or D
+ /C1 AF{(Cp )}{()}ie D /YA 0 D /YB 0 D BL
+ AT 4 eq LB not and PH 3 ge and
+ {ID DV length lt{DV ID get dup 0 ge{DO E sub /Lo E D /L1 Lo D}{pop}ie
+ /ID ID 1 add D}if}if /T t D CD{/LN LN 1 add D PD}if
+ /PD -1 D /NS 0 D /NB 0 D /TB f D /Ph f D /Mf 0 D /HM f D} D
+/RS {/TM E D /CN 0 D TM{10 eq{TM CN ( ) PI}if /CN CN 1 add D}forall
+ /CN 0 D /BK HM EN and{0}{1}ie D TM
+ {dup 32 ne{TM CN 3 2 roll put /CN CN 1 add D /BK 0 D}
+ {pop BK 0 eq{TM CN 32 put /CN CN 1 add D}if /BK 1 D}ie}forall
+ TM 0 CN GI dup dup () ne E ( ) ne and
+ {dup CN 1 sub get 32 eq{/EN f D}{/EN t D}ie}if} D
+/join {2 copy length E length add string dup 4 2 roll 2 index 0 3 index
+ PI E length E PI}d
+/WR {(\n) search{dup () ne BP not or
+ {Li 4 le CP E pop YI Li mul add LE add 0 lt and PL 0 eq and{NP}if
+ SH NL pop /Li Li 1 sub D WR}{pop pop WR}ie}{SH}ie /CI 0 D /BP f D} D
+/SH {dup dup () ne E ( ) ne and PF or CS Mf gt and{/Mf CS D}if
+ T not Wf and{( ) E join /T t D}if dup BP{/MF CS D}if
+ AT 3 eq{2 copy length dup 0 gt{/NB E NB add D
+ {( ) search{/NS NS 1 add D pop pop}{pop exit}ie}loop}{pop pop}ie}if
+ CD PD 0 lt and{dup DC search{SW pop /PD E L1 add D pop pop}{pop}ie}if
+ 0 Np dup SW pop L1 add /L1 E D dup () ne
+ {C1 (\() join E join (\)) join AU AF and UF or Wf and{( U ) join}if
+ sF{( s ) join}if ( S ) join
+ /C1 E D dup length 1 sub get 32 eq /TB E D /Bw BW D}{pop pop}ie} D
+/BG {AI LG BC add add 0 eq} D
+/ON {OU{Ty AR AI NN get dup 1 add Ln Ns Ty 2 mod 0 eq{(.  )}{(\)  )}ie join
+ dup SW pop neg 0 R CP E 0 lt{0 E M}{pop}ie CP BB show /Ms t D}if} D
+/Ln {AR AI 3 -1 roll put}D
+/SP {dup CI lt BP not and{dup CI sub 0 E R /CI E D}{pop}ie} D
+/BN {PF{WR /HM f D}{BT NL}ie} D
+/NN {dup 0 lt{pop 0}if} D
+/h {(h) HI ST cvs join cvx exec dup 1 get E Nf{0 get E join}{pop}ie} D
+/H {/fn FN D /Hi E 1 add D 1 sub /HL E D /H2 HL 2 add D /GS EZ H2 get D
+ E Tm H2 get GS mul BE dup 0 gt{1 sub}{pop EG H2 get dup 0 lt{pop AT}if}ie NA
+ WW Np /SL SL 1 add D /FN EF H2 get D GS Ey H2 get FS
+ EU H2 get Sc Hs not HL Hl lt and Hs HL hl lt and or Hi 0 eq or
+ {/HI Hi D /Hs t D /hl HL D /Hv HL D}if HL Hl lt{/hi Hi D}if
+ Nf HI 0 gt and{(h) Hi ST cvs join cvx exec 0 get WB}if
+ /HF t D /AH f D /PO f D} D
+/EH {Bm H2 get GS mul BE OA /SL SL 1 sub NN D /CF 0 D /FN fn D
+ SZ SL get FR SL get FS /HF f D /GS Ts D ()Ec} D
+/P {E PF{WR}{PO{EP}{BN}ie Ts 4 mul Np AE not{Tm 0 get Ts mul neg SP}if
+ dup 0 ge AH and{Pi Pd}if}ie 1 sub dup 0 lt{pop AV AL get}if /AT E D /PO t D} D
+/EP {PF{WR}{BN Ts 4 mul Np}ie AE not{Bm 0 get Ts mul neg SP}if
+ /AT AV AL get D /PO f D} D
+/BE {E PO{EP}{BN}ie Ts 4 mul Np neg SP} D
+/HR {/Aw W EO sub D /RW E dup 0 gt{Aw mul}{neg}ie dup Aw gt{pop Aw}if D /RZ E D
+ E BN Ts neg SP 1 sub 2 div Aw RW sub mul EO add CP E pop M PF{0 Ps neg R}if
+ 0 Np OU{gsave RZ LW Cf{Hc VC}{0 Sg}ie CP BB RW 0 RL CP BB stroke grestore}if
+ /CI 0 D /BP f D PF not{Ts neg SP}if /Ms t D} D
+/AD {I NL EG 14 get dup 0 lt{pop AT}if NA /AE t D Tm 14 get Ts mul neg SP
+ Cf{EU 14 get dup -1 eq{pop CA CL get}if Sc}if} D
+/DA {BN ()ES OA /AE f D ()Ec Bm 14 get Ts mul neg SP} D
+/PR {/MW E D /Li E D Tm 1 get Ps mul BE 0 NA /FN Fp D /PF t D SI /SL SL 1 add D
+ /CF 0 D Ps CS mul Ts div MW WC mul CS mul Ts div dup LL gt PL 0 eq and
+ {LL div div}{pop}ie Ey 1 get FS CP E pop LE add YI neg div cvi dup Li lt
+ AH and{4 lt YI Li mul 5 mul LE add 0 gt or PL 0 eq and{NP}if}{pop}ie
+ EU 1 get Sc /GS Ps D}D
+/RP {WR NL () /PF f D SI /FN 0 D ES Bm 1 get Ps mul neg SP OA /GS Ts D} D
+/SI {/XO Lm 15 get BC NN mul Lm 16 get AI UI sub NN mul add
+ Lm 17 get UI NN mul add Lm 20 get LG NN mul add Ts mul
+ PF{Lm 1 get Ps mul add}if EO add D
+ /MR Rm 15 get BC NN mul Rm 16 get AI UI sub NN mul add
+ Rm 17 get UI NN mul add Rm 20 get LG NN mul add Ts mul
+ PF{Rm 1 get Ps mul add}if D /LL W XO sub MR sub D} D
+/DT {/cC E D BN /LG LG 1 sub D SI /LG LG 1 add D WW 2 div Np BL} D
+/DD {WB Cc 0 eq cC 0 eq and L1 0 eq or Lm 20 get Ts mul L1 sub TB{BW add}if
+ Ts 2 div lt or NL /LF E D SI BL /cC 0 D} D
+/DL {Dc LG Cc put /Cc E D BG{Tm 18 get Ts mul BE}{BN}ie /LG LG 1 add D BL} D
+/LD {BN LG 0 gt{/LG LG 1 sub D}if /Cc Dc LG get D SI
+ BG{()Bm 18 get Ts mul BE}if BL} D
+/UL {BG{Tm 17 get Ts mul BE}{BN}ie NR AI NN 0 put /UI UI 1 add D
+ /AI AI 1 add D SI BL} D
+/LU {BN /UI UI 1 sub D /AI AI 1 sub D SI BG{()Bm 17 get Ts mul BE}if BL} D
+/OL {E BG{Tm 16 get Ts mul BE}{BN}ie TR AI NN Ty put /Ty E D NR AI NN 1 put
+ /AI AI 1 add D SI BL 1 Ln} D
+/LO {BN /AI AI 1 sub D /Ty TR AI get D SI BG{()Bm 16 get Ts mul BE}if BL} D
+/LI {E BN -1 SP /BP f D /CI 0 D 0 Np NR AI 1 sub NN get 1 eq
+ {dup dup 0 gt E 4 le and{/Ty E D}{pop}ie
+ /L1 L1 Ty AR AI NN get Ns SW pop XO sub dup 0 lt{pop 0}if add D ( ON )}
+ {pop ( B )}ie C1 E join /C1 E D CS Mf gt{/Mf CS D}if BL} D
+/BQ {Tm 15 get Ts mul BE /BC BC 1 add D SI BL} D
+/QB {Bm 15 get Ts mul BE /BC BC 1 sub D SI BL} D
+/Al {E EP 1 sub dup 0 lt{pop AV AL get}if NA} D
+/Ea {EP OA} D
+/WB {PF{WR}{BT}ie} D
+/F1 {WB /FN 0 D CS 0 FS} D
+/F2 {WB /FN WI D CS 0 FS} D
+/HY {/Hy t D WB /Hy f D} D
+/YH {WB} D
+/A {/LT E D LT 1 eq{/RN E D}if /Lh E D WB /C1 C1 ( Cp ) join D
+ Lc AF not and{Cl Sc}if /AF t D} D
+/EA {Lc AF and{Ec}{WB}ie TL Pa AF and Lh 0 ne and
+ {( \() Lh join (\)) join /AF f D WB}if /AF f D} D
+/TL {C1 ( Tl ) apa /C1 E D} d
+/apa {AF OU and Lh 0 ne LT 1 eq or and{LT 1 eq{RN ( /) E ST cvs join}
+ {(\() Lh join (\)) join}ie E join join}{pop}ie} d
+/Cp {/Xc CP /Yc E D D} D
+/SS {Cf{dup 0 ge{EU E get dup -1 eq{pop CA CL get}if}{pop CA CL get}ie Sc}
+ {pop}ie SZ SL get /SL SL 1 add D} D
+/I {WB 8 SS 1 FS} D
+/EM {WB 8 SS /CF CF 1 xor D 0 FS} D
+/BD {WB 9 SS 2 FS} D
+/TT {WB 10 SS /FN Fp D 0 FS} D
+/KB {WB 11 SS /FN Fp D 2 FS} D
+/CT {WB 12 SS 1 FS} D
+/SM {WB 13 SS /FN Fp D 0 FS} D
+/Q {/QL QL 1 add D QO QL 2 mod get La get join WB} D
+/EQ {QC QL 2 mod get La get join WB /QL QL 1 sub D} D
+/RO {WB -1 SS /CF 0 D 0 FS} D
+/SY {WB -1 SS -1 FS} D
+/MY {WB -1 SS -2 FS} D
+/ES {WB /SL SL 1 sub NN D /CF 0 D /FN FO SL get D SZ SL get FR SL get FS ()Ec}D
+/FZ {3 sub 1.2 E exp GS mul E WB TL /C1 C1 ( Cp ) join D /SL SL 1 add D 0 FS} D
+/Ef {WB TL ()ES /C1 C1 ( Cp ) join D} D
+/BZ {dup /Bf E D FZ}D
+/Sc {dup -1 ne Cf and{/CL CL 1 add D dup 0 eq{pop [0 0 0]}if
+ dup CA E CL E put VS ( VC ) join C1 E join /C1 E D}{pop}ie} D
+/Ec {WB Cf{/CL CL 1 sub NN D CA CL get VS ( VC ) join C1 E join /C1 E D}if} D
+/VS {dup type /arraytype eq{([) E {ST cvs join ( ) join}forall (]) join}if} D
+/VC {{255 div}forall setrgbcolor} D
+/Sl {dup type /integertype ne{Ds}if /La E D WB}d
+/UN {WB /UF t D} D
+/NU {WB /UF f D} D
+/SE {WB /sF t D} D
+/XE {WB /sF f D} D
+/sM {/C1 C1 ( k1 ) join D}d
+/eM {/C1 C1 ( k2 ) join D}d
+/k1 {/YC CP E pop Ts add D /mF t D /f1 t D}d
+/k2 {gsave 3 LW -9 CP E pop Ts 0.2 mul sub M -9 YC L stroke grestore /mF f D}d
+/Ac {/AC E D WB}d
+/Ca {eA{( \()join AC join(\) )join}if WB}d
+/s {OU{gsave 0 CS .25 mul R dup SW pop CJ 0 RL stroke grestore}if}D
+/CJ {AT 3 eq LB and{E dup dup length 1 sub A1 mul E
+ {( ) search{pop pop E A2 add E}{pop exit}ie}loop 3 -1 roll add
+ W CP pop sub 2 copy gt{E}if pop}if}D
+/So {/Co E D} D
+/SO {C1 Yo ST cvs join ( So ) join /C1 E D (j) SW pop 2 div Pd} D
+/Se {E WB CS E div Pd}D
+/Pd {dup type /stringtype eq{SW pop}if dup /L1 E L1 add D
+ ST cvs ( 0 R ) join C1 E join /C1 E D} D
+/Sp {0.35 CO} D
+/Sb {-0.2 CO} D
+/CO {OV Io Yo put /Yo E CS mul Yo add D /Io Io 1 add D -1.5 Io mul 3 add FZ SO
+ CS Yo add dup YA gt{/YA E D}{pop}ie
+ Yo neg dup YB gt{/YB E D}{pop}ie} D
+/Es {ES /Io Io 1 sub NN D /Yo OV Io get D SO} D
+/SB {/N2 0 D 0 1 NI{/N E D{IX N2 get 0 lt{/N2 N2 1 add D}{exit}ie}loop
+ /K WS N get FC N get mul D /NY AY N2 get D /BV NY array D
+ 0 1 NY 1 sub{/TM K string D currentfile TM readhexstring pop pop BV E TM put}
+ for BM N BV put /N2 N2 1 add D}for} D
+/IC [{/MA E D /MB 0 D}{2 div /MA E D /MB MA D}{/MB E CS sub D /MA CS D}
+ {pop /MA YS AB mul D /MB 1 AB sub YS mul D}{pop /MA 0 D /MB 0 D}] D
+/IP {BV N get /N N 1 add D} D
+/II {/K E D IX K get 0 lt{/EC E D}if /TY E D
+ TY 4 eq{/Y E D /X E D}if TY 3 eq{/AB E D}if
+ /XW AX K get D /YW AY K get D /IS SG IT K get get D /XS XW IS mul D
+ /YS YW IS mul D YS IC TY get exec /MA MA Fl not{3 add}if D} D
+/IM {II /ty TY D /xs XS D /ys YS D /ya YA D /yb YB D /ma MA D /mb MB D /k K D
+ /ec EC D /BP f D /CI 0 D WB TL L1 xs add dup XO add MR add W gt
+ {pop /ma ma Fl{3 add}if D NL /YA ma D /YB mb D /YS ys D /L1 xs D}
+ {/L1 E D ma YA gt{/YA ma D}if mb YB gt{/YB mb D}if}ie /TB f D
+ OU{CP E pop YS sub LE neg lt Fl not and PB not and{NP /YA ma D /YB mb D}if
+ /BP f D ty ST cvs ( ) join IX k get 0 lt{(\() join ec join (\) ) join}if
+ k ST cvs join ty 3 eq{AB ST cvs ( ) join E join}if
+ ty 4 eq{X ST cvs ( ) join Y ST cvs join ( ) join E join}if C1 E join
+ ( DI ) join FP 2 eq FP 1 eq AF and or{( FM ) join}if
+ ( Il Cp ) apa /C1 E D /EN f D}if /HM t D /T f D} D
+/DI {II /Xc CP /Yc E D D /YN YW neg D /HM t D /CI 0 D /K2 IX K get D gsave
+ TY 4 eq{OX X IS mul add OY FY add YS sub Y IS mul sub}
+ {/FY YS D CP MB sub 2 copy /OY E D /OX E D}ie
+ translate K2 0 ge{/DP AZ K2 get D /BV BM K2 get D XS YS scale /N 0 D XW YW DP
+ [XW 0 0 YN 0 YW] {IP} FC K2 get 1 eq{image}{f 3 colorimage}ie}
+ {EX}ie grestore XS 0 R /Ms t D} D
+/FM {gsave 0 Sg CP MB sub translate XS neg 0 M 0 YS RL XS 0 RL 0 YS neg RL
+ XS neg 0 RL stroke grestore} D
+/NA {/AT E D /AL AL 1 add D AV AL AT put} D
+/OA {AL 0 gt{/AL AL 1 sub D /AT AV AL get D}if} D
+/D1 {/BR {CP E pop E BN Mb{CP E pop eq{0 YI R}if}{pop}ie} D
+ /Sn {OU{C1 E ST cvs join ( Ld ) join /C1 E D}{pop}ie} D} D
+/D1 {/BR {BN} D /Sn {OU {C1 E ST cvs join ( Ld ) join /C1 E D} {pop} ie} D} D
+/TC {/TF t D /ML 0 D HN{SW pop dup ML gt{/ML E D}{pop}ie}forall NP /RM RM not D
+ RC /OU Tc D Ep /PN 0 D Ms not TP and{Ip}if /W IW ML sub Ts sub D
+ /A0 0 D TH{/BR {( ) join BT} D /Sn {pop} D /Au () D}if} D
+/TN {0 eq{E EA PF HF or not XR and{HN E get Xr}{pop}ie}
+ {OU{Tn 0 ge{() BN}if /Tn E D}{pop}ie WB}ie} D
+/NT {OU LB not and Tn 0 ge and{PL 0 eq{Ms not{CS CF FS}if CP dup
+ /y E YA sub D W 9 sub CS -1.8 mul XO L1 add 2 add{y M (.) show}for
+ HN Tn get dup SW pop IW E sub y M show CP BB M}if /Tn -1 D}if} D
+/Ld {/DN E D HN DN Pn put [/View [/XYZ -4 Fl{PS}{CP YA add US E pop}ie null]
+ /Dest DN ST cvs cvn /DEST pdfmark} D
+/C {ND 1 eq{1 sub}if TI mul /XO E D NL Nf not{pop()}if 0 3 -1 roll 1 A} D
+/OP {BP not{NP}if PN 2 mod 0 eq{/Ms t D NP}if}D
+/Ep {Xp PN 2 mod 0 eq and OU and{/Pn (-) D showpage /PM 1 D LA}if}D
+/Dg [73 86 88 76 67 68 77] D
+/Rd [0 [1 1 0][2 1 0][3 1 0][2 1 1][1 1 1][2 2 1][3 3 1][4 4 1][2 1 2]] D
+/Ns {/m E D /c E 32 mul D /j m 1000 idiv D /p j 12 add string D
+ c 96 le m 0 gt and{c 32 le {/i 0 D /d 77 D /l 100 D /m m j 1000 mul sub D
+  j -1 1 {pop p i d c add put /i i 1 add D}for
+  4 -2 0 {/j E D /n m l idiv D /m m n l mul sub D /d Dg j get D
+   n 0 gt {/x Rd n get D x 0 get -1 1 {pop p i d c add put /i i 1 add D}for
+   p i x 1 get sub Dg x 2 get j add get c add put}if /l l 10 idiv D
+  }for p 0 i GI}
+  {/i ST length 1 sub D m {1 sub dup 0 ge{dup 26 mod c add 1 add
+   ST i 3 -1 roll put 26 idiv dup 0 eq{pop exit}if}if /i i 1 sub D}loop
+   ST i ST length i sub GI}ie}
+ {m p cvs}ie} D
+/US {matrix currentmatrix matrix defaultmatrix matrix invertmatrix
+ matrix concatmatrix transform} D
+/GB {Gb{US}if}D
+/Tl {/Rn E D Xc CP pop ne{
+ [/Rect [Xc 1 sub Yc cS 0.25 mul sub GB CP E 1 add E cS 0.85 mul add GB]
+  /Subtype /Link /Border [0 0 Cf Lc and LX and AU or{0}{1}ie] Rn type
+  /nametype eq {/Dest Rn}{/Action [/Subtype /URI /URI Rn] Cd}ie
+  /ANN pdfmark}if} D
+/Il {/Rn E D [/Rect [Xc Yc GB Xc XS add Yc YS add GB] /Subtype /Link
+ /Border [0 0 0] Rn type /nametype eq{/Dest Rn}
+ {/Action [/Subtype /URI /URI Rn] Cd}ie /ANN pdfmark} D
+/XP {[{/Z Bz 2 div D Z 0 R Z Z RL Z neg Z RL Z neg Z neg RL Z Z neg RL
+ Fi cH 1 eq and{fill}if} {Bz 0 RL 0 Bz RL Bz neg 0 RL 0 Bz neg RL
+ Fi cH 1 eq and{fill}if} {0 -5 R Bz 0 RL 0 21 RL Bz neg 0 RL 0 -21 RL}]} D
+/MS {/Sm E D WB}D
+/O {BN()0 Sm BX} D
+/BX {/Bt E D Bt 2 lt{/Ch E D CS 0.8 mul}{11 mul}ie W XO sub MR sub
+ 2 copy gt{E}if pop /HZ E D Bt 2 eq{Fi not{pop()}if ( )E join /Ft E D TT
+ /PF t D /MW 1 D /Li 1 D /Fw Ft SW pop D Fw HZ gt{/HZ Fw 8 add D}if
+ HZ ST cvs( )join}{WB Ch ST cvs( )join}ie L1 HZ add XO add MR add W gt{NL}if
+ Bt 2 eq{Ft ES Fw neg HM{CS sub}if Pd}if Bt ST cvs join( Bx )join
+ Bt 2 eq HM and{CS Pd}if C1 E join /C1 E D /L1 L1 HZ add D /T f D
+ ( ) Pd /PF f D Bt 2 lt{YA CS .8 mul lt{/YA CS .8 mul D}if}
+ {YB 5 lt{/YB 5 D}if YA 21 lt{/YA 21 D}if}ie /CI 0 D} D
+/Bx {dup 2 eq{E /Bz E D}{E /cH E D /Bz CS .8 mul D}ie
+ OU {gsave 0 Sg XP E get exec stroke grestore}{pop}ie Bz 0 R /Ms t D}D
+/SD {FD 4 mul Dy add DZ NF newpath 0 0 M DX t charpath pathbbox
+ 3 -1 roll sub /DY E D E dup /X1 E D sub WM mul WX DY mul add WM DG mul E div
+ /DF E D /DR WX DF mul DY mul WM div 2 div D} d
+/Sd {gsave 0 IL Di mul neg translate IL IW atan Di 0 eq{neg}if rotate
+ FD 4 mul Dy add DZ NF DR X1 sub DY 2 div neg M cD VC DX show grestore} d
+/Pt {/tp t D Tp{NP /Pn (TP) D 0 Tt neg R Th BN NP Ep ET RC ZF}if /tp f D} D
+/RC {/AI 0 D /LG 0 D /BC 0 D /UI 0 D /PF f D /Cc 0 D /cC 0 D /Dc 10 array D
+ /NR [0 1 9{pop 0}for] D /La Ds D /AR 10 array D /TR 10 array D /AV 30 array D
+ SI /AL -1 D /AT A0 D AT NA /OV 9 array D /Yo 0 D /Co 0 D /Io 0 D /Hy f D
+ /Ph f D /CL -1 D Ct Sc}D
+/ZF {/FR [0 1 30{pop 0}for] D /SZ [0 1 30{pop 0}for] D /FO [0 1 30{pop 0}for] D
+ /SL 0 D /CF 0 D /FN 0 D 0 Ts SF}D
+/QO [[(\234)(\233)(\273)(\232)(\253)(\253\240)][(')(`)(\273)(\231)(\253)(\253\240)]] D
+/QC [[(\234)(\234)(\253)(\233)(\273)(\240\273)][(')(')(\253)(`)(\273)(\240\273)]] D
+/Hf EF length 2 sub D
+/Hz EZ Hf get D
+/HS Ey Hf get D
+/Fz EZ Hf 1 add get D
+/Fs Ey Hf 1 add get D
+/LE IL D
+/Ps EZ 1 get D
+/Fp EF 1 get D
+/XO 0 D
+/YI 0 D
+/CI 0 D
+/FP 0 D
+/WW Ts 7 mul D
+/Mf 0 D
+/YA 0 D
+/YB 0 D
+/Cs Ts D
+/GS Ts D
+/F0 0 D
+/NS 0 D
+/NB 0 D
+/N 0 D
+/C0 [] D
+/C1 () D
+/Lo 0 D
+/L1 0 D
+/LM 0 D
+/PH 0 D
+/EC 0 D
+/Lh 0 D
+/LT 0 D
+/CH 1 string D
+/ST 16 string D
+/CA 9 array D
+/HC (\255) D
+/HM f D
+/PF f D
+/EN f D
+/TB f D
+/UF f D
+/sF f D
+/AE f D
+/AF f D
+/BP t D
+/CD f D
+/PA t D
+/GL f D
+/T t D
+/HF f D
+/AH f D
+/SA f D
+/PB f D
+/f1 f D
+/mF f D
+/OX 0 D
+/OY 0 D
+/FY 0 D
+/EO 0 D
+/FB 0 D
+/PL 0 D
+/Bw 0 D
+/PD -1 D
+/TP f D
+/tp f D
+/TH t D
+/Ty 4 D
+/Tn -1 D
+/Fl t D
+/LB t D
+/PM 1 D
+/Ms f D
+/Ba f D
+/Bb f D
+/Hl 3 D
+/hl 6 D
+/Hv 6 D
+/Hs f D
+/HI 0 D
+/hi 0 D
+/PO t D
+/TE f D
+/LF t D
+/BO 0 D
+/Sm 1 D
+/Bf 3 D
+/A1 0 D
+/A2 0 D
+/Ds 1 D
+/QL -1 D
+/Cb Db D
+/Ct Dt D
+/Cl Dl D
+[/Creator (html2ps version 1.0 beta7) /Author () /Keywords () /Subject (package manager)
+ /Title (The build2 Package Manager) /DOCINFO pdfmark
+/ND 1 D
+/HN [(1) (1) (1) (1) (1) (5) (5) (9) (10) (10) (10) (11) (11) (11) (12) (12)
+(12) (13) (14) (14) (14) (14) (14) (14) (14) (15) (15) (15) (18) (19) (20)
+(21) (21) (22) (22) (22) (23) (23) (23) (23) (24) (24) (24) (24) (25) (26)
+(26) (26) (26) (26) (27) (28) (28) (1) (1) (1) (5) (5) (9) (10) (10) (10)
+(11) (11) (11) (12) (12) (12) (13) (14) (14) (14) (14) (14) (14) (14) (15)
+(15) (15) (18) (19) (20) (21) (21) (22) (22) (22) (23) (23) (23) (23) (24)
+(24) (24) (24) (25) (26) (26) (26) (26) (26) (27) (28) (28)] D
+/h0 [()(Table of Contents)] D
+/h1 [(1\240\240)(Preface)] D
+/h2 [(2\240\240)(1 Package Name)] D
+/h3 [(3\240\240)(2 Package Version)] D
+/h4 [(4\240\240)(3 Manifests)] D
+/h5 [(4.1\240\240)(3.1 Manifest Format)] D
+/h6 [(4.2\240\240)(3.2 Package Manifest)] D
+/h7 [(4.2.1\240\240)(3.2.1 name)] D
+/h8 [(4.2.2\240\240)(3.2.2 version)] D
+/h9 [(4.2.3\240\240)(3.2.3 project)] D
+/h10 [(4.2.4\240\240)(3.2.4 priority)] D
+/h11 [(4.2.5\240\240)(3.2.5 summary)] D
+/h12 [(4.2.6\240\240)(3.2.6 license)] D
+/h13 [(4.2.7\240\240)(3.2.7 topics)] D
+/h14 [(4.2.8\240\240)(3.2.8 keywords)] D
+/h15 [(4.2.9\240\240)(3.2.9 description)] D
+/h16 [(4.2.10\240\240)(3.2.10 changes)] D
+/h17 [(4.2.11\240\240)(3.2.11 url)] D
+/h18 [(4.2.12\240\240)(3.2.12 doc-url)] D
+/h19 [(4.2.13\240\240)(3.2.13 src-url)] D
+/h20 [(4.2.14\240\240)(3.2.14 package-url)] D
+/h21 [(4.2.15\240\240)(3.2.15 email)] D
+/h22 [(4.2.16\240\240)(3.2.16 package-email)] D
+/h23 [(4.2.17\240\240)(3.2.17 build-email)] D
+/h24 [(4.2.18\240\240)(3.2.18 build-warning-email)] D
+/h25 [(4.2.19\240\240)(3.2.19 build-error-email)] D
+/h26 [(4.2.20\240\240)(3.2.20 depends)] D
+/h27 [(4.2.21\240\240)(3.2.21 requires)] D
+/h28 [(4.2.22\240\240)(3.2.22 builds)] D
+/h29 [(4.2.23\240\240)(3.2.23 build-{include,exclude})] D
+/h30 [(4.3\240\240)(3.3 Package List Manifest for pkg Repositories)] D
+/h31 [(4.3.1\240\240)(3.3.1 sha256sum \(list manifest\))] D
+/h32 [(4.3.2\240\240)(3.3.2 location \(package manifest\))] D
+/h33 [(4.3.3\240\240)(3.3.3 sha256sum \(package manifest\))] D
+/h34 [(4.4\240\240)(3.4 Package List Manifest for dir Repositories)] D
+/h35 [(4.4.1\240\240)(3.4.1 location)] D
+/h36 [(4.4.2\240\240)(3.4.2 fragment)] D
+/h37 [(4.5\240\240)(3.5 Repository Manifest)] D
+/h38 [(4.5.1\240\240)(3.5.1 location)] D
+/h39 [(4.5.2\240\240)(3.5.2 type)] D
+/h40 [(4.5.3\240\240)(3.5.3 role)] D
+/h41 [(4.5.4\240\240)(3.5.4 trust)] D
+/h42 [(4.5.5\240\240)(3.5.5 url)] D
+/h43 [(4.5.6\240\240)(3.5.6 email)] D
+/h44 [(4.5.7\240\240)(3.5.7 summary)] D
+/h45 [(4.5.8\240\240)(3.5.8 description)] D
+/h46 [(4.5.9\240\240)(3.5.9 certificate)] D
+/h47 [(4.5.10\240\240)(3.5.10 fragment)] D
+/h48 [(4.6\240\240)(3.6 Repository List Manifest)] D
+/h49 [(4.7\240\240)(3.7 Signature Manifest for pkg Repositories)] D
+/h50 [(4.7.1\240\240)(3.7.1 sha256sum)] D
+/h51 [(4.7.2\240\240)(3.7.2 signature)] D
+/Hr [53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
+75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98
+99 100 101 102 103]D
+/HV [1 1 1 1 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 3 3 3
+2 3 3 2 3 3 3 3 3 3 3 3 3 3 2 2 3 3]D
+/Cn [0 0 0 7 0 23 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0
+2 0 0 10 0 0 0 0 0 0 0 0 0 0 0 2 0 0]D
+Hr length 0 gt{[/PageMode /UseOutlines /DOCVIEW pdfmark}if
+/Hn 1 D
+0 1 Hr length 1 sub{
+ /Bn E D [Cn Bn get dup 0 gt{/Count E HV Bn get Bl ge{neg}if}{pop}ie
+ /Dest Hr Bn get dup abs ST cvs cvn E 0 ge{(h)Hn ST cvs join cvx exec
+ dup 1 get E Nf{0 get E join}{pop}ie /Hn Hn 1 add D}{()}ie
+ /Title E dup length 255 gt{0 255 getinterval}if /OUT pdfmark}for
+ZF /FN Fp D Ps 0 FS /WC Wf{( )}{<A1A1>}ie SW pop D
+ET RC ZF
+/Df f D
+/R1 (http://semver.org/) D
+/R2 (https://github.github.com/gfm) D
+/R3 (https://spec.commonmark.org/current) D
+/Ba f D /BO 0 D Bs
+/UR (-) D
+/Ti (The build2 Package Manager) D
+/Au () D
+/Df f D
+/ME [(0.11)(Package Manager)(package manager)] D
+Pt
+/BO 0 D TC /Ba f D Bs /AU f D /UR () D RC ZF
+ tH WB
+ND 1 gt{Ts 3 mul Np 0()0 C()BD(The build2 Package Manager)ES()0 1 TN()EA()BN}if
+1 NH le{53(1\240\240)1 C(Preface)WB 2 Sn()53 1 TN()EA()BN}if
+1 NH le{54(2\240\240)1 C(1)WB 3 Sn( Package Name)54 1 TN()EA()BN}if
+1 NH le{55(3\240\240)1 C(2)WB 4 Sn( Package Version)55 1 TN()EA()BN}if
+1 NH le{56(4\240\240)1 C(3)WB 5 Sn( Mani)HY(fests)YH()56 1 TN()EA()BN}if
+2 NH le{57(4.1\240\240)2 C(3.1)WB 6 Sn( Mani)HY(fest)YH( Format)57 1 TN()EA()BN}if
+2 NH le{58(4.2\240\240)2 C(3.2)WB 7 Sn( Package Mani)HY(fest)YH()58 1 TN()EA()BN}if
+3 NH le{59(4.2.1\240\240)3 C(3.2.1)WB 8 Sn( )SM(name)ES()59 1 TN()EA()BN}if
+3 NH le{60(4.2.2\240\240)3 C(3.2.2)WB 9 Sn( )SM(version)ES()60 1 TN()EA()BN}if
+3 NH le{61(4.2.3\240\240)3 C(3.2.3)WB 10 Sn( )SM(project)ES()61 1 TN()EA()BN}if
+3 NH le{62(4.2.4\240\240)3 C(3.2.4)WB 11 Sn( )SM(prior)HY(ity)YH()ES()62 1 TN()EA()BN}if
+3 NH le{63(4.2.5\240\240)3 C(3.2.5)WB 12 Sn( )SM(summary)ES()63 1 TN()EA()BN}if
+3 NH le{64(4.2.6\240\240)3 C(3.2.6)WB 13 Sn( )SM(license)ES()64 1 TN()EA()BN}if
+3 NH le{65(4.2.7\240\240)3 C(3.2.7)WB 14 Sn( )SM(topics)ES()65 1 TN()EA()BN}if
+3 NH le{66(4.2.8\240\240)3 C(3.2.8)WB 15 Sn( )SM(keywords)ES()66 1 TN()EA()BN}if
+3 NH le{67(4.2.9\240\240)3 C(3.2.9)WB 16 Sn( )SM(descrip)HY(tion)YH()ES()67 1 TN()EA()BN}if
+3 NH le{68(4.2.10\240\240)3 C(3.2.10)WB 17 Sn( )SM(changes)ES()68 1 TN()EA()BN}if
+3 NH le{69(4.2.11\240\240)3 C(3.2.11)WB 18 Sn( )SM(url)ES()69 1 TN()EA()BN}if
+3 NH le{70(4.2.12\240\240)3 C(3.2.12)WB 19 Sn( )SM(doc-url)ES()70 1 TN()EA()BN}if
+3 NH le{71(4.2.13\240\240)3 C(3.2.13)WB 20 Sn( )SM(src-url)ES()71 1 TN()EA()BN}if
+3 NH le{72(4.2.14\240\240)3 C(3.2.14)WB 21 Sn( )SM(package-url)ES()72 1 TN()EA()BN}if
+3 NH le{73(4.2.15\240\240)3 C(3.2.15)WB 22 Sn( )SM(email)ES()73 1 TN()EA()BN}if
+3 NH le{74(4.2.16\240\240)3 C(3.2.16)WB 23 Sn(
+  )SM(package-email)ES()74 1 TN()EA()BN}if
+3 NH le{75(4.2.17\240\240)3 C(3.2.17)WB 24 Sn( )SM(build-email)ES()75 1 TN()EA()BN}if
+3 NH le{76(4.2.18\240\240)3 C(3.2.18)WB 25 Sn(
+  )SM(build-warning-email)ES()76 1 TN()EA()BN}if
+3 NH le{77(4.2.19\240\240)3 C(3.2.19)WB 26 Sn(
+  )SM(build-error-email)ES()77 1 TN()EA()BN}if
+3 NH le{78(4.2.20\240\240)3 C(3.2.20)WB 27 Sn( )SM(depends)ES()78 1 TN()EA()BN}if
+3 NH le{79(4.2.21\240\240)3 C(3.2.21)WB 28 Sn( )SM(requires)ES()79 1 TN()EA()BN}if
+3 NH le{80(4.2.22\240\240)3 C(3.2.22)WB 29 Sn( )SM(builds)ES()80 1 TN()EA()BN}if
+3 NH le{81(4.2.23\240\240)3 C(3.2.23)WB 30 Sn(
+  )SM(build-{include,exclude})ES()81 1 TN()EA()BN}if
+2 NH le{82(4.3\240\240)2 C(3.3)WB 31 Sn( Package List Mani)HY(fest)YH( for
+  )SM()BD(pkg)ES()ES( Repos)HY(i)HY(to)HY(ries)YH()82 1 TN()EA()BN}if
+3 NH le{83(4.3.1\240\240)3 C(3.3.1)WB 32 Sn( )SM(sha256sum)ES(
+  \201list mani)HY(fest)YH(\202)83 1 TN()EA()BN}if
+3 NH le{84(4.3.2\240\240)3 C(3.3.2)WB 33 Sn(
+  )SM(loca)HY(tion)YH()ES( \201package mani)HY(fest)YH(\202)84 1 TN()EA()BN}if
+3 NH le{85(4.3.3\240\240)3 C(3.3.3)WB 34 Sn(
+  )SM(sha256sum)ES( \201package mani)HY(fest)YH(\202)85 1 TN()EA()BN}if
+2 NH le{86(4.4\240\240)2 C(3.4)WB 35 Sn( Package List Mani)HY(fest)YH( for
+  )SM()BD(dir)ES()ES( Repos)HY(i)HY(to)HY(ries)YH()86 1 TN()EA()BN}if
+3 NH le{87(4.4.1\240\240)3 C(3.4.1)WB 36 Sn( )SM(loca)HY(tion)YH()ES()87 1 TN()EA()BN}if
+3 NH le{88(4.4.2\240\240)3 C(3.4.2)WB 37 Sn( )SM(frag)HY(ment)YH()ES()88 1 TN()EA()BN}if
+2 NH le{89(4.5\240\240)2 C(3.5)WB 38 Sn( Repos)HY(i)HY(tory)YH( Mani)HY(fest)YH()89 1 TN()EA()BN}if
+3 NH le{90(4.5.1\240\240)3 C(3.5.1)WB 39 Sn( )SM(loca)HY(tion)YH()ES()90 1 TN()EA()BN}if
+3 NH le{91(4.5.2\240\240)3 C(3.5.2)WB 40 Sn( )SM(type)ES()91 1 TN()EA()BN}if
+3 NH le{92(4.5.3\240\240)3 C(3.5.3)WB 41 Sn( )SM(role)ES()92 1 TN()EA()BN}if
+3 NH le{93(4.5.4\240\240)3 C(3.5.4)WB 42 Sn( )SM(trust)ES()93 1 TN()EA()BN}if
+3 NH le{94(4.5.5\240\240)3 C(3.5.5)WB 43 Sn( )SM(url)ES()94 1 TN()EA()BN}if
+3 NH le{95(4.5.6\240\240)3 C(3.5.6)WB 44 Sn( )SM(email)ES()95 1 TN()EA()BN}if
+3 NH le{96(4.5.7\240\240)3 C(3.5.7)WB 45 Sn( )SM(summary)ES()96 1 TN()EA()BN}if
+3 NH le{97(4.5.8\240\240)3 C(3.5.8)WB 46 Sn( )SM(descrip)HY(tion)YH()ES()97 1 TN()EA()BN}if
+3 NH le{98(4.5.9\240\240)3 C(3.5.9)WB 47 Sn( )SM(certifi)HY(cate)YH()ES()98 1 TN()EA()BN}if
+3 NH le{99(4.5.10\240\240)3 C(3.5.10)WB 48 Sn( )SM(frag)HY(ment)YH()ES()99 1 TN()EA()BN}if
+2 NH le{100(4.6\240\240)2 C(3.6)WB 49 Sn( Repos)HY(i)HY(tory)YH( List Mani)HY(fest)YH()100 1 TN()EA()BN}if
+2 NH le{101(4.7\240\240)2 C(3.7)WB 50 Sn( Signa)HY(ture)YH( Mani)HY(fest)YH( for
+  )SM()BD(pkg)ES()ES( Repos)HY(i)HY(to)HY(ries)YH()101 1 TN()EA()BN}if
+3 NH le{102(4.7.1\240\240)3 C(3.7.1)WB 51 Sn( )SM(sha256sum)ES()102 1 TN()EA()BN}if
+3 NH le{103(4.7.2\240\240)3 C(3.7.2)WB 52 Sn( )SM(signa)HY(ture)YH()ES()103 1 TN()EA()BN}if
+/OU t D /Cb Db D NP Ep ET 
+/Cb Db D /Ct [16#00 16#00 16#00] D /Cl [16#00 16#00 16#00] D /CL -1 D Ct Sc
+
+/Ba f D /BO 0 D Bs
+/UR (-) D
+/Ti (The build2 Package Manager) D
+/Au () D
+/Df f D
+/ME [(0.11)(Package Manager)(package manager)] D
+
+NP RC ZF
+()1 Sl()WB 0 Sn(
+)BR()WB 1 Sn(
+   
+  )0 1 0 H(Preface)WB 53 Sn()WB 2 Sn()EH(
+
+  )0 P(This docu)HY(ment)YH( describes )SM(bpkg)ES(, the )SM(build2)ES(
+  package depen)HY(dency)YH( manager. For the package manager command line inter)HY(face)YH(
+  refer to the )0 2 A()SM()BD(bpkg\2011\202)ES()ES()EA( man
+  pages.)EP(
+
+  )0 1 1 H(1)WB 54 Sn()WB 3 Sn( Package Name)EH(
+
+  )0 P(The )SM(bpkg)ES( package name can contain ASCII alpha)HY(betic)YH(
+  char)HY(ac)HY(ters)YH( \201)SM([a-zA-Z])ES(\202, digits \201)SM([0-9])ES(\202, under)HY(scores)YH(
+  \201)SM(_)ES(\202, plus/minus \201)SM(+-)ES(\202, and dots/periods
+  \201)SM()SM(.)ES()ES(\202. The name must be at least two char)HY(ac)HY(ters)YH( long
+  with the follow)HY(ing)YH( addi)HY(tional)YH( restric)HY(tions)YH(:)EP(
+
+  )4 OL(  )-1 LI(It must start with an alpha)HY(betic)YH( char)HY(ac)HY(ter)YH(.
+
+  )-1 LI(It must end with an alpha)HY(betic)YH(, digit, or plus char)HY(ac)HY(ter)YH(.
+
+  )-1 LI(It must not be any of the follow)HY(ing)YH( illegal names:
+
+  ) 4 44 PR(build
+con prn aux nul
+com1 com2 com3 com4 com5 com6 com7 com8 com9
+lpt1 lpt2 lpt3 lpt4 lpt5 lpt6 lpt7 lpt8 lpt9)RP(
+  )LO(
+
+  )0 P(The use of the plus \201)SM(+)ES(\202 char)HY(ac)HY(ter)YH( in package names is
+  discour)HY(aged)YH(. Pluses are used in URL encod)HY(ing)YH( which makes
+  spec)HY(i)HY(fy)HY(ing)YH( pack)HY(ages)YH( that contain pluses in URLs cumber)HY(some)YH(.)EP(
+
+  )0 P(The use of the dot \201)SM(.)ES(\202 char)HY(ac)HY(ter)YH( in package names is
+  discour)HY(aged)YH( except for distin)HY(guish)HY(ing)YH( the imple)HY(men)HY(ta)HY(tions)YH( of the same
+  func)HY(tion)HY(al)HY(ity)YH( for differ)HY(ent)YH( languages. For example,
+  )SM(libfoo)ES( and )SM(libfoo.bash)ES(.)EP(
+
+  )0 P(Package name compar)HY(i)HY(son)YH( is case-insen)HY(si)HY(tive)YH( but the orig)HY(i)HY(nal)YH( case must be
+  preserved for display, in file names, etc. The reason for
+  case-insen)HY(si)HY(tive)YH( compar)HY(i)HY(son)YH( is Windows file names.)EP(
+
+  )0 P(If the package is a library then it is strongly recom)HY(mended)YH( that you
+  start its package name with the )SM(lib)ES( prefix, for example,
+  )SM(libfoo)ES(. Some package repos)HY(i)HY(to)HY(ries)YH( may make this a require)HY(ment)YH(
+  as part of their submis)HY(sion)YH( policy.)EP(
+
+  )0 P(If a package \201normally a library\202 supports usage of multi)HY(ple)YH( major
+  versions in the same project, then it is recom)HY(mended)YH( to append the major
+  version number to the package name start)HY(ing)YH( from version )SM(2.0.0)ES(,
+  for example, )SM(libfoo)ES( \201before )SM(2.0.0)ES(\202,
+  )SM(libfoo2)ES(, )SM(libfoo3)ES( \201)SM(3.Y.Z)ES(\202, etc.)EP(
+
+  )0 1 2 H(2)WB 55 Sn()WB 4 Sn( Package Version)EH(
+
+  )0 P(The )SM(bpkg)ES( package version format tries to balance the need of
+  accom)HY(mo)HY(dat)HY(ing)YH( exist)HY(ing)YH( soft)HY(ware)YH( versions on one hand and provid)HY(ing)YH( a
+  reason)HY(ably)YH( straight)HY(for)HY(ward)YH( compar)HY(i)HY(son)YH( seman)HY(tics)YH( on another. For some
+  back)HY(ground)YH( on this problem see )SM()BD(deb-version\2011\202)ES()ES( and the )R1 2 A(Seman)HY(tic)YH( Version)HY(ing)YH()EA( spec)HY(i)HY(fi)HY(ca)HY(tion)YH(.)EP(
+
+  )0 P(Note also that if you are strat)HY(ing)YH( a new project that will use the
+  )SM(build2)ES( toolchain, then it is strongly recom)HY(mended)YH( that you use
+  the )I(stan)HY(dard)YH( version)HY(ing)YH()ES( scheme which is a more strictly defined
+  subset of semanic version)HY(ing)YH( and that allows automa)HY(tion)YH( of many version
+  manage)HY(ment)YH( tasks. See )0 2 A()SM(version)ES(
+  Module)EA( for details.)EP(
+
+  )0 P(The )SM(bpkg)ES( package version has the follow)HY(ing)YH( form:)EP(
+
+  ) 1 59 PR([+<epoch>-]<upstream>[-<prerel>][+<revision>][#<iteration>])RP(
+
+  )0 P(The )I(epoch)ES( part should be an integer. It can be used to change to a
+  new version)HY(ing)YH( scheme that would be incom)HY(pat)HY(i)HY(ble)YH( with the old one. If not
+  spec)HY(i)HY(fied)YH(, then )I(epoch)ES( defaults to )SM(1)ES( except for a stub
+  version \201see below\202 in which case it defaults to )SM(0)ES(. The
+  explicit zero )I(epoch)ES( can be used if the current version)HY(ing)YH( scheme \201for
+  example, date-based\202 is known to be tempo)HY(rary)YH(.)EP(
+
+  )0 P(The )I(upstream)ES( part is the upstream soft)HY(ware)YH( version that this
+  package is based on. It can only contain alpha-numeric char)HY(ac)HY(ters)YH( and
+  )SM(.)ES(. The )SM(.)ES( char)HY(ac)HY(ter)YH( is used to sepa)HY(rate)YH( the version
+  into )I(compo)HY(nents)YH()ES(.)EP(
+
+  )0 P(The )I(prerel)ES( part is the upstream soft)HY(ware)YH( pre-release marker, for
+  example, alpha, beta, candi)HY(date)YH(, etc. Its format is the same as for
+  )I(upstream)ES( except for two special values: the absent )I(prerel)ES( \201for
+  example, )SM(1.2.3)ES(\202 signi)HY(fies)YH( the maximum or final release while
+  the empty )I(prerel)ES( \201for example, )SM(1.2.3-)ES(\202 signi)HY(fies)YH( the
+  minimum or earli)HY(est)YH( possi)HY(ble)YH( release. The minimum release
+  is intended to be used for version constraints \201for example, )SM(libfoo
+  < 1.2.3-)ES(\202 rather than actual releases.)EP(
+
+  )0 P(The )I(revi)HY(sion)YH()ES( part should be an integer. It is used to version
+  package releases that are based on the same upstream versions. If not
+  spec)HY(i)HY(fied)YH(, then )I(revi)HY(sion)YH()ES( defaults to )SM(0)ES(.)EP(
+
+  )0 P(The )I(iter)HY(a)HY(tion)YH()ES( part is an integer. It is used inter)HY(nally)YH( by
+  )SM(bpkg)ES( to auto)HY(mat)HY(i)HY(cally)YH( version modi)HY(fi)HY(ca)HY(tions)YH( to the pack)HY(ag)HY(ing)YH(
+  infor)HY(ma)HY(tion)YH( \201specif)HY(i)HY(cally)YH(, to package mani)HY(fest)YH( and lock)HY(file)YH(\202 in )I(exter)HY(nal)YH(
+  pack)HY(ages)YH()ES( that have the same upstream version and revi)HY(sion)YH(. As a result,
+  the )I(iter)HY(a)HY(tion)YH()ES( cannot not be spec)HY(i)HY(fied)YH( by the user and is only shown
+  in the )SM(bpkg)ES( output \201for example, by )SM(pkg-status)ES(
+  command\202 in order to distin)HY(guish)YH( between package iter)HY(a)HY(tions)YH( with other)HY(wise)YH(
+  iden)HY(ti)HY(cal)YH( versions. Note also that )I(iter)HY(a)HY(tion)YH()ES( is rela)HY(tive)YH( to the
+  )SM(bpkg)ES( config)HY(u)HY(ra)HY(tion)YH(. Or, in other words, it is an iter)HY(a)HY(tion)YH(
+  number of a package as observed by a specific config)HY(u)HY(ra)HY(tion)YH(. As a result,
+  two config)HY(u)HY(ra)HY(tion)YH( can "see" the same package state as two differ)HY(ent)YH(
+  iter)HY(a)HY(tions)YH(.)EP(
+
+  )BR(
+  )0 P(Package iter)HY(a)HY(tions)YH( are used to support package devel)HY(op)HY(ment)YH( during which
+  requir)HY(ing)YH( the devel)HY(oper)YH( to manu)HY(ally)YH( incre)HY(ment)YH( the version or revi)HY(sion)YH( after
+  each modi)HY(fi)HY(ca)HY(tion)YH( would be imprac)HY(ti)HY(cal)YH(. This mech)HY(a)HY(nism)YH( is similar to the
+  auto)HY(matic)YH( commit version)HY(ing)YH( provided by the )I(stan)HY(dard)YH( version)ES( except
+  that it is limited to the pack)HY(ag)HY(ing)YH( infor)HY(ma)HY(tion)YH( but works for uncom)HY(mit)HY(ted)YH(
+  changes.)EP(
+  )BR(
+
+  )0 P(Version )SM(+0-0-)ES( \201least possi)HY(ble)YH( version\202 is reserved and
+  spec)HY(i)HY(fy)HY(ing)YH( it explic)HY(itly)YH( is illegal. Explic)HY(itly)YH(
+  spec)HY(i)HY(fy)HY(ing)YH( this version does not make much sense since )SM(libfoo <
+  +0-0-)ES( is always false and )SM(libfoo > +0-0-)ES( is always true.
+  In the imple)HY(men)HY(ta)HY(tion)YH( this value is used as a special empty
+  version.)EP(
+
+  )0 P(Version )SM(0)ES( \201with a poten)HY(tial)YH( revi)HY(sion)YH(, for example,
+  )SM(0+1)ES(, )SM(0+2)ES(\202 is used to signify a )I(stub
+  package)ES(. A stub is a package that does not contain source code and can
+  only be "obtained" from other sources, for example, a system package
+  manager. Note that at some point a stub may be converted into a full-fledged
+  package at which point it will be assigned a "real" version. It is assumed
+  that this version will always be greater than the stub version.)EP(
+
+  )0 P(When display)HY(ing)YH( the package version or when using the version to derive
+  the file name, the default )I(epoch)ES( value as well as zero
+  )I(revi)HY(sion)YH()ES( and )I(iter)HY(a)HY(tion)YH()ES( values are omitted \201even if they were
+  explic)HY(itly)YH( spec)HY(i)HY(fied)YH(, for instance, in the package mani)HY(fest)YH(\202. For example,
+  )SM(+1-1.2.3+0)ES( will be used as )SM(libfoo-1.2.3)ES(.)EP(
+
+  )BR(
+  )0 P(This version)HY(ing)YH( scheme and the choice of delim)HY(iter)YH( char)HY(ac)HY(ters)YH(
+  \201)SM(.-+)ES(\202 is meant to align with seman)HY(tic)YH( version)HY(ing)YH(.)EP(
+  )BR(
+
+  )0 P(Some exam)HY(ples)YH( of versions:)EP(
+
+  ) 15 18 PR(0+1
++0-20180112
+1.2.3
+1.2.3-a1
+1.2.3-b2
+1.2.3-rc1
+1.2.3-alpha1
+1.2.3-alpha.1
+1.2.3-beta.1
+1.2.3+1
++2-1.2.3
++2-1.2.3-alpha.1+3
++2.2.3#1
+1.2.3+1#1
++2-1.2.3+1#2)RP(
+
+  )0 P(The version sorting order is )I(epoch)ES(, )I(upstream)ES(,
+  )I(prerel)ES(, )I(revi)HY(sion)YH()ES(, and finally, )I(iter)HY(a)HY(tion)YH()ES(. The
+  )I(upstream)ES( and )I(prerel)ES( parts are compared from left to right, one
+  compo)HY(nent)YH( at a time, as described next.)EP(
+
+  )0 P(To compare two compo)HY(nents)YH(, first the compo)HY(nent)YH( types are deter)HY(mined)YH(.  A
+  compo)HY(nent)YH( that only consists of digits is an integer. Other)HY(wise)YH(, it is a
+  string. If both compo)HY(nents)YH( are inte)HY(gers)YH(, then they are compared as inte)HY(gers)YH(.
+  Other)HY(wise)YH(, they are compared lexi)HY(co)HY(graph)HY(i)HY(cally)YH( and case-insen)HY(si)HY(tively)YH(. The reason for case-insen)HY(si)HY(tive)YH( compar)HY(i)HY(son)YH( is Windows file
+  names.)EP(
+
+  )0 P(A non-exis)HY(tent)YH( compo)HY(nent)YH( is consid)HY(ered)YH( 0 if the other compo)HY(nent)YH( is an
+  integer and an empty string if the other compo)HY(nent)YH( is a string.  For
+  example, in )SM(1.2)ES( vs )SM(1.2.0)ES(, the third compo)HY(nent)YH( in
+  the first version is 0 and the two versions are there)HY(fore)YH( equal. As a
+  special excep)HY(tion)YH( to this rule, an absent )I(prerel)ES( part is always
+  greater than any non-absent part. And thus making the
+  final release always older than any pre-release.)EP(
+
+  )0 P(This algo)HY(rithm)YH( gives correct results for most commonly-used version)HY(ing)YH(
+  schemes, for example:)EP(
+
+  ) 4 23 PR(1.2.3 < 12.2
+1.alpha < 1.beta
+20151128 < 20151228
+2015.11.28 < 2015.12.28)RP(
+
+  )0 P(One notable version)HY(ing)YH( scheme where this approach gives an incor)HY(rect)YH(
+  result is hex numbers \201consider )SM(A)ES( vs )SM(1A)ES(\202. The
+  simplest work around is to convert such numbers to decimal. Alter)HY(na)HY(tively)YH(,
+  one can fix the width of the hex number and pad all the values with leading
+  zeros, for example: )SM(00A)ES( vs )SM(01A)ES(.)EP(
+
+  )0 P(It is also possi)HY(ble)YH( to convert the )I(upstream)ES( and )I(prerel)ES(
+  parts into a )I(canon)HY(i)HY(cal)YH( repre)HY(sen)HY(ta)HY(tion)YH()ES( that will produce the correct
+  compar)HY(i)HY(son)YH( result when always compared lexi)HY(co)HY(graph)HY(i)HY(cally)YH( and as a whole.
+  This can be useful, for example, when storing versions in
+  the database which would other)HY(wise)YH( require a custom colla)HY(tion)YH( imple)HY(men)HY(ta)HY(tion)YH(
+  to obtain the correct sort order.)EP(
+
+  )0 P(To convert one of these parts to its canon)HY(i)HY(cal)YH( repre)HY(sen)HY(ta)HY(tion)YH(, all its
+  string compo)HY(nents)YH( are converted to the lower case while all its integer
+  compo)HY(nents)YH( are padded with leading zeros to the fixed length of
+  )SM(16)ES( char)HY(ac)HY(ters)YH(, with all trail)HY(ing)YH( zero-only compo)HY(nents)YH( removed.
+  Note that this places an imple)HY(men)HY(ta)HY(tion)YH( limit on the length of integer
+  compo)HY(nents)YH( which should be checked by the imple)HY(men)HY(ta)HY(tion)YH( when convert)HY(ing)YH( to
+  the canon)HY(i)HY(cal)YH( repre)HY(sen)HY(ta)HY(tion)YH(. The )SM(16)ES(
+  char)HY(ac)HY(ters)YH( limit was chosen to still be able to repre)HY(sent)YH( \201with some spare\202
+  compo)HY(nents)YH( in the )I(YYYYM)HY(MD)HY(Dhh)HY(mmss)YH()ES( form while not \201visu)HY(ally)YH(\202 bloat)HY(ing)YH(
+  the database too much. As a special case, the absent )I(prerel)ES(
+  part is repre)HY(sented)YH( as )SM(~)ES(. Since the ASCII
+  code for )SM(~)ES( is greater than any other char)HY(ac)HY(ter)YH( that could
+  appear in )I(prerel)ES(, such a string will always be greater than any other
+  repre)HY(sen)HY(ta)HY(tion)YH(. The empty )I(prerel)ES( part is repre)HY(sented)YH( as an
+  empty string.)EP(
+
+  )0 P(Note that because it is no possi)HY(ble)YH( to perform a reverse conver)HY(sion)YH(
+  without the possi)HY(bil)HY(ity)YH( of loss \201consider )SM(01.AA.BB)ES(\202, the
+  orig)HY(i)HY(nal)YH( parts may also have to be stored, for example, for display, to
+  derive package archive names, etc.)EP(
+
+  )BR(
+  )0 P(In quite a few contexts the imple)HY(men)HY(ta)HY(tion)YH( needs to ignore the
+  )I(revi)HY(sion)YH()ES( and/or )I(iter)HY(a)HY(tion)YH()ES( parts. For example, this is needed
+  to imple)HY(ment)YH( the seman)HY(tics)YH( of newer revi)HY(sions)YH(/iter)HY(a)HY(tions)YH( of pack)HY(ages)YH(
+  replac)HY(ing)YH( their old ones since we do not keep multi)HY(ple)YH( revi)HY(sions)YH(/iter)HY(a)HY(tions)YH(
+  of the same upstream version in the same respos)HY(i)HY(tory)YH(. As a result, in the
+  package object model, we have a version key as just {)I(epoch)ES(,
+  )I(upstream)ES(, )I(prerel)ES(} but also store the package revi)HY(sion)YH( and
+  iter)HY(a)HY(tion)YH( so that it can be shown it to the user, etc.)EP(
+  )BR(
+
+  )0 1 3 H(3)WB 56 Sn()WB 5 Sn( Mani)HY(fests)YH()EH(
+
+  )0 P(This chapter describes the general mani)HY(fest)YH( file format as well as the
+  concrete mani)HY(fests)YH( used by )SM(bpkg)ES(.)EP(
+
+  )0 P(Currently, three mani)HY(fests)YH( are defined: package mani)HY(fest)YH(, repos)HY(i)HY(tory)YH(
+  mani)HY(fest)YH(, and signa)HY(ture)YH( mani)HY(fest)YH(. The former two mani)HY(fests)YH( can also be
+  combined into a list of mani)HY(fests)YH( to form the list of avail)HY(able)YH( pack)HY(ages)YH( and
+  the descrip)HY(tion)YH( of a repos)HY(i)HY(tory)YH(, respec)HY(tively)YH(.)EP(
+
+  )0 2 4 H(3.1)WB 57 Sn()WB 6 Sn( Mani)HY(fest)YH( Format)EH(
+
+  )0 P(The mani)HY(fest)YH( format is a UTF-8 encoded text contain)HY(ing)YH( a list of
+  name-value pairs in the form:)EP(
+
+  ) 1 15 PR(<name>: <value>)RP(
+
+  )0 P(For example:)EP(
+
+  ) 2 14 PR(name: libfoo
+version: 1.2.3)RP(
+
+  )0 P(The name can contain any char)HY(ac)HY(ters)YH( except )SM(:)ES( and
+  whites)HY(paces)YH(. Newline termi)HY(nates)YH( the pair unless escaped with )SM(\200)ES(
+  \201see below\202. Leading and trail)HY(ing)YH( whites)HY(paces)YH( before and after name and
+  value are ignored except in the multi-line mode \201see below\202.)EP(
+
+  )0 P(If, the first non-whites)HY(pace)YH( char)HY(ac)HY(ter)YH( on the line is )SM(#)ES(,
+  then the rest of the line is treated as a comment and ignored except if the
+  preced)HY(ing)YH( newline was escaped or in the multi-line mode \201see below\202. For
+  example:)EP(
+
+  ) 4 29 PR(# This is a comment.
+short: This is #not a comment
+long: Also \200
+#not a comment)RP(
+
+  )0 P(The first name-value pair in the mani)HY(fest)YH( file should always have an
+  empty name. The value of this special pair is the mani)HY(fest)YH( format version.
+  The version value shall use the default \201that is, non-multi-line\202 mode and
+  shall not use any escape sequences. Currently it should be )SM(1)ES(,
+  for example:)EP(
+
+  ) 3 14 PR(: 1
+name: libfoo
+version: 1.2.3)RP(
+
+  )0 P(Any new name that is added without incre)HY(ment)HY(ing)YH( the version must be
+  optional so that it can be safely ignored by older imple)HY(men)HY(ta)HY(tions)YH(.)EP(
+
+  )0 P(The special empty name pair can also be used to sepa)HY(rate)YH( multi)HY(ple)YH(
+  mani)HY(fests)YH(. In this case the version may be omitted in the subse)HY(quent)YH(
+  mani)HY(fests)YH(, for example:)EP(
+
+  ) 6 14 PR(: 1
+name: libfoo
+version: 1.2.3
+:
+name: libbar
+version: 2.3.4)RP(
+
+  )0 P(To disable treat)HY(ing)YH( of a newline as a name-value pair termi)HY(na)HY(tor)YH( we can
+  escape it with )SM(\200)ES(. Note that )SM(\200)ES( is only treated as
+  an escape sequence when followed by a newline and both are simply removed
+  from the stream \201as opposed to being replaced which a space\202. To enter a
+  literal )SM(\200)ES( at the end of the value, use the )SM(\200\200)ES(
+  sequence. For example:)EP(
+
+  ) 2 55 PR(description: Long text that doesn't fit into one line \200
+so it is continued on the next line.)RP(
+
+  ) 1 26 PR(windows-path: C:\200foo\200bar\200\200)RP(
+
+  )0 P(Notice that in the final example only the last )SM(\200)ES( needs
+  special handling since it is the only one that is followed by a newline.)EP(
+
+  )0 P(One may notice that in this newline escap)HY(ing)YH( scheme a line consist)HY(ing)YH( of
+  just )SM(\200)ES( followed by a newline has no use, except, perhaps, for
+  visual presen)HY(ta)HY(tion)YH( of, arguably, dubious value. For example, this
+  repre)HY(sen)HY(ta)HY(tion)YH(:)EP(
+
+  ) 3 26 PR(description: First line. \200
+\200
+Second line.)RP(
+
+  )0 P(Is seman)HY(ti)HY(cally)YH( equiv)HY(a)HY(lent)YH( to:)EP(
+
+  ) 1 37 PR(description: First line. Second line.)RP(
+
+  )0 P(As a result, such a sequence is "over)HY(loaded)YH(" to provide more useful
+  func)HY(tion)HY(al)HY(ity)YH( in two ways: Firstly, if )SM(:)ES( after the name is
+  imme)HY(di)HY(ately)YH( followed \201ignor)HY(ing)YH( whites)HY(paces)YH(\202 by )SM(\200)ES( and a newline,
+  then it signals the start of the multi-line mode. In this mode all
+  subse)HY(quent)YH( newlines and )SM(#)ES( are treated as ordi)HY(nary)YH( char)HY(ac)HY(ters)YH(
+  rather than value termi)HY(na)HY(tors)YH( or comments until a line consist)HY(ing)YH( of just \200
+  and a newline \201the multi-line mode termi)HY(na)HY(tor)YH(\202. For example:)EP(
+
+  ) 5 17 PR(description:\200
+First paragraph.
+#
+Second paragraph.
+\200)RP(
+
+  )0 P(Expressed as a C-string, the value in the above example is:)EP(
+
+  ) 1 40 PR("First paragraph.\200n#\200nSecond paragraph.")RP(
+
+  )BR(
+  )0 P(If we didn't expect to ever need to specify a name with an empty value,
+  then an empty value could have turned on the multi-line mode, for
+  example:)EP(
+
+  ) 5 17 PR(description:
+First paragraph.
+#
+Second paragraph.
+\200)RP(
+
+  )0 P(There are two reasons we don't do this: we don't want to close the door
+  on empty values and we want a more explicit "intro)HY(duc)HY(tor)YH(" for the multi-line
+  mode since it is quite differ)HY(ent)YH( compared to the simple mode.)EP(
+  )BR(
+
+  )0 P(Note that in the multi-line mode we can still use newline escap)HY(ing)YH( to
+  split long lines, for example:)EP(
+
+  ) 5 48 PR(description:\200
+First paragraph that doesn't fit into one line \200
+so it is continued on the next line.
+Second paragraph.
+\200)RP(
+
+  )0 P(In the simple \201that is, non-multi-line\202 mode, the sole )SM(\200)ES( and
+  newline sequence is over)HY(loaded)YH( to mean a newline. So the previ)HY(ous)YH( example
+  can also be repre)HY(sented)YH( like this:)EP(
+
+  ) 4 56 PR(description: First paragraph that doesn't fit into one \200
+line so it is continued on the next line.\200
+\200
+Second paragraph.)RP(
+
+  )0 P(Note that the multi-line mode can be used to capture a value with leading
+  and/or trail)HY(ing)YH( whites)HY(paces)YH(, for example:)EP(
+
+  ) 4 13 PR(description:\200
+  test
+
+\200)RP(
+
+  )0 P(The C-string repre)HY(sent)HY(ing)YH( this value is:)EP(
+
+  ) 1 10 PR("  test\200n")RP(
+
+  )0 P(EOF can be used instead of a newline to termi)HY(nate)YH( both simple and
+  multi-line values. For example the follow)HY(ing)YH( repre)HY(sen)HY(ta)HY(tion)YH( results in the
+  same value as in the previ)HY(ous)YH( example.)EP(
+
+  ) 4 13 PR(description:\200
+  test
+
+<EOF>)RP(
+
+  )0 P(By conven)HY(tion)YH(, names are all in lower case and multi-word names are
+  sepa)HY(rated)YH( with )SM(-)ES(. Note that names are case-sensi)HY(tive)YH(.)EP(
+
+  )0 P(Also by conven)HY(tion)YH(, the follow)HY(ing)YH( name suffixes are used to denote common
+  types of values:)EP(
+
+  ) 3 6 PR(-file
+-url
+-email)RP(
+
+  )0 P(For example:)EP(
+
+  ) 4 35 PR(description: Inline description
+description-file: README
+package-url: http://www.example.com
+package-email: john@example.com)RP(
+
+  )0 P(Other common name suffixes \201such as -feed\202 could be added later.)EP(
+
+  )BR(
+  )0 P(Gener)HY(ally)YH(, unless there is a good reason not to, we keep values
+  lower-case \201for example, )SM(requires)ES( values such as
+  )SM(c++11)ES( or )SM(linux)ES(\202. An example where we use
+  upper/mixed case would be )SM(license)ES(; it seems unlikely
+  )SM(gplv2)ES( would be better than )SM(GPLv2)ES(.)EP(
+  )BR(
+
+  )0 P(A number of name-value pairs described below allow for the value proper
+  to be option)HY(ally)YH( followed by )SM(;)ES( and a comment. Such comments
+  serve as addi)HY(tional)YH( docu)HY(men)HY(ta)HY(tion)YH( for the user and should be full
+  sentence\201s\202, that is start with a capital letter and end with a period. Note
+  that unlike )SM(#)ES(-style comments which are ignored, these comments
+  are consid)HY(ered)YH( to be part of the value. For example:)EP(
+
+  ) 1 51 PR(email: foo-users@example.com ; Public mailing list.)RP(
+
+  )0 P(It is recom)HY(mended)YH( that you keep comments short, single-sentence. Note
+  that non-comment semi)HY(colons)YH( in such values have to be escaped with a
+  back)HY(slash)YH(, for example:)EP(
+
+  ) 1 42 PR(url: http://git.example.com/?p=foo\200;a=tree)RP(
+
+  )0 P(In the mani)HY(fest)YH( spec)HY(i)HY(fi)HY(ca)HY(tions)YH( described below optional compo)HY(nents)YH( are
+  enclosed in square brack)HY(ets)YH( \201)SM([])ES(\202. If the name is enclosed in
+  )SM([])ES( then the name-value pair is optional, other)HY(wise)YH( \235
+  required. For example:)EP(
+
+  ) 3 33 PR(name: <name>
+license: <licenses> [; <comment>]
+[description]: <text>)RP(
+
+  )0 P(In the above example )SM(name)ES( is required, )SM(license)ES(
+  has an optional compo)HY(nent)YH( \201comment\202, and )SM(descrip)HY(tion)YH()ES( is
+  optional.)EP(
+
+  )0 P(In certain situ)HY(a)HY(tions)YH( \201for example, shell scripts\202 it can be easier to
+  parse the binary mani)HY(fest)YH( repre)HY(sen)HY(ta)HY(tion)YH(. The binary repre)HY(sen)HY(ta)HY(tion)YH( does not
+  include comments and consists of a sequence of name-value pairs in the
+  follow)HY(ing)YH( form:)EP(
+
+  ) 1 16 PR(<name>:<value>\2000)RP(
+
+  )0 P(That is, the name and the value are sepa)HY(rated)YH( by a colon and each pair
+  \201includ)HY(ing)YH( the last\202 is termi)HY(nated)YH( with the )SM(NUL)ES( char)HY(ac)HY(ter)YH(. Note
+  that there can be no leading or trail)HY(ing)YH( whites)HY(pace)YH( char)HY(ac)HY(ters)YH( around the
+  name and any whites)HY(paces)YH( after the colon and before the )SM(NUL)ES(
+  termi)HY(na)HY(tor)YH( are part of the value. Finally, the mani)HY(fest)YH( format versions are
+  always explicit \201that is, not empty\202 in binary mani)HY(fest)YH( lists.)EP(
+
+  )0 2 5 H(3.2)WB 58 Sn()WB 7 Sn( Package Mani)HY(fest)YH()EH(
+
+  )0 P(The package mani)HY(fest)YH( \201the )SM(mani)HY(fest)YH()ES( file found in the
+  package's root direc)HY(tory)YH(\202 describes a )SM(bpkg)ES( package. The
+  mani)HY(fest)YH( synop)HY(sis)YH( is presented next followed by the detailed descrip)HY(tion)YH( of
+  each value in subse)HY(quent)YH( sections.)EP(
+
+  )0 P(The subset of the values up to and includ)HY(ing)YH( )SM(license)ES(
+  consti)HY(tute)YH( the package mani)HY(fest)YH( header. Note that the header is a valid
+  package mani)HY(fest)YH( since all the other values are optional. There is also no
+  require)HY(ment)YH( for the header values to appear first or to be in a specific
+  order. In partic)HY(u)HY(lar)YH(, in a full package mani)HY(fest)YH( they can be inter)HY(leaved)YH(
+  with non-header values.)EP(
+
+  ) 6 36 PR(name: <name>
+version: <version>
+[project]: <name>
+[priority]: <priority> [; <comment>]
+summary: <text>
+license: <licenses> [; <comment>])RP(
+
+  ) 25 50 PR([topics]: <topics>
+[keywords]: <keywords>
+[description]: <text>
+[description-file]: <path> [; <comment>]
+[description-type]: <text-type>
+[changes]: <text>
+[changes-file]: <path> [; <comment>]
+
+[url]: <url> [; <comment>]
+[doc-url]: <url> [; <comment>]
+[src-url]: <url> [; <comment>]
+[package-url]: <url> [; <comment>]
+
+[email]: <email> [; <comment>]
+[package-email]: <email> [; <comment>]
+[build-email]: <email> [; <comment>]
+[build-warning-email]: <email> [; <comment>]
+[build-error-email]: <email> [; <comment>]
+
+[depends]: [?][*] <alternatives> [; <comment>]
+[requires]: [?] [<alternatives>] [; <comment>]
+
+[builds]: <class-expr> [; <comment>]
+[build-include]: <config>[/<target>] [; <comment>]
+[build-exclude]: <config>[/<target>] [; <comment>])RP(
+
+  )0 3 6 H(3.2.1)WB 59 Sn()WB 8 Sn( )SM(name)ES()EH(
+
+  ) 1 12 PR(name: <name>)RP(
+
+  )0 P(The package name. See )0 3 1 A(Package Name)3 0 TN TL()Ec /AF f D( for the
+  package name format descrip)HY(tion)YH(. Note that the name case is preserved for
+  display, in file names, etc.)EP(
+
+  )0 3 7 H(3.2.2)WB 60 Sn()WB 9 Sn( )SM(version)ES()EH(
+
+  ) 2 28 PR(version: <version>
+[upstream-version]: <string>)RP(
+
+  )0 P(The package version. See )0 4 1 A(Package Version)4 0 TN TL()Ec /AF f D(
+  for the version format descrip)HY(tion)YH(. Note that the version case is preserved
+  for display, in file names, etc.)EP(
+
+  )0 P(When pack)HY(ag)HY(ing)YH( exist)HY(ing)YH( projects, some)HY(times)YH( you may want to deviate from
+  the upstream version)HY(ing)YH( scheme because, for example, it may not be
+  repre)HY(sentable)YH( as a )SM(bpkg)ES( package version or simply be
+  incon)HY(ve)HY(nient)YH( to work with. In this case you would need to come up with an
+  upstream-to-down)HY(stream)YH( version mapping and use the
+  )SM(upstream-version)ES( value to preserve the orig)HY(i)HY(nal)YH( version for
+  infor)HY(ma)HY(tion)YH(.)EP(
+
+  )0 3 8 H(3.2.3)WB 61 Sn()WB 10 Sn( )SM(project)ES()EH(
+
+  ) 1 17 PR([project]: <name>)RP(
+
+  )0 P(The project this package belongs to. The project name has the same
+  restric)HY(tions)YH( as the package name \201see )0 3 1 A(Package
+  Name)3 0 TN TL()Ec /AF f D( for details\202 and its case is preserved for display, in direc)HY(tory)YH(
+  names, etc. If unspec)HY(i)HY(fied)YH(, then the project name is assumed to be the same
+  as the package name.)EP(
+
+  )0 P(Projects are used to group related pack)HY(ages)YH( together in order to help
+  with orga)HY(ni)HY(za)HY(tion)YH( and discov)HY(ery)YH( in repos)HY(i)HY(to)HY(ries)YH(. For example, pack)HY(ages)YH(
+  )SM(hello)ES(, )SM(libhello)ES(, and )SM(libhello2)ES( could
+  all belong to project )SM(hello)ES(. By conven)HY(tion)YH(, projects of library
+  pack)HY(ages)YH( are named without the )SM(lib)ES( prefix.)EP(
+
+  )0 3 9 H(3.2.4)WB 62 Sn()WB 11 Sn( )SM(prior)HY(ity)YH()ES()EH(
+
+  ) 3 43 PR([priority]: <priority> [; <comment>]
+
+<priority> = security | high | medium | low)RP(
+
+  )0 P(The release prior)HY(ity)YH( \201optional\202. As a guide)HY(line)YH(, use
+  )SM(secu)HY(rity)YH()ES( for secu)HY(rity)YH( fixes, )SM(high)ES( for crit)HY(i)HY(cal)YH( bug
+  fixes, )SM(medium)ES( for impor)HY(tant)YH( bug fixes, and )SM(low)ES( for
+  minor fixes and/or feature releases. If not spec)HY(i)HY(fied)YH(, )SM(low)ES( is
+  assumed.)EP(
+
+  )0 3 10 H(3.2.5)WB 63 Sn()WB 12 Sn( )SM(summary)ES()EH(
+
+  ) 1 15 PR(summary: <text>)RP(
+
+  )0 P(The short descrip)HY(tion)YH( of the package.)EP(
+
+  )0 3 11 H(3.2.6)WB 64 Sn()WB 13 Sn( )SM(license)ES()EH(
+
+  ) 3 37 PR(license: <licenses> [; <comment>]
+
+<licenses> = <license> [, <license>]*)RP(
+
+  )0 P(The package license. The format is a comma-sepa)HY(rated)YH( list of
+  case-insen)HY(si)HY(tive)YH( license names under which this package is distributed. This
+  list has the )I(AND)ES( seman)HY(tics)YH(, that is, the user must comply with all
+  the licenses listed. To capture alter)HY(na)HY(tive)YH( licens)HY(ing)YH( options use multi)HY(ple)YH(
+  )SM(license)ES( values, for example:)EP(
+
+  ) 2 22 PR(license: LGPLv2.1, MIT
+license: BSD3)RP(
+
+  )0 P(In the above example, the package can be used either under the BSD3
+  license or both LGPLv2.1 and MIT.)EP(
+
+  )0 P(For complex licens)HY(ing)YH( schemes it is recom)HY(mended)YH( to add comments as an aid
+  to the user, for example:)EP(
+
+  ) 2 49 PR(license: LGPLv2.1, MIT ; If linking with GNU TLS.
+license: BSD3          ; If linking with OpenSSL.)RP(
+
+  )0 P(To assist auto)HY(mated)YH( process)HY(ing)YH(, the follow)HY(ing)YH( pre-defined names should be
+  used for the common licenses:)EP(
+
+  ) 20 54 PR(MIT          ; MIT License.
+BSD2         ; Simplified 2-clause BSD License.
+BSD3         ; New 3-clause BSD License.
+BSD4         ; Original 4-clause BSD License.
+GPLv2        ; GNU General Public License v2.0.
+GPLv3        ; GNU General Public License v3.0.
+LGPLv2       ; GNU Lesser General Public License v2.0.
+LGPLv2.1     ; GNU Lesser General Public License v2.1.
+LGPLv3       ; GNU Lesser General Public License v3.0.
+AGPLv2       ; Affero General Public License v2.0.
+AGPLv3       ; GNU Affero General Public License v3.0.
+ASLv1        ; Apache License v1.0.
+ASLv1.1      ; Apache License v1.1.
+ASLv2        ; Apache License v2.0.
+MPLv2        ; Mozilla Public License v2.0.
+
+public domain
+available source ; Not free software/open source.
+proprietary
+TODO             ; License is not yet decided.)RP(
+
+  )0 P(Note that just )SM(BSD)ES( is ambigu)HY(ous)YH( and should be avoided.)EP(
+
+  )BR(
+  )0 P(An example of auto)HY(mated)YH( process)HY(ing)YH( would be filter)HY(ing)YH( for non-copy)HY(left)YH(
+  licensed pack)HY(ages)YH(.)EP(
+  )BR(
+
+  )0 3 12 H(3.2.7)WB 65 Sn()WB 14 Sn( )SM(topics)ES()EH(
+
+  ) 3 31 PR([topics]: <topics>
+
+<topics> = <topic> [, <topic>]*)RP(
+
+  )0 P(The package topics \201optional\202. The format is a comma-sepa)HY(rated)YH( list of up
+  to five poten)HY(tially)YH( multi-word concepts that describe this package. For
+  example:)EP(
+
+  ) 1 34 PR(topics: xml parser, xml serializer)RP(
+
+  )0 3 13 H(3.2.8)WB 66 Sn()WB 15 Sn( )SM(keywords)ES()EH(
+
+  ) 3 36 PR([keywords]: <keywords>
+
+<keywords> = <keyword> [ <keyword>]*)RP(
+
+  )0 P(The package keywords \201optional\202. The format is a space-sepa)HY(rated)YH( list of
+  up to five words that describe this package. Note that the package and
+  project names as well as words from its summary are already consid)HY(ered)YH( to be
+  keywords and need not be repeated in this value.)EP(
+
+  )0 3 14 H(3.2.9)WB 67 Sn()WB 16 Sn( )SM(descrip)HY(tion)YH()ES()EH(
+
+  ) 3 40 PR([description]: <text>
+[description-file]: <path> [; <comment>]
+[description-type]: <text-type>)RP(
+
+  )0 P(The detailed descrip)HY(tion)YH( of the package. It can be provided either inline
+  as a text frag)HY(ment)YH( or by refer)HY(ring)YH( to a file within a package \201e.g.,
+  )SM(README)ES(\202, but not both.)EP(
+
+  )0 P(In the web inter)HY(face)YH( \201)SM(brep)ES(\202 the descrip)HY(tion)YH( is displayed
+  accord)HY(ing)YH( to its type. Currently, pre-format)HY(ted)YH( plain text, )R2 2 A(GitHub-Flavored Mark)HY(down)YH()EA(, and )R3 2 A(Common)HY(Mark)YH()EA( are supported with
+  the follow)HY(ing)YH( )SM(descrip)HY(tion)YH(-type)ES( values, respec)HY(tively)YH(:)EP(
+
+  ) 3 32 PR(text/plain
+text/markdown;variant=GFM
+text/markdown;variant=CommonMark)RP(
+
+  )0 P(If just )SM(text/mark)HY(down)YH()ES( is spec)HY(i)HY(fied)YH(, then the GitHub-Flavored
+  Mark)HY(down)YH( \201which is a super)HY(set)YH( of Common)HY(Mark)YH(\202 is assumed.)EP(
+
+  )0 P(If the descrip)HY(tion)YH( type is not explic)HY(itly)YH( spec)HY(i)HY(fied)YH( and the descrip)HY(tion)YH(
+  is spec)HY(i)HY(fied)YH( as )SM(descrip)HY(tion)YH(-file)ES(, then an attempt to derive the
+  type from the file exten)HY(sion)YH( is made. Specif)HY(i)HY(cally)YH(, the
+  )SM()BD(.md)ES()ES( and )SM()BD(.mark)HY(down)YH()ES()ES( exten)HY(sions)YH( are
+  mapped to )SM(text/mark)HY(down)YH()ES(, the )SM()BD(.txt)ES()ES( and no
+  exten)HY(sion)YH( are mapped to )SM(text/plain)ES(, and all other exten)HY(sions)YH(
+  are treated as an unknown type, similar to unknown
+  )SM(descrip)HY(tion)YH(-type)ES( values. And if the descrip)HY(tion)YH( is not
+  spec)HY(i)HY(fied)YH( as a file, )SM(text/plain)ES( is assumed.)EP(
+
+  )0 3 15 H(3.2.10)WB 68 Sn()WB 17 Sn( )SM(changes)ES()EH(
+
+  ) 2 36 PR([changes]: <text>
+[changes-file]: <path> [; <comment>])RP(
+
+  )0 P(The descrip)HY(tion)YH( of changes in the release.)EP(
+
+  )BR(
+  )0 P(The tricky aspect is what happens if the upstream release stays the same
+  \201and has, say, a )SM(NEWS)ES( file to which we point\202 but we need to
+  make another package release, for example, to apply a crit)HY(i)HY(cal)YH( patch.)EP(
+  )BR(
+
+  )0 P(Multi)HY(ple)YH( )SM(changes)ES( values can be present which are all
+  concate)HY(nated)YH( in the order spec)HY(i)HY(fied)YH(, that is, the first value is consid)HY(ered)YH(
+  to be the most recent \201similar to )SM(ChangeLog)ES( and
+  )SM(NEWS)ES( files\202. For example:)EP(
+
+  ) 3 61 PR(changes: 1.2.3-2: applied upstream patch for critical bug bar
+changes: 1.2.3-1: applied upstream patch for critical bug foo
+changes-file: NEWS)RP(
+
+  )0 P(Or:)EP(
+
+  ) 9 47 PR(changes:\200
+1.2.3-2
+  - applied upstream patch for critical bug bar
+  - regenerated documentation
+
+1.2.3-1
+  - applied upstream patch for critical bug foo
+\200
+changes-file: NEWS)RP(
+
+  )0 P(In the web inter)HY(face)YH( \201)SM(brep)ES(\202 the changes are displayed as
+  pre-format)HY(ted)YH( plain text, similar to the package descrip)HY(tion)YH(.)EP(
+
+  )0 3 16 H(3.2.11)WB 69 Sn()WB 18 Sn( )SM(url)ES()EH(
+
+  ) 1 26 PR([url]: <url> [; <comment>])RP(
+
+  )0 P(The project home page URL.)EP(
+
+  )0 3 17 H(3.2.12)WB 70 Sn()WB 19 Sn( )SM(doc-url)ES()EH(
+
+  ) 1 30 PR([doc-url]: <url> [; <comment>])RP(
+
+  )0 P(The project docu)HY(men)HY(ta)HY(tion)YH( URL.)EP(
+
+  )0 3 18 H(3.2.13)WB 71 Sn()WB 20 Sn( )SM(src-url)ES()EH(
+
+  ) 1 30 PR([src-url]: <url> [; <comment>])RP(
+
+  )0 P(The project source repos)HY(i)HY(tory)YH( URL.)EP(
+
+  )0 3 19 H(3.2.14)WB 72 Sn()WB 21 Sn( )SM(package-url)ES()EH(
+
+  ) 1 34 PR([package-url]: <url> [; <comment>])RP(
+
+  )0 P(The package home page URL. If not spec)HY(i)HY(fied)YH(, then assumed to be the same
+  as )SM(url)ES(. It only makes sense to specify this value if the
+  project and package are main)HY(tained)YH( sepa)HY(rately)YH(.)EP(
+
+  )0 3 20 H(3.2.15)WB 73 Sn()WB 22 Sn( )SM(email)ES()EH(
+
+  ) 1 30 PR([email]: <email> [; <comment>])RP(
+
+  )0 P(The project email address. For example, a support mailing list.)EP(
+
+  )0 3 21 H(3.2.16)WB 74 Sn()WB 23 Sn(
+  )SM(package-email)ES()EH(
+
+  ) 1 38 PR([package-email]: <email> [; <comment>])RP(
+
+  )0 P(The package email address. If not spec)HY(i)HY(fied)YH(, then assumed to be the same
+  as )SM(email)ES(. It only makes sense to specify this value if the
+  project and package are main)HY(tained)YH( sepa)HY(rately)YH(.)EP(
+
+  )0 3 22 H(3.2.17)WB 75 Sn()WB 24 Sn( )SM(build-email)ES()EH(
+
+  ) 1 36 PR([build-email]: <email> [; <comment>])RP(
+
+  )0 P(The build noti)HY(fi)HY(ca)HY(tion)YH( email address. It is used to send build result
+  noti)HY(fi)HY(ca)HY(tions)YH( by auto)HY(mated)YH( build bots. If none of the
+  )SM(build-*email)ES( values are spec)HY(i)HY(fied)YH(, then it is assumed to be the
+  same as )SM(package-email)ES(. If it is spec)HY(i)HY(fied)YH( but empty, then no
+  build result noti)HY(fi)HY(ca)HY(tions)YH( for this package are sent by email.)EP(
+
+  )0 3 23 H(3.2.18)WB 76 Sn()WB 25 Sn(
+  )SM(build-warning-email)ES()EH(
+
+  ) 1 44 PR([build-warning-email]: <email> [; <comment>])RP(
+
+  )0 P(The build warning noti)HY(fi)HY(ca)HY(tion)YH( email address. Unlike
+  )SM(build-email)ES(, only build warning and error noti)HY(fi)HY(ca)HY(tions)YH( are
+  sent to this email.)EP(
+
+  )0 3 24 H(3.2.19)WB 77 Sn()WB 26 Sn(
+  )SM(build-error-email)ES()EH(
+
+  ) 1 42 PR([build-error-email]: <email> [; <comment>])RP(
+
+  )0 P(The build error noti)HY(fi)HY(ca)HY(tion)YH( email address. Unlike
+  )SM(build-email)ES(, only build error noti)HY(fi)HY(ca)HY(tions)YH( are sent to this
+  email.)EP(
+
+  )0 3 25 H(3.2.20)WB 78 Sn()WB 27 Sn( )SM(depends)ES()EH(
+
+  ) 8 61 PR([depends]: [?][*] <alternatives> [; <comment>]
+
+<alternatives> := <dependency> [ '|' <dependency>]*
+<dependency>   := <name> [<constraint>]
+<constraint>   := <comparison> | <shortcut> | <range>
+<comparison>   := \201'==' | '>' | '<' | '>=' | '<='\202 <version>
+<shortcut>     := \201'^' | '~'\202 <version>
+<range>        := \201'\201' | '['\202 <version> <version> \201'\202' | ']'\202)RP(
+
+  )0 P(The prereq)HY(ui)HY(site)YH( pack)HY(ages)YH(. If the )SM(depends)ES( value start with
+  )SM(*)ES(, then it is a )I(build-time)ES( prereq)HY(ui)HY(site)YH(. Other)HY(wise)YH( it is
+  )I(run-time)ES(.)EP(
+
+  )BR(
+  )0 P(Most of the build-time prereq)HY(ui)HY(sites)YH( are expected to be tools such as
+  code gener)HY(a)HY(tor)YH(, so you can think of )SM(*)ES( as the executable mark
+  printed by )SM(ls)ES(. An impor)HY(tant)YH( differ)HY(ence)YH( between the two kind of
+  depen)HY(den)HY(cies)YH( is that in case of cross-compi)HY(la)HY(tion)YH( a build-time depen)HY(dency)YH(
+  must be built for the build machine, not the target.)EP(
+  )BR(
+
+  )0 P(Two special build-time depen)HY(dency)YH( names are recog)HY(nized)YH( and checked in an
+  ad hoc manner: )SM(build2)ES( \201the )SM(build2)ES( build system\202
+  and )SM(bpkg)ES( \201the )SM(build2)ES( package manager\202. This allows
+  us to specify the required build system and package manager versions, for
+  example:)EP(
+
+  ) 2 26 PR(depends: * build2 >= 0.6.0
+depends: * bpkg >= 0.6.0)RP(
+
+  )0 P(Each )SM(depends)ES( value can specify multi)HY(ple)YH( pack)HY(ages)YH( with the
+  )I(OR)ES( seman)HY(tics)YH(. While multi)HY(ple)YH( )SM(depends)ES( values are used to
+  specify multi)HY(ple)YH( pack)HY(ages)YH( with the )I(AND)ES( seman)HY(tics)YH(. A value that starts
+  with )SM(?)ES( is a condi)HY(tional)YH( prereq)HY(ui)HY(site)YH(. Whether such a
+  prereq)HY(ui)HY(site)YH( will be in effect can only be deter)HY(mined)YH( at the package
+  config)HY(u)HY(ra)HY(tion)YH( time. It is recom)HY(mended)YH( that you provide a comment for each
+  condi)HY(tional)YH( prereq)HY(ui)HY(site)YH( as an aid to the user. For example:)EP(
+
+  ) 5 63 PR(depends: libz
+depends: libfoo ~1.2.0 ; Only works with libfoo 1.2.*.
+depends: libgnutls >= 1.2.3 | libopenssl >= 2.3.4
+depends: ? libboost-regex >= 1.52.0 ; Only if no C++11 <regex>.
+depends: ? libqtcore >= 5.0.0 ; Only if GUI is enabled.)RP(
+
+  )0 P(It is recom)HY(mended)YH( that you specify uncon)HY(di)HY(tional)YH( depen)HY(den)HY(cies)YH( first with
+  simple \201no alter)HY(na)HY(tives)YH(\202 depen)HY(den)HY(cies)YH( leading each set.)EP(
+
+  )0 P(The optional version constraint can be spec)HY(i)HY(fied)YH( using compar)HY(i)HY(son)YH(
+  oper)HY(a)HY(tors)YH(, short)HY(cut)YH( \201to range\202 oper)HY(a)HY(tors)YH(, and ranges.)EP(
+
+  )0 P(The short)HY(cut)YH( oper)HY(a)HY(tors)YH( can only be used with )0 2 A(stan)HY(dard)YH(
+  versions)EA( \201a seman)HY(tic)YH( version without the pre-release part is a stan)HY(dard)YH(
+  version\202. They are equiv)HY(a)HY(lent)YH( to the follow)HY(ing)YH( ranges. The )SM(X.Y.Z-)ES( version signi)HY(fies)YH( the earli)HY(est)YH(
+  pre-release in the )SM(X.Y.Z)ES( series; see )0 4 1 A(Package Version)4 0 TN TL()Ec /AF f D( for details.)EP(
+
+  ) 4 36 PR(~X.Y.Z  [X.Y.Z  X.Y+1.0-\202
+
+^X.Y.Z  [X.Y.Z  X+1.0.0-\202  if X >  0
+^0.Y.Z  [0.Y.Z  0.Y+1.0-\202  if X == 0)RP(
+
+  )0 P(That is, the tilde \201)SM(~)ES(\202 constraint allows upgrades to any
+  further patch version while the caret \201)SM(^)ES(\202 constraint \235
+  also to any further minor version.)EP(
+
+  )BR(
+  )0 P(Zero major version compo)HY(nent)YH( is custom)HY(ar)HY(ily)YH( used during early devel)HY(op)HY(ment)YH(
+  where the minor version effec)HY(tively)YH( becomes major. As a result, the tilde
+  constraint has special seman)HY(tics)YH( for this case.)EP(
+  )BR(
+
+  )0 P(Note that the short)HY(uct)YH( oper)HY(a)HY(tors)YH( can only be used with the complete,
+  three-compo)HY(nent)YH( versions \201)SM(X.Y.Z)ES( with the optional pre-release
+  part per the stan)HY(dard)YH( version\202. Specif)HY(i)HY(cally)YH(, there is no support for
+  special )SM(^X.Y)ES( or )SM(~X)ES( seman)HY(tics)YH( offered by some
+  package manager \235 if desired, such func)HY(tion)HY(al)HY(ity)YH( can be easily
+  achieved with ranges. Also, the )SM(0.0.Z)ES( version is not consid)HY(ered)YH(
+  special except as having zero major compo)HY(nent)YH( for the tilde seman)HY(tics)YH(
+  discussed above.)EP(
+
+  )0 P(Note also that pre-releases do not required any special consid)HY(er)HY(a)HY(tions)YH(
+  when used with the short)HY(cut)YH( oper)HY(a)HY(tors)YH(. For example, if package
+  )SM(libfoo)ES( is usable start)HY(ing)YH( with the second beta of the
+  )SM(2.0.0)ES( release, then our constraint could be expressed as:)EP(
+
+  ) 1 26 PR(depends: libfoo ^2.0.0-b.2)RP(
+
+  )BR(
+  )0 P(Inter)HY(nally)YH( short)HY(ucts)YH( and compar)HY(isons)YH( can be repre)HY(sented)YH( as ranges \201that
+  is, )SM([v, v])ES( for )SM(==)ES(, )SM(\201v, inf\202)ES( for
+  )SM(>)ES(, etc\202. However, for display and seri)HY(al)HY(iza)HY(tion)YH( such
+  repre)HY(sen)HY(ta)HY(tions)YH( should be converted back to simple oper)HY(a)HY(tors)YH(. While it is
+  possi)HY(ble)YH( that the orig)HY(i)HY(nal)YH( mani)HY(fest)YH( spec)HY(i)HY(fied)YH( equal)HY(ity)YH( or short)HY(ucts)YH( as full
+  ranges, it is accept)HY(able)YH( to display/seri)HY(al)HY(ize)YH( them as simpler oper)HY(a)HY(tors)YH(.)EP(
+  )BR(
+
+  )0 P(Instead of a specific version, the constraint can be spec)HY(i)HY(fied)YH( in terms
+  of the depen)HY(dent)YH( package's version \201that is, its )0 9 1 A()SM(version)ES()9 0 TN TL()Ec /AF f D( value\202 using the
+  special )SM($)ES( value. A )SM(depends)ES( value that contains
+  )SM($)ES( is called incom)HY(plete)YH(. This mech)HY(a)HY(nism)YH( is primar)HY(ily)YH( useful when
+  devel)HY(op)HY(ing)YH( related pack)HY(ages)YH( that should track each other's versions exactly
+  or closely. For example:)EP(
+
+  ) 3 24 PR(name: sqlite3
+version: 3.18.2
+depends: libsqlite3 == $)RP(
+
+  )0 P(In compar)HY(i)HY(son)YH( oper)HY(a)HY(tors)YH( and ranges the )SM($)ES( value is replaced
+  with the depen)HY(dent)YH( version ignor)HY(ing)YH( the revi)HY(sion)YH(. For short)HY(cut)YH( oper)HY(a)HY(tors)YH(,
+  the depen)HY(dent)YH( version must be a stan)HY(dard)YH( version and the follow)HY(ing)YH(
+  addi)HY(tional)YH( process)HY(ing)YH( is applied depend)HY(ing)YH( on whether the version is a
+  release, final pre-release, or a snap)HY(shot)YH( pre-release.)EP(
+
+  )4 OL(  )-1 LI(For a release we set the min version patch to zero. For )SM(^)ES(
+  we also set the minor version to zero, unless the major version is zero
+  \201reduces to )SM(~)ES(\202. The max version is set accord)HY(ing)YH( to the
+  stan)HY(dard)YH( short)HY(cut)YH( logic. For example, )SM(~$)ES( is completed as
+  follows:
+
+  ) 3 23 PR(1.2.0 -> [1.2.0 1.3.0-\202
+1.2.1 -> [1.2.0 1.3.0-\202
+1.2.2 -> [1.2.0 1.3.0-\202)RP(
+
+  )0 P(And )SM(^$)ES( is completed as follows:)EP(
+
+  ) 2 23 PR(1.0.0 -> [1.0.0 2.0.0-\202
+1.1.1 -> [1.0.0 2.0.0-\202)RP(
+
+  )-1 LI(For a final pre-release the key obser)HY(va)HY(tion)YH( is that if the patch
+  compo)HY(nent)YH( for )SM(~)ES( or minor and patch compo)HY(nents)YH( for
+  )SM(^)ES( are not zero, then that means there has been a compat)HY(i)HY(ble)YH(
+  release and we treat this case the same as release, ignor)HY(ing)YH( the pre-release
+  part. If, however, it/they are zero, then that means there may yet be no
+  final release and we have to start from the first alpha. For example, for
+  the )SM(~$)ES( case:
+
+  ) 4 31 PR(1.2.0-a.1 -> [1.2.0-a.1 1.3.0-\202
+1.2.0-b.2 -> [1.2.0-a.1 1.3.0-\202
+1.2.1-a.1 -> [1.2.0     1.3.0-\202
+1.2.2-b.2 -> [1.2.0     1.3.0-\202)RP(
+
+  )0 P(And for the )SM(^$)ES( case:)EP(
+
+  ) 4 31 PR(1.0.0-a.1 -> [1.0.0-a.1 2.0.0-\202
+1.0.0-b.2 -> [1.0.0-a.1 2.0.0-\202
+1.0.1-a.1 -> [1.0.0     2.0.0-\202
+1.1.0-b.2 -> [1.0.0     2.0.0-\202)RP(
+
+  )-1 LI(For a snap)HY(shot)YH( pre-release we distin)HY(guish)YH( two cases: a patch snap)HY(shot)YH(
+  \201the patch compo)HY(nent)YH( is not zero\202 and a major/minor snap)HY(shot)YH( \201the patch
+  compo)HY(nent)YH( is zero\202. For the patch snap)HY(shot)YH( case we assume that it is \201most
+  likely\202 devel)HY(oped)YH( inde)HY(pen)HY(dently)YH( of the depen)HY(dency)YH( and we treat it the same
+  as the final pre-release case. For example, if the depen)HY(dent)YH( version is
+  )SM(1.2.1-a.0.nnn)ES(, the depen)HY(dency)YH( could be )SM(1.2.0)ES( or
+  )SM(1.2.2)ES( \201or some)HY(where)YH( in-between\202.
+
+  )0 P(For the major/minor snap)HY(shot)YH( we assume that all the pack)HY(ages)YH( are
+  devel)HY(oped)YH( in the lock)HY(step)YH( and have the same )SM(X.Y.0)ES( version. In
+  this case we make the range start from the earli)HY(est)YH( possi)HY(ble)YH( version in this
+  "snap)HY(shot)YH( series" and end before the final pre-release. For example \201in this
+  case )SM(~)ES( and )SM(^)ES( are treated the same\202:)EP(
+
+  ) 2 40 PR(1.2.0-a.0.nnn -> [1.2.0-a.0.1 1.2.0-a.1\202
+2.0.0-b.2.nnn -> [2.0.0-b.2.1 2.0.0-b.3\202)RP(
+  )LO(
+
+  )0 3 26 H(3.2.21)WB 79 Sn()WB 28 Sn( )SM(requires)ES()EH(
+
+  ) 4 53 PR([requires]: [?] [<alternatives>] [; <comment>]
+
+<alternatives> := <requirement> [ '|' <requirement>]*
+<requirement>  := <id> | <dependency>)RP(
+
+  )0 P(The package require)HY(ments)YH( \201other than other pack)HY(ages)YH(\202. Such require)HY(ments)YH(
+  are normally checked during package config)HY(u)HY(ra)HY(tion)YH( by the build system and
+  the only purpose of captur)HY(ing)YH( them in the mani)HY(fest)YH( is for docu)HY(men)HY(ta)HY(tion)YH(.
+  Similar to )SM(depends)ES(, a value that starts with )SM(?)ES( is
+  a condi)HY(tional)YH( require)HY(ment)YH(. For example:)EP(
+
+  ) 4 50 PR(requires: linux | windows | macosx
+requires: c++11
+requires: ? ; VC 15 or later if targeting Windows.
+requires: ? ; libc++ if using Clang on Mac OS.)RP(
+
+  )0 P(Notice that in the last two cases the id is omitted alto)HY(gether)YH( with only
+  the comment spec)HY(i)HY(fy)HY(ing)YH( the require)HY(ment)YH(.)EP(
+
+  )0 P(Note that )SM(requires)ES( should also be used to specify
+  depen)HY(den)HY(cies)YH( on exter)HY(nal)YH( libraries, that is, the ones not pack)HY(aged)YH( or not in
+  the repos)HY(i)HY(tory)YH(. In this case it may make sense to also specify the version
+  constraint. For example:)EP(
+
+  ) 1 76 PR(requires: zlib >= 1.2.0 ; Most systems already have it or get from zlib.net.)RP(
+
+  )0 P(It is recom)HY(mended)YH( that you specify uncon)HY(di)HY(tional)YH( require)HY(ments)YH( first with
+  simple \201no alter)HY(na)HY(tives)YH(\202 require)HY(ments)YH( leading each set.)EP(
+
+  )0 P(To assist auto)HY(mated)YH( process)HY(ing)YH(, the follow)HY(ing)YH( pre-defined ids should be
+  used for the common require)HY(ments)YH(:)EP(
+
+  ) 7 5 PR(c++98
+c++03
+c++11
+c++14
+c++17
+c++20
+c++23)RP(
+
+  ) 5 7 PR(posix
+linux
+macos
+freebsd
+windows)RP(
+
+  ) 3 59 PR(gcc[_X.Y.Z]  ; For example: gcc_6, gcc_4.9, gcc_5.0.0
+clang[_X.Y]  ; For example: clang_6, clang_3.4, clang_3.4.1
+msvc[_NU]    ; For example: msvc_14, msvc_15u3)RP(
+
+  )0 3 27 H(3.2.22)WB 80 Sn()WB 29 Sn( )SM(builds)ES()EH(
+
+  ) 5 71 PR([builds]: [<class-uset> ':' ] [<class-expr>] [; <comment>]
+
+<class-uset> := <class-name> [ <class-name>]*
+<class-expr> := <class-term> [ <class-term>]*
+<class-term> := \201'+'|'-'|'&'\202['!']\201<class-name> | '\201' <class-expr> '\202'\202)RP(
+
+  )0 P(The package build config)HY(u)HY(ra)HY(tions)YH(. They specify the build config)HY(u)HY(ra)HY(tion)YH(
+  classes the package should or should not be built for by auto)HY(mated)YH( build
+  bots. For example:)EP(
+
+  ) 1 16 PR(builds: -windows)RP(
+
+  )0 P(Build config)HY(u)HY(ra)HY(tions)YH( can belong to multi)HY(ple)YH( classes with their names and
+  seman)HY(tics)YH( varying between differ)HY(ent)YH( build bot deploy)HY(ments)YH(. However, the
+  pre-defined )SM(none)ES(, )SM(default)ES(, and )SM(all)ES(
+  classes are always provided. If no )SM(builds)ES( value is spec)HY(i)HY(fied)YH( in
+  the package mani)HY(fest)YH(, then the )SM(default)ES( class is assumed.)EP(
+
+  )BR(
+  )0 P(A build config)HY(u)HY(ra)HY(tion)YH( class can also derive from another class in which
+  case config)HY(u)HY(ra)HY(tions)YH( that belong to the derived class are treated as also
+  belong)HY(ing)YH( to the base class \201or classes, recur)HY(sively)YH(\202. See the Build
+  Config)HY(u)HY(ra)HY(tions)YH( page of the build bot deploy)HY(ment)YH( for the list of avail)HY(able)YH(
+  build config)HY(u)HY(ra)HY(tions)YH( and their classes.)EP(
+  )BR(
+
+  )0 P(The )SM(builds)ES( value consists of an optional under)HY(ly)HY(ing)YH( class
+  set \201)SM(<class-uset>)ES(\202 followed by a class set expres)HY(sion)YH(
+  \201)SM(<class-expr>)ES(\202. The under)HY(ly)HY(ing)YH( set is a space-sepa)HY(rated)YH( list
+  of class names that define the set of build config)HY(u)HY(ra)HY(tions)YH( to consider. If
+  not spec)HY(i)HY(fied)YH(, then all the config)HY(u)HY(ra)HY(tions)YH( belong)HY(ing)YH( to the
+  )SM(default)ES( class are assumed. The class set expres)HY(sion)YH( can then be
+  used to exclude certain config)HY(u)HY(ra)HY(tions)YH( from this initial set.)EP(
+
+  )0 P(The class expres)HY(sion)YH( is a space-sepa)HY(rated)YH( list of terms that are
+  eval)HY(u)HY(ated)YH( from left to right. The first char)HY(ac)HY(ter)YH( of each term deter)HY(mines)YH(
+  whether the build config)HY(u)HY(ra)HY(tion)YH( that belong to its set are added to
+  \201)SM(+)ES(\202, subtracted from \201)SM(-)ES(\202, or inter)HY(sected)YH( with
+  \201)SM(&)ES(\202 the current set. If the second char)HY(ac)HY(ter)YH( in the term is
+  )SM(!)ES(, then its set of config)HY(u)HY(ra)HY(tion)YH( is inverted against the
+  under)HY(ly)HY(ing)YH( set. The term itself can be either the class name or a
+  paren)HY(the)HY(sized)YH( expres)HY(sion)YH(. Some exam)HY(ples)YH(:)EP(
+
+  ) 9 62 PR(builds: none                     ; None.
+builds: all                      ; All.
+builds: default legacy           ; Default and legacy.
+builds: -windows                 ; Default except Windows.
+builds: all : -windows           ; All except Windows.
+builds: all : &gcc               ; All with GCC only.
+builds: all : &gcc-8+            ; All with GCC 8 and up only.
+builds: gcc : -optimized         ; GCC without optimization.
+builds: gcc : &\201 +linux +macos \202 ; GCC on Linux or Mac OS.)RP(
+
+  )0 P(Notice that the colon and paren)HY(the)HY(ses)YH( must be sepa)HY(rated)YH( with spaces from
+  both preced)HY(ing)YH( and follow)HY(ing)YH( terms.)EP(
+
+  )0 P(Multi)HY(ple)YH( )SM(builds)ES( values are eval)HY(u)HY(ated)YH( in the order spec)HY(i)HY(fied)YH(
+  and as if they were all part of a single expres)HY(sion)YH(. Only the first value
+  may specify the under)HY(ly)HY(ing)YH( set. The main reason for having multi)HY(ple)YH( values
+  is to provide indi)HY(vid)HY(ual)YH( reasons \201as the )SM(builds)ES( value comments\202
+  for differ)HY(ent)YH( parts of the expres)HY(sion)YH(. For example:)EP(
+
+  ) 3 67 PR(builds: default experimental ; Only modern compilers are supported.
+builds: -gcc                 ; GCC is not supported.
+builds: -clang               ; Clang is not supported.)RP(
+
+  )BR(
+  )0 P(The )SM(builds)ES( value comments are used by the web inter)HY(face)YH(
+  \201)SM(brep)ES(\202 to display the reason for the build config)HY(u)HY(ra)HY(tion)YH(
+  exclu)HY(sion)YH(.)EP(
+  )BR(
+
+  )0 P(After eval)HY(u)HY(at)HY(ing)YH( all the )SM(builds)ES( values, the final
+  config)HY(u)HY(ra)HY(tion)YH( set can be further fine-tuned using the )0 30 1 A()SM(build-{include,exclude})ES()30 0 TN TL()Ec /AF f D(
+  patterns.)EP(
+
+  )0 3 28 H(3.2.23)WB 81 Sn()WB 30 Sn(
+  )SM(build-{include,exclude})ES()EH(
+
+  ) 2 50 PR([build-include]: <config>[/<target>] [; <comment>]
+[build-exclude]: <config>[/<target>] [; <comment>])RP(
+
+  )0 P(The package build inclu)HY(sions)YH( and exclu)HY(sions)YH(. The
+  )SM(build-include)ES( and )SM(build-exclude)ES( values further
+  reduce the config)HY(u)HY(ra)HY(tion)YH( set produced by eval)HY(u)HY(at)HY(ing)YH( the )0 29 1 A()SM(builds)ES()29 0 TN TL()Ec /AF f D( values. The
+  )I(config)ES( and )I(target)ES( values are filesys)HY(tem)YH( wild)HY(card)YH( patterns
+  which are matched against the build config)HY(u)HY(ra)HY(tion)YH( names and target names
+  \201see the )SM(bbot)ES( docu)HY(men)HY(ta)HY(tion)YH( for details\202. In partic)HY(u)HY(lar)YH(, the
+  )SM(*)ES( wild)HY(card)YH( matches zero or more char)HY(ac)HY(ters)YH( within the name
+  compo)HY(nent)YH( while the )SM(**)ES( sequence matches across the compo)HY(nents)YH(.
+  Plus, wild)HY(card)YH(-only pattern compo)HY(nents)YH( match absent name compo)HY(nents)YH(. For
+  example:)EP(
+
+  ) 3 73 PR(build-exclude: windows**     # matches windows_10-msvc_15
+build-exclude: macos*-gcc**  # matches macos_10.13-gcc_8.1-O3
+build-exclude: linux-gcc*-*  # matches linux-gcc_8.1 and linux-gcc_8.1-O3)RP(
+
+  )0 P(The exclu)HY(sion)YH( and inclu)HY(sion)YH( patterns are applied in the order spec)HY(i)HY(fied)YH(
+  with the first match deter)HY(min)HY(ing)YH( whether the package will be built for this
+  config)HY(u)HY(ra)HY(tion)YH( and target. If none of the patterns match \201or none we
+  spec)HY(i)HY(fied)YH(\202, then the package is built.)EP(
+
+  )0 P(As an example, the follow)HY(ing)YH( value will exclude 32-bit builds for the
+  MSVC 14 compiler:)EP(
+
+  ) 1 50 PR(build-exclude: *-msvc_14**/i?86-** ; Linker crash.)RP(
+
+  )0 P(As another example, the follow)HY(ing)YH( pair of values will make sure that a
+  package is only built on Linux:)EP(
+
+  ) 2 44 PR(build-include: linux**
+build-exclude: ** ; Only supported on Linux.)RP(
+
+  )0 P(Note that the comment of the match)HY(ing)YH( exclu)HY(sion)YH( is used by the web
+  inter)HY(face)YH( \201)SM(brep)ES(\202 to display the reason for the build
+  config)HY(u)HY(ra)HY(tion)YH( exclu)HY(sion)YH(.)EP(
+
+  )0 2 29 H(3.3)WB 82 Sn()WB 31 Sn( Package List Mani)HY(fest)YH( for
+  )SM()BD(pkg)ES()ES( Repos)HY(i)HY(to)HY(ries)YH()EH(
+
+  )0 P(The package list mani)HY(fest)YH( \201the )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file found
+  in the )SM()BD(pkg)ES()ES( repos)HY(i)HY(tory)YH( root direc)HY(tory)YH(\202 describes the list
+  of pack)HY(ages)YH( avail)HY(able)YH( in the repos)HY(i)HY(tory)YH(. First comes a mani)HY(fest)YH( that
+  describes the list itself \201referred to as the list mani)HY(fest)YH(\202. The list
+  mani)HY(fest)YH( synop)HY(sis)YH( is presented next:)EP(
+
+  ) 1 16 PR(sha256sum: <sum>)RP(
+
+  )0 P(After the list mani)HY(fest)YH( comes a \201poten)HY(tially)YH( empty\202 sequence of package
+  mani)HY(fests)YH(. These mani)HY(fests)YH( shall not contain any )SM(*-file)ES( or
+  incom)HY(plete)YH( )0 27 1 A()SM(depends)ES()27 0 TN TL()Ec /AF f D(
+  values \201such values should be converted to their inline versions or
+  completed, respec)HY(tively)YH(\202 but must contain the follow)HY(ing)YH( addi)HY(tional)YH( \201to
+  package mani)HY(fest)YH(\202 values:)EP(
+
+  ) 2 16 PR(location: <path>
+sha256sum: <sum>)RP(
+
+  )0 P(The detailed descrip)HY(tion)YH( of each value follows in the subse)HY(quent)YH(
+  sections.)EP(
+
+  )0 3 30 H(3.3.1)WB 83 Sn()WB 32 Sn( )SM(sha256sum)ES(
+  \201list mani)HY(fest)YH(\202)EH(
+
+  ) 1 16 PR(sha256sum: <sum>)RP(
+
+  )0 P(The SHA256 check)HY(sum)YH( of the )SM(repos)HY(i)HY(to)HY(ries)YH(.mani)HY(fest)YH()ES( file
+  \201described below\202 that corre)HY(sponds)YH( to this repos)HY(i)HY(tory)YH(. The )I(sum)ES( value
+  should be 64 char)HY(ac)HY(ters)YH( long \201that is, just the SHA256 value, no file name
+  or any other markers\202, be calcu)HY(lated)YH( in the binary mode, and use lower-case
+  letters.)EP(
+
+  )BR(
+  )0 P(This check)HY(sum)YH( is used to make sure that the
+  )SM(repos)HY(i)HY(to)HY(ries)YH(.mani)HY(fest)YH()ES( file that was fetched is the same as the
+  one that was used to create the )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file. This
+  also means that if )SM(repos)HY(i)HY(to)HY(ries)YH(.mani)HY(fest)YH()ES( is modi)HY(fied)YH( in any
+  way, then )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( must be regen)HY(er)HY(ated)YH( as well.)EP(
+  )BR(
+
+  )0 3 31 H(3.3.2)WB 84 Sn()WB 33 Sn(
+  )SM(loca)HY(tion)YH()ES( \201package mani)HY(fest)YH(\202)EH(
+
+  ) 1 16 PR(location: <path>)RP(
+
+  )0 P(The path to the package archive file rela)HY(tive)YH( to the repos)HY(i)HY(tory)YH( root. It
+  should be in the POSIX repre)HY(sen)HY(ta)HY(tion)YH(.)EP(
+
+  )BR(
+  )0 P(if the repos)HY(i)HY(tory)YH( keeps multi)HY(ple)YH( versions of the package and places them
+  all into the repos)HY(i)HY(tory)YH( root direc)HY(tory)YH(, it can get untidy. With
+  )SM(loca)HY(tion)YH()ES( we allow for sub-direc)HY(to)HY(ries)YH(.)EP(
+  )BR(
+
+  )0 3 32 H(3.3.3)WB 85 Sn()WB 34 Sn(
+  )SM(sha256sum)ES( \201package mani)HY(fest)YH(\202)EH(
+
+  ) 1 16 PR(sha256sum: <sum>)RP(
+
+  )0 P(The SHA256 check)HY(sum)YH( of the package archive file. The )I(sum)ES( value
+  should be 64 char)HY(ac)HY(ters)YH( long \201that is, just the SHA256 value, no file name
+  or any other markers\202, be calcu)HY(lated)YH( in the binary mode, and use lower-case
+  letters.)EP(
+
+  )0 2 33 H(3.4)WB 86 Sn()WB 35 Sn( Package List Mani)HY(fest)YH( for
+  )SM()BD(dir)ES()ES( Repos)HY(i)HY(to)HY(ries)YH()EH(
+
+  )0 P(The package list mani)HY(fest)YH( \201the )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file found
+  in the )SM()BD(dir)ES()ES( repos)HY(i)HY(tory)YH( root direc)HY(tory)YH(\202 describes the list
+  of pack)HY(ages)YH( avail)HY(able)YH( in the repos)HY(i)HY(tory)YH(. It is a \201poten)HY(tially)YH( empty\202
+  sequence of mani)HY(fests)YH( with the follow)HY(ing)YH( synop)HY(sis)YH(:)EP(
+
+  ) 2 20 PR(location: <path>
+[fragment]: <string>)RP(
+
+  )0 P(The detailed descrip)HY(tion)YH( of each value follows in the subse)HY(quent)YH(
+  sections. The )SM(frag)HY(ment)YH()ES( value can only be present in a merged
+  )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file for a multi-frag)HY(ment)YH( repos)HY(i)HY(tory)YH(.)EP(
+
+  )0 P(As an example, if our repos)HY(i)HY(tory)YH( contained the )SM(src/)ES(
+  subdi)HY(rec)HY(tory)YH( that in turn contained the )SM(libfoo)ES( and
+  )SM(foo)ES( pack)HY(ages)YH(, then the corre)HY(spond)HY(ing)YH(
+  )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file could look like this:)EP(
+
+  ) 4 21 PR(: 1
+location: src/libfoo/
+:
+location: src/foo/)RP(
+
+  )0 3 34 H(3.4.1)WB 87 Sn()WB 36 Sn( )SM(loca)HY(tion)YH()ES()EH(
+
+  ) 1 16 PR(location: <path>)RP(
+
+  )0 P(The path to the package direc)HY(tory)YH( rela)HY(tive)YH( to the repos)HY(i)HY(tory)YH( root. It
+  should be in the POSIX repre)HY(sen)HY(ta)HY(tion)YH(.)EP(
+
+  )0 3 35 H(3.4.2)WB 88 Sn()WB 37 Sn( )SM(frag)HY(ment)YH()ES()EH(
+
+  ) 1 20 PR([fragment]: <string>)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( frag)HY(ment)YH( id this package belongs to.)EP(
+
+  )0 2 36 H(3.5)WB 89 Sn()WB 38 Sn( Repos)HY(i)HY(tory)YH( Mani)HY(fest)YH()EH(
+
+  )0 P(The repos)HY(i)HY(tory)YH( mani)HY(fest)YH( \201only used as part of the repos)HY(i)HY(tory)YH( mani)HY(fest)YH(
+  list described below\202 describes a )SM()BD(pkg)ES()ES(,
+  )SM()BD(dir)ES()ES(, or )SM()BD(git)ES()ES( repos)HY(i)HY(tory)YH(. The mani)HY(fest)YH(
+  synop)HY(sis)YH( is presented next followed by the detailed descrip)HY(tion)YH( of each
+  value in subse)HY(quent)YH( sections.)EP(
+
+  ) 10 36 PR([location]: <uri>
+[type]: pkg|dir|git
+[role]: base|prerequisite|complement
+[trust]: <fingerprint>
+[url]: <url>
+[email]: <email> [; <comment>]
+[summary]: <text>
+[description]: <text>
+[certificate]: <pem>
+[fragment]: <string>)RP(
+
+  )0 P(See also the Repos)HY(i)HY(tory)YH( Chain)HY(ing)YH( docu)HY(men)HY(ta)HY(tion)YH( for further infor)HY(ma)HY(tion)YH( @@
+  TODO.)EP(
+
+  )0 3 37 H(3.5.1)WB 90 Sn()WB 39 Sn( )SM(loca)HY(tion)YH()ES()EH(
+
+  ) 1 17 PR([location]: <uri>)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( loca)HY(tion)YH(. The loca)HY(tion)YH( can only and must be omitted for
+  the base repos)HY(i)HY(tory)YH(. Since we got hold of its mani)HY(fest)YH(,
+  then we presum)HY(ably)YH( already know the loca)HY(tion)YH( of the base repos)HY(i)HY(tory)YH(.
+  If the loca)HY(tion)YH( is a rela)HY(tive)YH( path, then it is treated as rela)HY(tive)YH( to the
+  base repos)HY(i)HY(tory)YH( loca)HY(tion)YH(.)EP(
+
+  )0 P(For the )SM()BD(git)ES()ES( repos)HY(i)HY(tory)YH( type the rela)HY(tive)YH( loca)HY(tion)YH(
+  does not inherit the URL frag)HY(ment)YH( from the base repos)HY(i)HY(tory)YH(. Note also that
+  the remote )SM()BD(git)ES()ES( repos)HY(i)HY(tory)YH( loca)HY(tions)YH( normally have the
+  )SM()BD(.git)ES()ES( exten)HY(sion)YH( that is stripped when a repos)HY(i)HY(tory)YH( is
+  cloned locally. To make the rela)HY(tive)YH( loca)HY(tions)YH( usable in both contexts, the
+  )SM()BD(.git)ES()ES( exten)HY(sion)YH( should be ignored if the local
+  prereq)HY(ui)HY(site)YH( repos)HY(i)HY(tory)YH( with the exten)HY(sion)YH( does not exist while the one
+  without the exten)HY(sion)YH( does.)EP(
+
+  )0 P(While POSIX systems normally only support POSIX paths \201that is, forward
+  slashes only\202, Windows is gener)HY(ally)YH( able to handle both slash types. As a
+  result, it is recom)HY(mended)YH( that POSIX paths are always used in the
+  )SM(loca)HY(tion)YH()ES( values, except, perhaps, if the repos)HY(i)HY(tory)YH( is
+  explic)HY(itly)YH( Windows-only by, for example, having a loca)HY(tion)YH( that is an
+  abso)HY(lute)YH( Windows path with the drive letter. The
+  )SM()BD(bpkg)ES()ES( package manager will always try to repre)HY(sent)YH( the
+  loca)HY(tion)YH( as a POSIX path and only fall)HY(back)YH( to the native repre)HY(sen)HY(ta)HY(tion)YH( if
+  that is not possi)HY(ble)YH( \201for example, there is a drive letter in the
+  path\202.)EP(
+
+  )0 3 38 H(3.5.2)WB 91 Sn()WB 40 Sn( )SM(type)ES()EH(
+
+  ) 1 19 PR([type]: pkg|dir|git)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( type. The type must be omitted for the base repos)HY(i)HY(tory)YH(. If
+  the type is omitted for a prereq)HY(ui)HY(site)YH(/comple)HY(ment)YH( repos)HY(i)HY(tory)YH(, then it is
+  guessed from its )SM(loca)HY(tion)YH()ES( value as described in )0 2 A()SM()BD(bpkg-rep-add\2011\202)ES()ES()EA(.)EP(
+
+  )0 3 39 H(3.5.3)WB 92 Sn()WB 41 Sn( )SM(role)ES()EH(
+
+  ) 1 36 PR([role]: base|prerequisite|complement)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( role. The )SM(role)ES( value can be omitted for the
+  base repos)HY(i)HY(tory)YH( only.)EP(
+
+  )0 3 40 H(3.5.4)WB 93 Sn()WB 42 Sn( )SM(trust)ES()EH(
+
+  ) 1 22 PR([trust]: <fingerprint>)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( finger)HY(print)YH( to trust. The )SM(trust)ES( value can
+  only be spec)HY(i)HY(fied)YH( for prereq)HY(ui)HY(site)YH( and comple)HY(ment)YH( repos)HY(i)HY(to)HY(ries)YH( and only for
+  repos)HY(i)HY(tory)YH( types that support authen)HY(ti)HY(ca)HY(tion)YH( \201currently only
+  )SM(pkg)ES(\202. The )I(finger)HY(print)YH()ES( value should be an SHA256
+  repos)HY(i)HY(tory)YH( finger)HY(print)YH( repre)HY(sented)YH( as 32 colon-sepa)HY(rated)YH( hex digit pairs.
+  The repos)HY(i)HY(tory)YH( in ques)HY(tion)YH( is only trusted for use as a
+  prereq)HY(ui)HY(site)YH( or comple)HY(ment)YH( of this repos)HY(i)HY(tory)YH(. If it is also used by other
+  repos)HY(i)HY(to)HY(ries)YH( or is added to the config)HY(u)HY(ra)HY(tion)YH( by the user, then such uses
+  cases are authen)HY(ti)HY(cated)YH( inde)HY(pen)HY(dently)YH(.)EP(
+
+  )0 3 41 H(3.5.5)WB 94 Sn()WB 43 Sn( )SM(url)ES()EH(
+
+  ) 1 12 PR([url]: <url>)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH('s web inter)HY(face)YH( \201)SM(brep)ES(\202 URL. It can only be
+  spec)HY(i)HY(fied)YH( for the base repos)HY(i)HY(tory)YH( \201the web inter)HY(face)YH( URLs for
+  prereq)HY(ui)HY(site)YH(/comple)HY(ment)YH( repos)HY(i)HY(to)HY(ries)YH( can be extracted from their respec)HY(tive)YH(
+  mani)HY(fests)YH(\202.)EP(
+
+  )0 P(For example, given the follow)HY(ing)YH( )SM(url)ES( value:)EP(
+
+  ) 1 31 PR(url: https://example.org/hello/)RP(
+
+  )0 P(The package details page for )SM(libfoo)ES( located in this
+  repos)HY(i)HY(tory)YH( will be )SM(https://example.org/hello/libfoo)ES(.)EP(
+
+  )0 P(The web inter)HY(face)YH( URL can also be spec)HY(i)HY(fied)YH( as rela)HY(tive)YH( to the repos)HY(i)HY(tory)YH(
+  loca)HY(tion)YH( \201the )SM(loca)HY(tion)YH()ES( value\202. In this case )I(url)ES( should
+  start with two path compo)HY(nents)YH( each being either )SM(.)ES( or
+  )SM(..)ES(. If the first compo)HY(nent)YH( is )SM(..)ES(, then the
+  )SM(www)ES(, )SM(pkg)ES( or )SM(bpkg)ES( domain compo)HY(nent)YH(, if
+  any, is removed from the )SM(loca)HY(tion)YH()ES( URL host, just like when
+  deriv)HY(ing)YH( the repos)HY(i)HY(tory)YH( name.)EP(
+
+  )0 P(Simi)HY(larly)YH(, if the second compo)HY(nent)YH( is )SM(..)ES(, then the
+  )SM(pkg)ES( or )SM(bpkg)ES( path compo)HY(nent)YH(, if any, is removed
+  from the )SM(loca)HY(tion)YH()ES( URL path, again, just like when deriv)HY(ing)YH( the
+  repos)HY(i)HY(tory)YH( name.)EP(
+
+  )0 P(Finally, the version compo)HY(nent)YH( is removed from the )SM(loca)HY(tion)YH()ES(
+  URL path, the rest \201after the two )SM(.)ES(/)SM(..)ES( compo)HY(nents)YH(\202
+  of the )SM(url)ES( value is appended to it, and the result)HY(ing)YH( path is
+  normal)HY(ized)YH( with all remain)HY(ing)YH( )SM(..)ES(  and )SM(.)ES( applied
+  normally.)EP(
+
+  )0 P(For exam)HY(ples)YH(, assum)HY(ing)YH( repos)HY(i)HY(tory)YH( loca)HY(tion)YH( is:)EP(
+
+  ) 1 47 PR(https://pkg.example.org/test/pkg/1/hello/stable)RP(
+
+  )0 P(The follow)HY(ing)YH( listing shows some of the possi)HY(ble)YH( combi)HY(na)HY(tions)YH( \201the
+  )SM(<>)ES( marker is used to high)HY(light)YH( the changes\202:)EP(
+
+  ) 6 62 PR(./.          ->  https://pkg.example.org/test/pkg/hello/stable
+../.         ->  https://<  >example.org/test/pkg/hello/stable
+./..         ->  https://pkg.example.org/test/<  >hello/stable
+../..        ->  https://<  >example.org/test/<  >hello/stable
+././..       ->  https://pkg.example.org/test/pkg/hello<     >
+../../../..  ->  https://<  >example.org/test<               >)RP(
+
+  )BR(
+  )0 P(The ratio)HY(nale)YH( for the rela)HY(tive)YH( web inter)HY(face)YH( URLs is to allow deploy)HY(ment)YH(
+  of the same repos)HY(i)HY(tory)YH( to slightly differ)HY(ent)YH( config)HY(u)HY(ra)HY(tion)YH(, for example,
+  during devel)HY(op)HY(ment)YH(, testing, and public use. For instance, for devel)HY(op)HY(ment)YH(
+  we may use the )SM(https://example.org/pkg/)ES( setup while in
+  produc)HY(tion)YH( it becomes )SM(https://pkg.example.org/)ES(. By spec)HY(i)HY(fy)HY(ing)YH(
+  the web inter)HY(face)YH( loca)HY(tion)YH( as, say, )SM(../.)ES(, we can run the web
+  inter)HY(face)YH( at these respec)HY(tive)YH( loca)HY(tions)YH( using a single repos)HY(i)HY(tory)YH(
+  mani)HY(fest)YH(.)EP(
+  )BR(
+
+  )0 3 42 H(3.5.6)WB 95 Sn()WB 44 Sn( )SM(email)ES()EH(
+
+  ) 1 30 PR([email]: <email> [; <comment>])RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( email address. It must and can only be spec)HY(i)HY(fied)YH( for the
+  base repos)HY(i)HY(tory)YH(. The email address is displayed by the web inter)HY(face)YH(
+  \201)SM(brep)ES(\202 in the repos)HY(i)HY(tory)YH( about page and could be used to
+  contact the main)HY(tain)HY(ers)YH( about issues with the repos)HY(i)HY(tory)YH(.)EP(
+
+  )0 3 43 H(3.5.7)WB 96 Sn()WB 45 Sn( )SM(summary)ES()EH(
+
+  ) 1 17 PR([summary]: <text>)RP(
+
+  )0 P(The short descrip)HY(tion)YH( of the repos)HY(i)HY(tory)YH(. It must and can only be
+  spec)HY(i)HY(fied)YH( for the base repos)HY(i)HY(tory)YH(.)EP(
+
+  )0 3 44 H(3.5.8)WB 97 Sn()WB 46 Sn( )SM(descrip)HY(tion)YH()ES()EH(
+
+  ) 1 21 PR([description]: <text>)RP(
+
+  )0 P(The detailed descrip)HY(tion)YH( of the repos)HY(i)HY(tory)YH(. It can only be spec)HY(i)HY(fied)YH( for
+  the base repos)HY(i)HY(tory)YH(.)EP(
+
+  )0 P(In the web inter)HY(face)YH( \201)SM(brep)ES(\202 the descrip)HY(tion)YH( is format)HY(ted)YH(
+  into one or more para)HY(graphs)YH( using blank lines as para)HY(graph)YH( sepa)HY(ra)HY(tors)YH(.
+  Specif)HY(i)HY(cally)YH(, it is not repre)HY(sented)YH( as )SM(<pre>)ES( so any kind of
+  addi)HY(tional)YH( plain text format)HY(ting)YH( \201for example, lists\202 will be lost and
+  should not be used in the descrip)HY(tion)YH(.)EP(
+
+  )0 3 45 H(3.5.9)WB 98 Sn()WB 47 Sn( )SM(certifi)HY(cate)YH()ES()EH(
+
+  ) 1 20 PR([certificate]: <pem>)RP(
+
+  )0 P(The X.509 certifi)HY(cate)YH( for the repos)HY(i)HY(tory)YH(. It should be in the PEM format
+  and can only be spec)HY(i)HY(fied)YH( for the base repos)HY(i)HY(tory)YH(. Currently only used for
+  the )SM()BD(pkg)ES()ES( repos)HY(i)HY(tory)YH( type.)EP(
+
+  )0 P(The certifi)HY(cate)YH( should contain the )SM(CN)ES( and )SM(O)ES(
+  compo)HY(nents)YH( in the subject as well as the )SM(email:)ES( compo)HY(nent)YH( in
+  the subject alter)HY(na)HY(tive)YH( names. The )SM(CN)ES( compo)HY(nent)YH( should start
+  with )SM(name:)ES( and continue with the repos)HY(i)HY(tory)YH( name
+  prefix/wild)HY(card)YH( \201without trail)HY(ing)YH( slash\202 that will be used to verify the
+  repos)HY(i)HY(tory)YH( name\201s\202 that are authen)HY(ti)HY(cated)YH( with this certifi)HY(cate)YH(. See )0 2 A()SM()BD(bpkg-repos)HY(i)HY(tory)YH(-signing\2011\202)ES()ES()EA(
+  for details.)EP(
+
+  )0 P(If this value is present then the )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file
+  must be signed with the corre)HY(spond)HY(ing)YH( private key and the signa)HY(ture)YH( saved in
+  the )SM(signa)HY(ture)YH(.mani)HY(fest)YH()ES( file. See )0 50 1 A(Signa)HY(ture)YH( Mani)HY(fest)YH()50 0 TN TL()Ec /AF f D( for details.)EP(
+
+  )0 3 46 H(3.5.10)WB 99 Sn()WB 48 Sn( )SM(frag)HY(ment)YH()ES()EH(
+
+  ) 1 20 PR([fragment]: <string>)RP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( frag)HY(ment)YH( id this repos)HY(i)HY(tory)YH( belongs to.)EP(
+
+  )0 2 47 H(3.6)WB 100 Sn()WB 49 Sn( Repos)HY(i)HY(tory)YH( List Mani)HY(fest)YH()EH(
+
+  )0 P(@@ TODO See the Repos)HY(i)HY(tory)YH( Chain)HY(ing)YH( docu)HY(ment)YH( for more infor)HY(ma)HY(tion)YH( on the
+  termi)HY(nol)HY(ogy)YH( and seman)HY(tics)YH(.)EP(
+
+  )0 P(The repos)HY(i)HY(tory)YH( list mani)HY(fest)YH( \201the )SM(repos)HY(i)HY(to)HY(ries)YH(.mani)HY(fest)YH()ES( file
+  found in the repos)HY(i)HY(tory)YH( root direc)HY(tory)YH(\202 describes the repos)HY(i)HY(tory)YH(. It is a
+  sequence of repos)HY(i)HY(tory)YH( mani)HY(fests)YH( consist)HY(ing)YH( of the base repos)HY(i)HY(tory)YH( mani)HY(fest)YH(
+  \201that is, the mani)HY(fest)YH( for the repos)HY(i)HY(tory)YH( that is being described\202 as well
+  as mani)HY(fests)YH( for its prereq)HY(ui)HY(site)YH( and comple)HY(ment)YH( repos)HY(i)HY(to)HY(ries)YH(. The
+  indi)HY(vid)HY(ual)YH( repos)HY(i)HY(tory)YH( mani)HY(fests)YH( can appear in any order and the base
+  repos)HY(i)HY(tory)YH( mani)HY(fest)YH( can be omitted.)EP(
+
+  )0 P(The )SM(frag)HY(ment)YH()ES( values can only be present in a merged
+  )SM(repos)HY(i)HY(to)HY(ries)YH(.mani)HY(fest)YH()ES( file for a multi-frag)HY(ment)YH( repos)HY(i)HY(tory)YH(.)EP(
+
+  )0 P(As an example, a repos)HY(i)HY(tory)YH( mani)HY(fest)YH( list for the
+  )SM(math/testing)ES( repos)HY(i)HY(tory)YH( could look like this:)EP(
+
+  ) 11 48 PR(# math/testing
+#
+: 1
+email: math-pkg@example.org
+summary: Math package repository
+:
+role: complement
+location: ../stable
+:
+role: prerequiste
+location: https://pkg.example.org/1/misc/testing)RP(
+
+  )0 P(Here the first mani)HY(fest)YH( describes the base repos)HY(i)HY(tory)YH( itself, the second
+  mani)HY(fest)YH( \235 a comple)HY(ment)YH( repos)HY(i)HY(tory)YH(, and the third mani)HY(fest)YH( \235 a
+  prereq)HY(ui)HY(site)YH( repos)HY(i)HY(tory)YH(. Note that the comple)HY(ment)YH( repos)HY(i)HY(tory)YH('s loca)HY(tion)YH( is
+  spec)HY(i)HY(fied)YH( as a rela)HY(tive)YH( path. For example, if the base repos)HY(i)HY(tory)YH( loca)HY(tion)YH(
+  were:)EP(
+
+  ) 1 38 PR(https://pkg.example.org/1/math/testing)RP(
+
+  )0 P(Then the complete)HY(ment)YH('s loca)HY(tion)YH( would be:)EP(
+
+  ) 1 37 PR(https://pkg.example.org/1/math/stable)RP(
+
+  )0 2 48 H(3.7)WB 101 Sn()WB 50 Sn( Signa)HY(ture)YH( Mani)HY(fest)YH( for
+  )SM()BD(pkg)ES()ES( Repos)HY(i)HY(to)HY(ries)YH()EH(
+
+  )0 P(The signa)HY(ture)YH( mani)HY(fest)YH( \201the )SM(signa)HY(ture)YH(.mani)HY(fest)YH()ES( file found in
+  the )SM()BD(pkg)ES()ES( repos)HY(i)HY(tory)YH( root direc)HY(tory)YH(\202 contains the
+  signa)HY(ture)YH( of the repos)HY(i)HY(tory)YH('s )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file. In order
+  to detect the situ)HY(a)HY(tion)YH( where the down)HY(loaded)YH( )SM(signa)HY(ture)YH(.mani)HY(fest)YH()ES(
+  and )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( files belong to differ)HY(ent)YH( updates, the
+  mani)HY(fest)YH( contains both the check)HY(sum)YH( and the signa)HY(ture)YH( \201which is the
+  encrypted check)HY(sum)YH(\202. We cannot rely on just the signa)HY(ture)YH(
+  since a mismatch could mean either a split update or tamper)HY(ing)YH(. The
+  mani)HY(fest)YH( synop)HY(sis)YH( is presented next followed by the detailed descrip)HY(tion)YH( of
+  each value in subse)HY(quent)YH( sections.)EP(
+
+  ) 2 16 PR(sha256sum: <sum>
+signature: <sig>)RP(
+
+  )0 3 49 H(3.7.1)WB 102 Sn()WB 51 Sn( )SM(sha256sum)ES()EH(
+
+  ) 1 16 PR(sha256sum: <sum>)RP(
+
+  )0 P(The SHA256 check)HY(sum)YH( of the )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file. The
+  )I(sum)ES( value should be 64 char)HY(ac)HY(ters)YH( long \201that is, just the SHA256
+  value, no file name or any other markers\202, be calcu)HY(lated)YH( in the binary mode,
+  and use lower-case letters.)EP(
+
+  )0 3 50 H(3.7.2)WB 103 Sn()WB 52 Sn( )SM(signa)HY(ture)YH()ES()EH(
+
+  ) 1 16 PR(signature: <sig>)RP(
+
+  )0 P(The signa)HY(ture)YH( of the )SM(pack)HY(ages)YH(.mani)HY(fest)YH()ES( file. It should be
+  calcu)HY(lated)YH( by encrypt)HY(ing)YH( the above )SM(sha256sum)ES( value with the
+  repos)HY(i)HY(tory)YH( certifi)HY(cate)YH('s private key and then )SM(base64)ES(-encod)HY(ing)YH(
+  the result.)EP(
+
+)BR(
+
+)WB NL
+/TE t D NP /OU t D TU PM 1 eq and{/Pn () D showpage}if end restore

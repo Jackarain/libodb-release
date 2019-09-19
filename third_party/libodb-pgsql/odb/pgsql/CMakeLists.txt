@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.3)
 
+add_definitions(-DLIBODB_PGSQL_STATIC_BUILD)
+
 set(LIBODB_PGSQL_SOURCES
 	auto-handle.cxx
 	connection.cxx

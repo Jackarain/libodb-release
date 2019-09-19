@@ -1,0 +1,27 @@
+This package contains files from the MSYS2 distribution:
+
+http://www.msys2.org
+
+The MSYS2 distribution is comprised of several different packages each
+of them governed by its own individual copyright and licensing terms.
+Some of those packages are licensed under the GNU Public License (GPL)
+or the GNU Lesser General Public License(LGPL), some are in the Public
+Domain, and some use other open-source licenses. See the individual
+packages for details on licensing term and how to obtain their source
+code.
+
+This package contains files from the following MSYS2 packages:
+
+mingw-w64-x86_64-binutils: x86_64/mingw-w64-x86_64-binutils-2.30-5-any.pkg.tar.xz
+mingw-w64-x86_64-crt-git: x86_64/mingw-w64-x86_64-crt-git-7.0.0.5302.6c8f5629-1-any.pkg.tar.xz
+mingw-w64-x86_64-gcc-libs: x86_64/mingw-w64-x86_64-gcc-libs-8.3.0-1-any.pkg.tar.xz
+mingw-w64-x86_64-gcc: x86_64/mingw-w64-x86_64-gcc-8.3.0-1-any.pkg.tar.xz
+mingw-w64-x86_64-gettext: x86_64/mingw-w64-x86_64-gettext-0.19.8.1-7-any.pkg.tar.xz
+mingw-w64-x86_64-gmp: x86_64/mingw-w64-x86_64-gmp-6.1.2-1-any.pkg.tar.xz
+mingw-w64-x86_64-headers-git: x86_64/mingw-w64-x86_64-headers-git-7.0.0.5302.6c8f5629-1-any.pkg.tar.xz
+mingw-w64-x86_64-libiconv: x86_64/mingw-w64-x86_64-libiconv-1.15-3-any.pkg.tar.xz
+mingw-w64-x86_64-libwinpthread-git: x86_64/mingw-w64-x86_64-libwinpthread-git-7.0.0.5273.3e5acf5d-1-any.pkg.tar.xz
+mingw-w64-x86_64-make: x86_64/mingw-w64-x86_64-make-4.2.1-2-any.pkg.tar.xz
+mingw-w64-x86_64-windows-default-manifest: x86_64/mingw-w64-x86_64-windows-default-manifest-6.4-3-any.pkg.tar.xz
+mingw-w64-x86_64-winpthreads-git: x86_64/mingw-w64-x86_64-winpthreads-git-7.0.0.5273.3e5acf5d-1-any.pkg.tar.xz
+mingw-w64-x86_64-zlib: x86_64/mingw-w64-x86_64-zlib-1.2.11-5-any.pkg.tar.xz

@@ -1,0 +1,1102 @@
+Version 0.11.0
+
+ * Initial work on header unit importation and include translation support.
+
+   In particular, for GCC, the (experimental) module mapper approach is now
+   used to handle header unit importation, include translation, and headers
+   dependency extraction, all with support for auto-generated headers.
+
+ * Generalized target/prerequisite variable blocks.
+
+   Target/prerequisite-specific variable blocks can now be present even if
+   there are prerequisites. For example, now instead of:
+
+   exe{foo}: cxx{foo}
+   exe{foo}: cc.loptions += -rdynamic
+
+   Or:
+
+   exe{foo}: cxx{foo}
+   exe{foo}:
+   {
+     cc.loptions += -rdynamic
+     cc.libs += -ldl
+   }
+
+   We can write:
+
+   exe{foo}: cxx{foo}
+   {
+     cc.loptions += -rdynamic
+     cc.libs += -ldl
+   }
+
+   This also works with dependency chains in which case the block applies
+   to the set of prerequisites (note: not targets) before the last ':'. For
+   example:
+
+   ./: exe{foo}: libue{foo}: cxx{foo}
+   {
+     bin.whole = false  # Applies to the libue{foo} prerequisite.
+   }
+
+ * Support for ad hoc target groups.
+
+   In certain cases we may need to instruct the underlying tool (compiler,
+   linker, etc) to produce additional outputs. For example, we may want to
+   request the compiler to produce an assembler listing or the linker to
+   produce a map file. While we could already pass the required options, the
+   resulting files will not be part of the build state. Specifically, they
+   will not be cleaned up and we cannot use them as prerequisites of other
+   targets.
+
+   Ad hoc target groups allow us to specify that updating a target produces
+   additional outputs, called ad hoc group members. For example:
+
+   <exe{hello} file{hello.map}>: cxx{hello}
+   {
+     cc.loptions += "-Wl,-Map=$out_base/hello.map"
+   }
+
+   <obje{hello} file{hello.lst}>:
+   {
+     cc.coptions += "-Wa,-amhls=$out_base/hello.lst"
+   }
+
+   Note also that all things ad hoc (prerequisites, targets, rules) are still
+   under active development so further improvements (such as not having to
+   repeat names twice) are likely.
+
+ * New config.{c,cxx}.std configuration variables that, if present, override
+   {c,cxx}.std specified at the project level.
+
+   In particular, this allows forcing a specific standard for all the projects
+   in a build configuration, for example:
+
+   $ b create: exp-conf/,cc config.cxx=g++ config.cxx.std=experimental
+
+ * New --dry-run|-n option instructs build rules to print commands without
+   actually executing them.
+
+   Note that commands that are required to create an accurate build state will
+   still be executed and the extracted auxiliary dependency information saved.
+   In other words, this is not the "don't touch the filesystem" mode but
+   rather "do minimum amount of work to show what needs to be done". In
+   particular, this mode is useful to quickly generate the compilation
+   database, for example:
+
+   $ b -vn clean update |& compiledb
+
+ * Ability to disable automatic rpath, support for custom rpath-link.
+
+   Specifically, the new config.bin.rpath.auto variable can be used to disable
+   automatic addition of prerequisite library rpaths, for example:
+
+   $ b config.bin.rpath.auto=false
+
+   Note that in this case rpath-link is still added where normally required
+   and for target platforms that support it (Linux and *BSD).
+
+   The new config.bin.rpath_link and config.bin.rpath_link.auto have the same
+   semantics as config.bin.rpath* but for rpath-link.
+
+ * Enable MSVC strict mode (/permissive-) for 'experimental' standard starting
+   from version 15.5.
+
+Version 0.10.0
+
+ * Support for an alternative build file/directory naming scheme.
+
+   Now the build/*.build, buildfile, and .buildignore filesystem entries in
+   a project can alternatively (but consistently) be called build2/*.build2,
+   build2file, and .build2ignore. See a note at the beginning of the Project
+   Structure section in the manual for details (motivation, restrictions,
+   etc).
+
+ * Support for multiple variable overrides.
+
+   Now we can do:
+
+   $ b config.cxx.coptions=-O3 config.cxx.coptions=-O0
+
+   Or even:
+
+   $ b config.cxx.coptions=-O3 config.cxx.coptions+=-g
+
+ * Support for MSVC 16 (2019).
+
+ * Support for automatic switching to option files (AKA response files) on
+   Windows if the linker command line is too long.
+
+   This covers both MSVC link.exe/lib.exe and MinGW gcc.exe/ar.exe.
+
+Version 0.9.0
+
+ * New "Diagnostics and Debugging" section in the manual on debugging build
+   issues.
+
+ * Support for dependency chains.
+
+   Now instead of:
+
+   ./: exe{foo}
+   exe{foo}: cxx{*}
+
+   We can write:
+
+   ./: exe{foo}: cxx{*}
+
+   Or even:
+
+   ./: exe{foo}: libue{foo}: cxx{*}
+
+   This can be combined with prerequisite-specific variables (which naturally
+   only apply to the last set of prerequisites in the chain):
+
+   ./: exe{foo}: libue{foo}: bin.whole = false
+
+ * Support for target and prerequisite specific variable blocks.
+
+   For example, now instead of:
+
+   lib{foo}: cxx.loptions += -static
+   lib{foo}: cxx.libs += -lpthread
+
+   We can write:
+
+   lib{foo}:
+   {
+     cxx.loptions += -static
+     cxx.libs += -lpthread
+   }
+
+   The same works for prerequisites as well as target type/patterns. For
+   example:
+
+   exe{*.test}:
+   {
+     test = true
+     install = false
+   }
+
+ * Fallback to loading outer buildfile if there isn't one in the target's
+   directory (src_base).
+
+   This covers the case where the target is defined in the outer buildfile
+   which is common with non-intrusive project conversions where everything is
+   built from a single root buildfile.
+
+ * Command line variable override scope syntax is now consistent with
+   buildfile syntax.
+
+   Before:
+
+   $ b dir/:foo=bar ...
+
+   After:
+
+   $ b dir/foo=bar
+
+   Alternatively (the buildfile syntax):
+
+   $ b 'dir/ foo=bar'
+
+   Note that the (rarely used) scope visibility modifier now leads to a double
+   slash:
+
+   $ b dir//foo=bar
+
+ * Support for relative to base scope command line variable overrides.
+
+   Currently, if we do:
+
+   $ b dir/ ./foo=bar
+
+   The scope the foo=bar is set on is relative to CWD, not dir/. While this
+   may seem wrong at first, this is the least surprising behavior when we take
+   into account that there can be multiple dir/'s.
+
+   Sometimes, however, we do want the override directory to be treated
+   relative to (every) target's base scope that we are building. To support
+   this we are extending the '.' and '..' special directory names (which are
+   still resolved relative to CWD) with '...', which means "relative to the
+   base scope of every target in the buildspec". For example:
+
+   $ b dir/ .../foo=bar
+
+   Is equivalent to:
+
+   $ b dir/ dir/foo=bar
+
+   And:
+
+   $ b liba/ libb/ .../tests/foo=bar
+
+   Is equivalent to:
+
+   $ b liba/ libb/ liba/tests/foo=bar libb/tests/foo=bar
+
+ * New config.{c,cxx}.{id,version,target} configuration variables.
+
+   These variables allow overriding guessed compiler id/version/target, for
+   example, in case of mis-guesses or when working with compilers that don't
+   report their base (e.g., GCC, Clang) with -v/--version (common in the
+   embedded space).
+
+ * New --[no-]mtime-check options to control backwards modification time
+   checks at runtime.
+
+   By default the checks are enabled only for the staged toolchain.
+
+ * New --dump <phase> option, remove state dumping from verbosity level 6.
+
+ * The info meta-operation now prints the list of operations and meta-
+   operations supported by the project.
+
+ * New sleep Testscript builtin.
+
+Version 0.8.0
+
+ * BREAKING: rename the .test extension (Testscript file) to .testscript and
+   the test{} target type to testscript{}.
+
+ * Introduction chapter in the build system manual.
+
+   The introduction covers every aspect of the build infrastructure, including
+   the underlying concepts, for the canonical executable and library projects
+   as produced by bdep-new(1).
+
+ * New 'in' build system module.
+
+   Given test.in containing something along these lines:
+
+   foo = $foo$
+
+   Now we can do:
+
+   using in
+
+   file{test}: in{test.in}
+   file{test}: foo = FOO
+
+   The alternative variable substitution symbol can be specified with the
+   in.symbol variable and lax (instead of the default strict) mode with
+   in.substitution. For example:
+
+   file{test}: in.symbol = '@'
+   file{test}: in.substitution = lax
+
+ * New 'bash' build system module that provides modularization support for bash
+   scripts. See the build system manual for all the details.
+
+ * Support for 'binless' (binary-less aka header-only) libraries.
+
+   A header-only library (or, in the future, a module interface-only library)
+   is not a different kind of library compared to static/shared libraries but
+   is rather a binary-less, or binless for short, static or shared library.
+   Whether a library is binless is determined dynamically and automatically
+   based on the absence of source file prerequisites. See the build system
+   manual for details.
+
+ * Use thin archives for utility libraries if available.
+
+   Thin archives are supported by GNU ar since binutils 2.19.1 and LLVM ar
+   since LLVM 3.8.0.
+
+ * Support for archive checksum generation during distribution:
+
+   Now we can do:
+
+   $ b dist: ... \
+   config.dist.archives='tar.gz zip' \
+   config.dist.checksums='sha1 sha256'
+
+   And end up with .tar.gz.sha1, .tar.gz.sha256, .zip.sha1, and .zip.sha256
+   checksum files in addition to archives.
+
+ * Support for excluded and ad hoc prerequisites:
+
+   The inclusion/exclusion is controlled via the 'include' prerequisite-
+   specific variable. Valid values are:
+
+   false  - exclude
+   true   - include
+   adhoc  - include but treat as an ad hoc input
+
+   For example:
+
+   lib{foo}: cxx{win32-utility}: include = ($cxx.targe.class == 'windows')
+   exe{bar}: libs{plugin}: include = adhoc
+
+ * C++ Modules support:
+
+   - handle the leading 'module;' marker (p0713)
+   - switch to new GCC module interface (-fmodule-mapper)
+   - force reprocessing for module interface units if compiling with MSVC
+
+ * Testscript:
+
+   - new mv builtin
+   - new --after <ref-file> option in touch builtin
+
+ * New $process.run() and $process.run_regex() functions:
+
+   $process.run(<prog>[ <args>...])
+
+   Return trimmed stdout.
+
+   $process.run_regex(<prog>[ <args>...], <pat> [, <fmt>])
+
+   Return stdout lines matched and optionally processed with regex.
+
+   Each line of stdout (including the customary trailing blank) is matched (as
+   a whole) against <pat> and, if successful, returned, optionally processed
+   with <fmt>, as an element of a list.
+
+ * Support for name patterns without wildcard characters.
+
+   In particular, this allows the "if-exists" specification of prerequisites,
+   for example:
+
+   for t: $tests
+     exe{$t}: cxx{$t} test{+$t}
+
+ * Functions for decomposing name as target/prerequisite name:
+
+   $name.name()
+   $name.extension()
+   $name.directory()
+   $name.target_type()
+   $name.project()
+
+ * Add support for default extension specification, trailing dot escaping.
+
+   For example:
+
+   cxx{*}: extension = cxx
+
+   cxx{foo}         # foo.cxx
+   cxx{foo.test}    # foo.test      (probably what we want...)
+   cxx{foo.test...} # foo.test.cxx  (... is this)
+   cxx{foo..}       # foo.
+   cxx{foo....}     # foo..
+   cxx{foo.....}    # error (must come in escape pairs)
+
+ * Use (native) C and C++ compilers we were built with as defaults for
+   config.c and config.cxx, respectively.
+
+ * Implement missing pieces in utility libraries support. In particular, we
+   can now build static libraries out of utility libraries.
+
+ * Built-in support for Windows module definition files (.def/def{}).
+
+ * Project names are now sanitized when forming the config.import.<proj>
+   variables. Specifically, '-', '+', and '.' are replaced with '_' to form a
+   "canonical" variable name.
+
+Version 0.7.0
+
+ * Initial support for Clang targeting MSVC runtime (native Clang interface,
+   not the clang-cl wrapper).
+
+ * C++ Modules TS introduction, build system support, and design guidelines
+   documentation.
+
+ * New {c,cxx}.guess modules.
+
+   These can be loaded before {c,cxx} to guess the compiler. Based on this
+   information we can then choose the standard, experimental features, etc.
+   For example:
+
+   using cxx.guess
+
+   if ($cxx.id == 'clang')
+     cxx.features.modules = false
+
+   cxx.std = experimental
+
+   using cxx
+
+ * New {c,cxx}.class variables.
+
+   Compiler class describes a set of compilers that follow more or less
+   the same command line interface. Compilers that don't belong to any of
+   the existing classes are in classes of their own (say, Sun CC would be
+   on its own if we were to support it).
+
+   Currently defined compiler classes:
+
+   gcc   gcc, clang, clang-apple, icc (on non-Windows)
+   msvc  msvc, clang-cl, icc (Windows)
+
+ * Support for C/C++ runtime/stdlib detection ({c,cxx}.{runtime,stdlib}
+   variables; see cc/guess.hxx for possible values).
+
+
+ * New __build2_preprocess macro.
+
+   If cc.reprocess is true, the __build2_preprocess is defined during
+   dependency extraction. This can be used to work around separate
+   preprocessing bugs in the compiler.
+
+ * Support for for-loop. The semantics is similar to the C++11 range-based
+   for:
+
+   list = 1 2 3
+   for i: $list
+     print $i
+
+   Note that there is no scoping of any kind for the loop variable ('i' in the
+   above example). In the future the plan is to also support more general
+   while-loop as well as break and continue.
+
+ * New info meta operation.
+
+   This meta operation can be used to print basic information (name, version,
+   source/output roots, etc) for one or more projects.
+
+ * New update-for-{test,install} operation aliases.
+
+ * Support for forwarded configurations with target backlinking. See the
+   configure meta-operation discussion in b(1) for details.
+
+ * Improvements to the in module (in.symbol, in.substitution={strict|lax}).
+
+ * New $directory(), $base(), $leaf() and $extension() path functions.
+
+ * New $regex.split(), $regex.merge() and $regex.apply() functions.
+
+ * Support for (parallel) bootstrapping using GNU make makefile.
+
+ * Support for chroot'ed install (aka DESTDIR):
+
+   b config.install.root=/usr config.install.chroot=/tmp/install
+
+ * Support for prerequisite-specific variables, used for the bin.whole
+   variable ("link whole archive").
+
+ * Regularize directory target/scope-specific variable assignment syntax:
+
+   $out_root/: foo = bar # target
+   $out_root/  foo = bar # scope
+   $out_root/
+   {
+     foo = bar           # scope
+   }
+
+ * Support for structured result output (--structured-result).
+
+ * Support for build hooks.
+
+   The following buildfiles are loaded (if present) at appropriate times from
+   the out_root subdirectories of a project:
+
+   build/bootstrap/pre-*.build   # before loading bootstrap.build
+   build/bootstrap/post-*.build  # after  loading bootstrap.build
+   build/root/pre-*.build        # before loading root.build
+   build/root/post-*.build       # after  loading root.build
+
+ * New run directive.
+
+   Now it is possible to:
+
+   run echo 'foo = bar'
+   print $foo
+
+ * New dump directive.
+
+   It can be used to print (to stderr) a human-readable representation of the
+   current scope or a list of targets. For example:
+
+   dump                           # Dump current scope.
+   dump lib{foo} details/exe{bar} # Dump two targets.
+
+   This is primarily useful for debugging as well as to write build system
+   tests.
+
+Version 0.6.0
+
+  * C++ Modules TS support for GCC, Clang, and VC.
+
+    The new 'experimental' value of the cxx.std variable enables modules
+    support if provided by the C++ compiler. The cxx.features.modules boolean
+    variable can be used to control/query C++ modules enablement.
+
+    See the "C++ Module Support" section in the build system manual for all
+    the details.
+
+  * Precise change detection for C and C++ sources.
+
+    The build system now calculates a checksum of the preprocessed token
+    stream and avoids recompilation if the changes are ignorable (whitespaces,
+    comments, unused macros, etc). To minimize confusion ("I've changed my
+    code but nothing got updated"), the build system prints a 'skip' line for
+    ignored changes.
+
+  * Initial support for utility libraries.
+
+    A utility library is an archive that "mimics" the object file type
+    (executable, static library, or shared library) of its "primary" target.
+    Unless explicitly overridden, utility libraries are linked in the "whole
+    archive" mode. For example:
+
+    exe{prog}: cxx{prog} libu{prog}
+    libu{prog}: cxx{* -prog}
+
+    # Unit tests.
+    #
+    tests/
+    {
+      libu{*}: bin.whole = false # Don't link whole.
+
+      exe{test1}: cxx{test1} ../libu{prog}
+      exe{test2}: cxx{test2} ../libu{prog}
+    }
+
+    This change adds the new target group libu{} and its libue{}, libua{}, and
+    libus{} members. Note that the bin.whole variable can also be used on
+    normal static libraries.
+
+  * Progress display.
+
+    The build system will now display build progress for low verbosity levels
+    and if printing to a terminal. It can also be explicitly requested with
+    the -p|--progress option and suppressed with --no-progress.
+
+    Note that it is safe to enable progress even when redirecting to a file,
+    for example:
+
+    b -p 2>&1 | tee build.log
+
+  * Support for generating pkg-config's .pc files on install.
+
+    These files are now generated by default and automatically for libraries
+    being installed provided the version, project.summary, and project.url
+    variables are defined. The version module has been improved to extract the
+    summary and url in addition to the version from the manifest.
+
+  * Support for the '20' cxx.std value (C++20/c++2a).
+
+  * The fail, warn, info, and text directives in addition to print. For
+    example:
+
+    if ($cxx.id.type == 'msvc')
+      fail 'msvc is not supported'
+
+  * New build system functions:
+
+    - $getenv()                         -- query environment variable value
+    - $filesystem.path_{search,match}() -- wildcard pattern search/match
+    - $regex.{match,search,replace}()   -- regex match/search/replace
+
+  * New Testscript builtins:
+
+    - ln
+    - exit (pseudo-builtin)
+
+  * Separate C and C++ (partial) preprocessing and compilation for Clang, GCC,
+    and VC.
+
+    This is part of the infrastructure that is relied upon by the C++ modules
+    support, precise change detection support, and, in the future, by
+    distributed compilation.
+
+    There is also the ability to limit the amount of preprocessing done on a
+    source file by setting the {c,cxx}.preprocessed variables. Valid values
+    are 'none' (not preprocessed), 'includes' (no #include directives in the
+    source), 'modules' (as above plus no module declarations depend on the
+    preprocessor, for example, #ifdef, etc.), and 'all' (the source is fully
+    preprocessed). Note that for 'all' the source may still contain comments
+    and line continuations.
+
+    While normally unnecessary, the use of the (partially) preprocessed output
+    in compilation can be disabled. This can be done from a buildfile for a
+    scope (including project root scope) and per target via the cc.reprocess
+    variable:
+
+    cc.reprocess = true
+    obj{hello}: cc.reprocess = false
+
+    As well as externally via the config.cc.reprocess variable:
+
+    b config.cc.reprocess=true
+
+Version 0.5.0
+
+  * Parallel build system execution, including header dependency extraction
+    and compilation.
+
+  * Support for Testscript, a shell-like language for portable and parallel
+    execution of tests. See the Testscript manual for details.
+
+  * Support for name generation with wildcard patterns. For example:
+
+    exe{hello}: cxx{*}
+
+    Or:
+
+    ./: {*/ -build/}
+
+    See the build system manual for details.
+
+  * New module, version, automates project version management. See the build
+    system manual for details.
+
+  * Support for VC15, C++ standard selection in VC14U3 and up.
+
+  * New meta-operation, create, allows the creation and configuration of an
+    amalgamation project. See b(1) for details.
+
+  * Alternative, shell-friendly command line buildspec and variable assignment
+    syntax. For example:
+
+    b test: foo/ bar/
+    b config.import.libhello = ../libhello/
+
+    See b(1) for details.
+
+  * Automatic loading of directory buildfiles, implied directory buildfiles.
+    Now instead of explicitly writing:
+
+    d = foo/ bar/
+    ./: $d doc{README}
+    include $d
+
+    We can just write:
+
+    ./: foo/ bar/ doc{README}
+
+    And if our buildfile simply builds all the subdirectories:
+
+    ./: */
+
+    Then it can be omitted altogether.
+
+  * Support of the PATH-based search as a fallback import mechanism for exe{}
+    targets.
+
+  * Support for the 'latest' value in the cxx.std variable which can be used
+    to request the latest C++ standard available in the compiler.
+
+  * Ternary and logical operators support in eval contexts.
+
+  * Initial support for build system functions. See build2/function*.?xx for
+    early details.
+
+  * Assert directive. The grammar is as follows:
+
+    assert <expression> [<description>]
+    assert! <expression> [<description>]
+
+    The expression must evaluate to 'true' or 'false', just like in if-else.
+
+Version 0.4.0
+
+  * Support for Windows.
+
+    The toolchain can now be built and used on Windows with either MSVC or
+    MinGW GCC.
+
+    With VC, the toolchain can be built with version 14 Update 2 or later and
+    used with any version from 7.1. /MD and, for C++, /EHsc are default but
+    are overridden if an explicit value is specified in the coptions variable.
+
+  * Support for C compilation.
+
+    There is now the 'c' module in addition to 'cxx' as well as 'cc', which
+    stands for C-common. Mixed source (C and C++) building is also supported.
+
+  * Integration with pkg-config.
+
+    Note that build2 doesn't use pkg-config to actually locate the libraries
+    (because this functionality of pkg-config is broken when it comes to
+    cross-compilation). Rather, it searches for the library (in the
+    directories extracted from the compiler) itself and then looks for the
+    corresponding .pc file (normally in the pkgconfig/ subdirectory of where
+    it found the library). It then calls pkg-config to extract any additional
+    options that might be needed to use the library from this specific .pc
+    file.
+
+  * Initial support for library versioning.
+
+    Currently, only platform-independent versions are supported. They get
+    appended to the library name/soname. For example:
+
+    lib{foo}: bin.lib.version = @-1.2
+
+    This will produce libfoo-1.2.so, libfoo-1.2.dll, etc.
+
+    In the future the plan is to support platform-specific versions, for
+    example:
+
+    lib{foo}: bin.lib.version = linux@1.2.3 freebsd@1.2 windows@1.2
+
+  * Library dependency export support.
+
+    In build2 a library dependency on another library is either an "interface"
+    or "implementation". If it is an interface, then everyone who links this
+    library should also be linking the interface dependency. A good example of
+    an interface dependency is a library API that is called in an inline
+    function.
+
+    Interface dependencies of a library should be explicitly listed in the
+    *.export.libs variable (where we can now list target names). The typical
+    usage will be along these lines:
+
+    import int_libs  = libformat%lib{format}
+    import int_libs += ...
+
+    import imp_libs  = libprint%lib{print}
+    import imp_libs += ...
+
+    lib{hello}: ... $imp_libs $int_libs
+
+    lib{hello}: cxx.export.libs = $int_libs
+
+    There is support for symbol exporting on Windows and build2 now also does
+    all the right things when linking static vs shared libraries with regards
+    to which library dependencies to link, which -rpath/-rpath-link options to
+    pass, etc.
+
+  * Support for the uninstall operation in addition to install.
+
+  * Support for preserving subdirectories when installing.
+
+    This is useful, for example, when installing headers:
+
+    install.include = $install.include/foo/
+    install.include.subdirs = true
+
+    The base for calculating the subdirectories is the scope where the subdirs
+    value is set.
+
+  * Support for installing as a different file name.
+
+    Now the install variable is a path, not dir_path. If it is a directory
+    (ends with a trailing slash), then the target is installed into this
+    directory with the same name. Otherwise, the entire path is used as the
+    installation destination.
+
+  * Support for config.bin.{,lib,exe}.{prefix,suffix}.
+
+    This replaces the bin.libprefix functionality.
+
+  * Support for global config.install.{cmd,options,sudo,mode,dir_mode}.
+
+    This way we can do:
+
+    b install \
+      config.install.data_root=/opt/data \
+      config.install.exec_root=/opt/exec \
+      config.install.sudo=sudo
+
+  * The new -V option is an alias for --verbose 3 (show all commands).
+
+  * Support for specifying directories in config.dist.archives.
+
+    For example, this command will create /tmp/foo-X.Y.Z.tar.xz:
+
+    b foo/ config.dist.archives=/tmp/tar.xz
+
+  * The cxx (and c) module is now project root-only.
+
+    This means these modules can only be loaded in the project root scope
+    (normally root.build). Also, the c.std and cxx.std values must now be set
+    before loading the module to take effect.
+
+  * The test, dist, install, and extension variables now have target
+    visibility to prevent accidental "reuse" for other purposes.
+
+  * An empty config.import.* value is now treated as an instruction to skip
+    subproject search. Also, explicit config.import.* values now take
+    precedence over the subproject search.
+
+  * Search for subprojects is no longer recursive. In the future the plan is
+    to allow specifying wildcard paths (* and **) in the subprojects variable.
+
+  * Support out-qualified target syntax for setting target-specific variables
+    on targets from src_base. For example:
+
+    doc{INSTALL}@./: install = false
+
+  * Only "effective escaping" (['"\$(]) is now performed for values on the
+    command line. This makes for a more usable interface on Windows provided
+    we use "sane" paths (no spaces, no (), etc).
+
+  * The default variable override scope has been changed from "projects and
+    subprojects" to "amalgamation".
+
+    The "projects and subprojects" semantics resulted in counter-intuitive
+    behavior. For example, in a project with tests/ as a subproject if one
+    builds one of the tests directly with a non-global override (say C++
+    compiler), then the main project would be built without the overrides. In
+    this light, overriding in the whole amalgamation seems like the right
+    thing to do. The old behavior can still be obtained with explicit scope
+    qualification, for example:
+
+    b ./:foo=bar
+
+  * The config.build format has been made more readable. Specifically, the
+    order is now from the higher-level modules (e.g., c, cxx) to the
+    lower-level (e.g., binutils) with imports coming first. The file now also
+    includes an explicit version for incompatibility detected/migration in
+    the future.
+
+  * Support for <, >, <=, >= in the eval context.
+
+    Now we can write:
+
+    if ($build.version >= 40000)
+
+  * Support for single line if-blocks.
+
+    Now we can write:
+
+    if true
+      print true
+    else
+      print false
+
+    Instead of having to do:
+
+    if true
+    {
+      print true
+    }
+    else
+    {
+      print false
+    }
+
+  * Support for prepend/append in target type/pattern-specific variables.
+
+    Semantically, these are similar to variable overrides and are essentially
+    treated as "templates" that are applied on lookup to the "stem" value that
+    is specific to the target type/name. For example:
+
+    x = [string] a
+    file{f*}: x =+ b
+
+    sub/:
+    {
+      file{*}: x += c
+
+      print $(file{foo}:x)  # abc
+      print $(file{bar}:x)  # ac
+    }
+
+  * The obj*{} target type to exe/lib mapping has been redesigned.
+
+    Specifically:
+
+    - objso{} and libso{} target types have been renamed to objs{} and libs{}
+
+    - obje{} has been added (so now we have obje{}, obja{}, and objs{})
+
+    - obje{} is now used for building exe{}
+
+    - object file extensions now use "hierarchical extensions" that reflect
+      the extension of the corresponding exe/lib target (instead of the -so
+      suffix we used), specifically:
+
+      obje{}: foo.o, (UNIX), foo.exe.o (MinGW), foo.exe.obj (MSVC)
+      obja{}: foo.a.o (UNIX, MinGW), foo.lib.obj (MSVC)
+      objs{}: foo.so.o (UNIX), foo.dylib.o (Darwin), foo.dll.o (MinGW),
+              foo.dll.obj (MSVC)
+
+    We now also have libi{} which is the Windows DLL import library. When
+    used, it is the first ad hoc group member of libs{}.
+
+Version 0.3.0
+
+  * Support for High Fidelity Builds (HFB).
+
+    The C++ compile and link rules now detect when the compiler, options, or
+    input file set have changed and trigger the update of the target. Some
+    examples of the events that would now trigger an automatic update are:
+
+    * compiler change (e.g., g++ to clang++), upgrade, or reconfiguration
+    * change of compile/link options (e.g., -O2 to -O3)
+    * replacement of a source file (e.g., foo.cpp with foo.cxx)
+    * removal of a file from a library/executable
+
+  * New command line variable override semantics. A command line variable can
+    be an override (=), prefix (=+), or suffix (+=), for example:
+
+    b config.cxx=clang++ config.cxx.coptions+=-g config.cxx.poptions=+-I/tmp
+
+    Prefixes/suffixes are applied at the outsets of values set in buildfiles,
+    provided these values were set (in those buildfiles) using =+/+= and not
+    an expansion, for example:
+
+    b x=+P x+=S
+
+    x = y
+    print $x # P y S
+
+    x =+ p
+    x += s
+    print $x # P p y s S
+
+    But:
+
+    x = A $x B
+    print $x # A P p y s S B
+
+    By default an override applies to all the projects mentioned in the
+    buildspec as well as to their subprojects. We can restrict an override to
+    not apply to subprojects by prefixing it with '%', for example:
+
+    b %config.cxx=clang++ configure
+
+    An override can also be made global (i.e., it applies to all projects,
+    including the imported ones) by prefixing it with '!'. As an example,
+    compare these two command lines:
+
+    b config.cxx.coptions+=-g
+    b '!config.cxx.coptions+=-g'
+
+    In the first case only the current project and its subprojects will be
+    recompiled with the debug information. In the second case, everything that
+    the current project requires (e.g., imported libraries) will be rebuilt
+    with the debug information.
+
+    Finally, we can also specify the scope from which an override should
+    apply. For example, we may only want to rebuild tests with the debug
+    information:
+
+    b tests/:config.cxx.coptions+=-g
+
+  * Attribute support. Attributes are key or key=value pairs enclosed in []
+    and separated with spaces. They come before the entity they apply to.
+    Currently we recognize attributes for variables and values. For variables
+    we recognize the following keys as types:
+
+    bool
+    uint64
+    string
+    path
+    dir_path
+    abs_dir_path
+    name
+    strings
+    paths
+    dir_paths
+    names
+
+    For example:
+
+    [uint64] x = 01
+    print $x # 1
+    x += 1
+    print $x # 2
+
+    Note that variable types are global, which means you could type a variable
+    that is used by another project for something completely different. As a
+    result, typing of values (see below) is recommended over variables. If you
+    do type a variable, make sure it has a namespace (typing of unqualified
+    variables may become illegal).
+
+    For values we recognize the same set of types plus 'null'. The value type
+    is preserved in prepend/append (=+/+=) but not in assignment. For example:
+
+    x = [uint64] 01
+    print $x # 1
+    x += 1
+    print $x # 2
+
+    x = [string] 01
+    print $x # 01
+    x += 1
+    print $x # 011
+
+    x = [null]
+    print $x # [null]
+
+    Value attributes can also be used in the evaluation contexts, for example:
+
+    if ($x == [null])
+
+    if ([uint64] $x == [uint64] 0)
+
+  * Support for scope/target-qualified variable expansion. For example:
+
+    print $(dir/:x)
+    print $(file{target}:x)
+    print $(dir/file{target}:x)
+
+  * Command line options, variables, and buildspec can now be specified in any
+    order. This is especially useful if you want to re-run the previous
+    command with -v or add a forgotten config variable:
+
+    b test -v
+    b configure config.cxx=clang++
+
+  * Support for the Intel C++ compiler on Linux.
+
+  * Implement C++ compiler detection. Currently recognized compilers and their
+    ids (in the <type>[-<variant>] form):
+
+      gcc            GCC
+      clang          Vanilla Clang
+      clang-apple    Apple Clang (and the g++ "alias")
+      icc            Intel icpc
+      msvc           Microsoft cl.exe
+
+    The compiler id, version, and other information is available via the
+    following build system variables:
+
+    cxx.id
+    cxx.id.{type,variant}
+    cxx.version
+    cxx.version.{major,minor,patch,build}
+    cxx.signature
+    cxx.checksum
+    cxx.target
+    cxx.target.{cpu,vendor,system,version,class}
+
+  * Implement ar/ranlib detection. The following information is available
+    via the build system variables:
+
+    bin.ar.signature
+    bin.ar.checksum
+    bin.ranlib.signature
+    bin.ranlib.checksum
+
+  * On update for install the C++ link rule no longer uses the -rpath
+    mechanism for finding prerequisite libraries.
+
+  * Set build.host, build.host.{cpu,vendor,system,version,class} build system
+    variables to the host triplet. By default it is set to the compiler target
+    build2 was built with but a more precise value can be obtained with the
+    --config-guess option.
+
+  * Set build.version, build.version.{major,minor,patch,release,string} build
+    system variables to the build2 version.
+
+  * Extracted header dependencies (-M*) are now cached in the auxiliary
+    dependency (.d) files rather than being re-extracted on every run. This
+    speeds up the up-to-date check significantly.
+
+  * Revert back to only cleaning prerequisites if they are in the same project.
+
+    Cleaning everything as long as it is in the same strong amalgamation had
+    some undesirable side effects. For example, in bpkg, upgrading a package
+    (which requires clean/reconfigure) led to all its prerequisites being
+    cleaned as well and then rebuilt. That was surprising, to say the least.
+
+  * Allow escaping in double-quoted strings.
+
+  * Implement --buildfile option that can be used to specify the alternative
+    file to read build information from. If '-' is specified, read from STDIN.
+
+  * New scoping semantics. The src tree paths are no longer entered into the
+    scope map. Instead, targets from the src tree now include their out tree
+    directories (which are, in essence, their "configuration", with regards to
+    variable lookup). The only user-visible result of this change is the extra
+    '@<out-dir>/' suffix that is added when a target is printed, for example,
+    as part of the compilation command lines.
+
+Version 0.2.0
+
+  * First public release.

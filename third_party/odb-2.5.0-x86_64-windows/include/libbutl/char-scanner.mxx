@@ -1,0 +1,198 @@
+// file      : libbutl/char-scanner.mxx -*- C++ -*-
+// copyright : Copyright (c) 2014-2019 Code Synthesis Ltd
+// license   : MIT; see accompanying LICENSE file
+
+#ifndef __cpp_modules_ts
+#pragma once
+#endif
+
+#include <cassert>
+
+#ifndef __cpp_lib_modules_ts
+#include <string>  // char_traits
+#include <cstdint> // uint64_t
+#include <istream>
+#endif
+
+// Other includes.
+
+#ifdef __cpp_modules_ts
+export module butl.char_scanner;
+#ifdef __cpp_lib_modules_ts
+import std.core;
+import std.io;
+#endif
+import butl.fdstream;
+#else
+#include <libbutl/fdstream.mxx>
+#endif
+
+#include <libbutl/export.hxx>
+
+LIBBUTL_MODEXPORT namespace butl
+{
+  // Low-level character stream scanner. Normally used as a base for
+  // higher-level lexers.
+  //
+  class LIBBUTL_SYMEXPORT char_scanner
+  {
+  public:
+    // If the crlf argument is true, then recognize Windows newlines (0x0D
+    // 0x0A) and convert them to just '\n' (0x0A). Note that a standalone
+    // 0x0D is treated "as if" it was followed by 0x0A and multiple 0x0D
+    // are treated as one.
+    //
+    // Note also that if the stream happens to be ifdstream, then it includes
+    // a number of optimizations that assume nobody else is messing with the
+    // stream.
+    //
+    // The line and position arguments can be used to override the start line
+    // and position in the stream (useful when re-scanning data saved with the
+    // save_* facility).
+    //
+    char_scanner (std::istream& is,
+                  bool crlf = true,
+                  std::uint64_t line = 1,
+                  std::uint64_t position = 0);
+
+    char_scanner (const char_scanner&) = delete;
+    char_scanner& operator= (const char_scanner&) = delete;
+
+    // Scanner interface.
+    //
+  public:
+
+    // Extended character. It includes line/column/position information and is
+    // capable of representing EOF.
+    //
+    // Note that implicit conversion of EOF to char_type results in NUL
+    // character (which means in most cases it is safe to compare xchar to
+    // char without checking for EOF).
+    //
+    class xchar
+    {
+    public:
+      using traits_type = std::char_traits<char>;
+      using int_type = traits_type::int_type;
+      using char_type = traits_type::char_type;
+
+      int_type value;
+      std::uint64_t line;
+      std::uint64_t column;
+
+      // Logical character position (see ifdstream for details on the logical
+      // part) if the scanned stream is ifdstream and always zero otherwise.
+      //
+      std::uint64_t position;
+
+      operator char_type () const
+      {
+        return value != traits_type::eof ()
+          ? static_cast<char_type> (value)
+          : char_type (0);
+      }
+
+      xchar (int_type v,
+             std::uint64_t l = 0,
+             std::uint64_t c = 0,
+             std::uint64_t p = 0)
+          : value (v), line (l), column (c), position (p) {}
+    };
+
+    xchar
+    get ();
+
+    void
+    get (const xchar& peeked); // Get previously peeked character (faster).
+
+    void
+    unget (const xchar&);
+
+    // Note that if there is an "ungot" character, peek() will return
+    // that.
+    //
+    xchar
+    peek ();
+
+    // Tests. In the future we can add tests line alpha(), alnum(),
+    // etc.
+    //
+    static bool
+    eos (const xchar& c) {return c.value == xchar::traits_type::eof ();}
+
+    // Line, column and position of the next character to be extracted from
+    // the stream by peek() or get().
+    //
+    std::uint64_t line;
+    std::uint64_t column;
+    std::uint64_t position;
+
+    // Ability to save raw data as it is being scanned. Note that the
+    // character is only saved when it is got, not peeked.
+    //
+  public:
+    void
+    save_start (std::string& b)
+    {
+      assert (save_ == nullptr);
+      save_ = &b;
+    }
+
+    void
+    save_stop ()
+    {
+      assert (save_ != nullptr);
+      save_ = nullptr;
+    }
+
+    struct save_guard
+    {
+      explicit
+      save_guard (char_scanner& s, std::string& b): s_ (&s) {s.save_start (b);}
+
+      void
+      stop () {if (s_ != nullptr) {s_->save_stop (); s_ = nullptr;}}
+
+      ~save_guard () {stop ();}
+
+    private:
+      char_scanner* s_;
+    };
+
+  protected:
+    using int_type = xchar::int_type;
+    using char_type = xchar::char_type;
+
+    int_type
+    peek_ ();
+
+    void
+    get_ ();
+
+    std::uint64_t
+    pos_ () const;
+
+  protected:
+    std::istream& is_;
+
+    // Note that if you are reading from the buffer directly, then it is
+    // also your responsibility to save the data.
+    //
+    fdbuf* buf_; // NULL if not ifdstream.
+    const char_type* gptr_;
+    const char_type* egptr_;
+
+    std::string* save_ = nullptr;
+
+    bool crlf_;
+    bool eos_ = false;
+
+    bool unget_ = false;
+    bool unpeek_ = false;
+
+    xchar ungetc_ = '\0';
+    xchar unpeekc_ = '\0';
+  };
+}
+
+#include <libbutl/char-scanner.ixx>
