@@ -127,8 +127,8 @@ session::session(std::string const & connectString)
 session::session(void* pg_native_handle)
     : once(this), prepare(this), query_transformation_(NULL),
       logger_(new standard_logger_impl),
-      isFromPool_(false), pool_(NULL),
-      useNativeHandle_(true)
+      useNativeHandle_(false),
+      isFromPool_(false), pool_(NULL)
 {
     open(pg_native_handle);
 }
