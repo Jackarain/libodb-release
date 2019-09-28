@@ -366,6 +366,7 @@ struct postgresql_session_backend : details::session_backend
 {
     postgresql_session_backend(connection_parameters const & parameters,
         bool single_row_mode);
+    explicit postgresql_session_backend(void* native_handle);
 
     ~postgresql_session_backend() SOCI_OVERRIDE;
 

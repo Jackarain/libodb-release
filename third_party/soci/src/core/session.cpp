@@ -12,6 +12,8 @@
 #include "soci/soci-backend.h"
 #include "soci/query_transformation.h"
 
+#include "soci/postgresql/soci-postgresql.h"
+
 using namespace soci;
 using namespace soci::details;
 
@@ -122,6 +124,16 @@ session::session(std::string const & connectString)
     open(lastConnectParameters_);
 }
 
+session::session(void* pg_native_handle)
+    : once(this), prepare(this), query_transformation_(NULL),
+      logger_(new standard_logger_impl),
+      isFromPool_(false), pool_(NULL),
+      useNativeHandle_(true)
+{
+    open(pg_native_handle);
+}
+
+
 session::session(connection_pool & pool)
     : query_transformation_(NULL),
       logger_(new standard_logger_impl),
@@ -137,6 +149,9 @@ session::session(connection_pool & pool)
 
 session::~session()
 {
+    if (useNativeHandle_)
+        return;
+
     if (isFromPool_)
     {
         pool_->give_back(poolPosition_);
@@ -187,6 +202,11 @@ void session::open(std::string const & backendName,
 void session::open(std::string const & connectString)
 {
     open(connection_parameters(connectString));
+}
+
+void session::open(void* pg_native_handle)
+{
+    backEnd_ = new postgresql_session_backend(pg_native_handle);
 }
 
 void session::close()

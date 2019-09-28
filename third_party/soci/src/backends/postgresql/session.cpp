@@ -41,6 +41,12 @@ postgresql_session_backend::postgresql_session_backend(
     connect(parameters);
 }
 
+postgresql_session_backend::postgresql_session_backend(void* native_handle)
+{
+    single_row_mode_ = false;
+    conn_ = (PGconn*)native_handle;
+}
+
 void postgresql_session_backend::connect(
     connection_parameters const& parameters)
 {

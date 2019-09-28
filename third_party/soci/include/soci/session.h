@@ -53,6 +53,7 @@ public:
     session(backend_factory const & factory, std::string const & connectString);
     session(std::string const & backendName, std::string const & connectString);
     explicit session(std::string const & connectString);
+    explicit session(void* pg_native_handle);
     explicit session(connection_pool & pool);
 
     ~session();
@@ -60,6 +61,7 @@ public:
     void open(connection_parameters const & parameters);
     void open(backend_factory const & factory, std::string const & connectString);
     void open(std::string const & backendName, std::string const & connectString);
+    void open(void* pg_native_handle);
     void open(std::string const & connectString);
     void close();
     void reconnect();
@@ -198,6 +200,7 @@ private:
     connection_parameters lastConnectParameters_;
 
     bool uppercaseColumnNames_;
+    bool useNativeHandle_;
 
     details::session_backend * backEnd_;
 
