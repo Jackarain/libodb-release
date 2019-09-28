@@ -87,8 +87,11 @@ endif(NOT MSVC)
 if (WIN32)
 	add_subdirectory(third_party/libpq)
 	set(PostgreSQL_LIBRARY libpq)
+	set(POSTGRESQL_LIBRARY libpq)
 	set(PostgreSQL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpq/include)
+	set(POSTGRESQL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpq/include)
 	include_directories(${PostgreSQL_INCLUDE_DIR})
+
 else()
 	find_package(PostgreSQL REQUIRED)
 endif()
@@ -122,12 +125,26 @@ add_definitions(-DBOOST_LOCALE_HIDE_AUTO_PTR)
 add_definitions(-DBOOST_COROUTINES_NO_DEPRECATION_WARNING)
 add_subdirectory(third_party/boost)
 
+add_subdirectory(third_party/soci)
+set(SOCI_INCLUDE_DIRS
+       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/soci/src/
+       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/soci/src/core/
+       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/soci/include/private
+       ${CMAKE_CURRENT_SOURCE_DIR}/third_party/soci/include/
+       ${CMAKE_BINARY_DIR}/third_party/soci/include/
+)
+
+set(SOCI_LIBRARY soci_core_static soci_postgresql_static)
+
+include_directories(${SOCI_INCLUDE_DIRS})
+
 link_libraries(
 		Boost::date_time
 		libodb
 		libodb-pgsql
 		libodb-boost
 		${PostgreSQL_LIBRARY}
+		${SOCI_LIBRARY}
 )
 
 if (WIN32)
