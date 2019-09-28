@@ -1,0 +1,4 @@
+[ODBC]
+DRIVER=MySQL ODBC 5.3 ANSI Driver
+DATABASE=soci_test
+OPTION=0
