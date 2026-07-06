@@ -125,6 +125,7 @@ add_definitions(-DBOOST_LOCALE_HIDE_AUTO_PTR)
 add_definitions(-DBOOST_COROUTINES_NO_DEPRECATION_WARNING)
 add_subdirectory(third_party/boost)
 
+set(SOCI_TESTS OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/soci)
 set(SOCI_INCLUDE_DIRS
        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/soci/src/
@@ -134,7 +135,7 @@ set(SOCI_INCLUDE_DIRS
        ${CMAKE_BINARY_DIR}/third_party/soci/include/
 )
 
-set(SOCI_LIBRARY soci_core_static soci_postgresql_static)
+set(SOCI_LIBRARY -Wl,--start-group soci_postgresql_static soci_core_static -Wl,--end-group)
 
 include_directories(${SOCI_INCLUDE_DIRS})
 
