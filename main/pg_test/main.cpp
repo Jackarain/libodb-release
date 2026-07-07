@@ -11,12 +11,7 @@
 #include <odb/pgsql/database.hxx>
 #include <odb/schema-catalog.hxx>
 
-#include <soci/soci.h>
-#include <soci/postgresql/soci-postgresql.h>
-
-using namespace soci;
 using namespace std;
-
 
 int main()
 {
@@ -46,47 +41,6 @@ int main()
 				t.commit();
 			}
 		}
-
-		{
-			auto dbconn = db->connection();
-			odb::transaction t(dbconn->begin());
-
-			auto pghandle = dbconn->handle();
-
-			session sql((void*)pghandle);
-
-			int count;
-			sql << "select count(*) from spool_sealed_share", into(count);
-
-			int id;
-			std::string miner;
-			std::string nonce = "0xd9d64d7dfb04ecf0";
-			sql << "select id, miner from spool_sealed_share where nonce = :nonce",
-				into(id), into(miner), use(nonce);
-
-			t.commit();
-		}
-
-		{
-			auto dbconn = db->connection();
-			odb::transaction t(dbconn->begin());
-
-			auto pghandle = dbconn->handle();
-
-			session sql((void*)pghandle);
-
-			int count;
-			sql << "select count(*) from spool_sealed_share", into(count);
-
-			int id;
-			std::string miner;
-			std::string nonce = "0xd9d64d7dfb04ecf0";
-			sql << "select id, miner from spool_sealed_share where nonce = :nonce",
-				into(id), into(miner), use(nonce);
-
-			t.commit();
-		}
-
 	}
 	catch (const std::exception& e)
 	{

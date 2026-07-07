@@ -9,18 +9,36 @@ get_filename_component(ODB_HEADER_BASE ${ARGV1} NAME_WE)
 set(ODB_HEADER ${ARGV1})
 set(OUT_DIR ${ARGV2})
 set(EXTRA_ARGS ${ARG3})
-#message(STATUS "ddd" ${ARGV1})
+set(ODB_DB_TYPE ${ARGV4})
+if (NOT ODB_DB_TYPE)
+	set(ODB_DB_TYPE "pgsql")
+endif()
+
+# Database-specific options.
+if (ODB_DB_TYPE STREQUAL "pgsql")
+	set(ODB_DB_OPTIONS "--pgsql-server-version" "9.6")
+	set(ODB_INC_DIRS
+		-I ${ODB_LIB_DIR}
+		-I ${ODB_PGSQL_LIB_DIR}
+		-I ${ODB_BOOST_LIB_DIR}
+		-I ${BOOST_INCLUDE_DIRS})
+elseif (ODB_DB_TYPE STREQUAL "sqlite")
+	set(ODB_DB_OPTIONS "")
+	set(ODB_INC_DIRS
+		-I ${ODB_LIB_DIR}
+		-I ${ODB_SQLITE_LIB_DIR}
+		-I ${ODB_BOOST_LIB_DIR}
+		-I ${BOOST_INCLUDE_DIRS})
+else()
+	message(SEND_ERROR "unsupported database type: ${ODB_DB_TYPE}")
+endif()
 
 add_custom_command(OUTPUT ${OUT_DIR}/${ODB_HEADER_BASE}.sql
                    COMMAND ${ODB_COMPILER} ARGS
                               ${EXTRA_ARGS}
-                              -d pgsql --std c++11 -p boost --generate-schema --generate-query --generate-schema-only --pgsql-server-version 9.6 --hxx-prologue "#include \"db_traits.hpp\""
+                              -d ${ODB_DB_TYPE} --std c++11 -p boost --generate-schema-only --schema-format sql ${ODB_DB_OPTIONS} --hxx-prologue "#include \"db_traits.hpp\""
                               ${ODB_HEADER}
-#                             -I ${ODB_EXTRA_INCLUDE_DIR}
-                              -I ${ODB_LIB_DIR}
-                              -I ${ODB_PGSQL_LIB_DIR}
-                              -I ${ODB_BOOST_LIB_DIR}
-                              -I ${BOOST_INCLUDE_DIRS}
+                              ${ODB_INC_DIRS}
                    MAIN_DEPENDENCY ${ODB_HEADER}
                    DEPENDS ${ODB_HEADER}
                    WORKING_DIRECTORY ${OUT_DIR}
@@ -32,13 +50,9 @@ add_custom_command(OUTPUT
                           ${OUT_DIR}/${ODB_HEADER_BASE}-odb.hxx
                           ${OUT_DIR}/${ODB_HEADER_BASE}-odb.ixx
                    COMMAND ${ODB_COMPILER} ARGS ${EXTRA_ARGS}
-                              -d pgsql --std c++11 -p boost --generate-query --generate-schema --schema-format embedded --pgsql-server-version 9.6 --hxx-prologue "#include \"db_traits.hpp\""
+                              -d ${ODB_DB_TYPE} --std c++11 -p boost --generate-query --generate-schema --schema-format embedded ${ODB_DB_OPTIONS} --hxx-prologue "#include \"db_traits.hpp\""
                               ${ODB_HEADER}
-#                             -I ${ODB_EXTRA_INCLUDE_DIR}
-                              -I ${ODB_LIB_DIR}
-                              -I ${ODB_PGSQL_LIB_DIR}
-                              -I ${ODB_BOOST_LIB_DIR}
-                              -I ${BOOST_INCLUDE_DIRS}
+                              ${ODB_INC_DIRS}
                    MAIN_DEPENDENCY ${ODB_HEADER}
                    DEPENDS ${ODB_HEADER}
                    WORKING_DIRECTORY ${OUT_DIR}
@@ -53,4 +67,3 @@ set(${ODB_HEADERS}
 	${OUT_DIR}/${ODB_HEADER_BASE}-odb.ixx PARENT_SCOPE)
 
 endfunction(ADD_ODB_INTERFACE)
-
