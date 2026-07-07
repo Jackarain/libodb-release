@@ -7,26 +7,36 @@
 #include <boost/core/lightweight_test.hpp>
 #include <boost/histogram/axis/ostream.hpp>
 #include <boost/histogram/axis/variable.hpp>
-#include <boost/histogram/detail/cat.hpp>
 #include <limits>
+#include <sstream>
 #include <type_traits>
 #include <vector>
+#include "axis.hpp"
 #include "is_close.hpp"
-#include "std_ostream.hpp"
+#include "ostream.hpp"
+#include "str.hpp"
 #include "throw_exception.hpp"
-#include "utility_axis.hpp"
 
 using namespace boost::histogram;
+namespace op = boost::histogram::axis::option;
 
 int main() {
+  constexpr auto inf = std::numeric_limits<double>::infinity();
+  constexpr auto nan = std::numeric_limits<double>::quiet_NaN();
+
   BOOST_TEST(std::is_nothrow_move_assignable<axis::variable<>>::value);
+  BOOST_TEST(std::is_nothrow_move_constructible<axis::variable<>>::value);
 
   // bad_ctors
   {
-    auto empty = std::vector<double>(0);
-    BOOST_TEST_THROWS((axis::variable<>(empty)), std::invalid_argument);
+    BOOST_TEST_THROWS(axis::variable<>(std::vector<double>{}), std::invalid_argument);
     BOOST_TEST_THROWS(axis::variable<>({1.0}), std::invalid_argument);
+    BOOST_TEST_THROWS(axis::variable<>({1.0, 1.0}), std::invalid_argument);
     BOOST_TEST_THROWS(axis::variable<>({1.0, -1.0}), std::invalid_argument);
+    BOOST_TEST_THROWS((axis::variable<>{{1.0, 2.0, nan}}), std::invalid_argument);
+    BOOST_TEST_THROWS((axis::variable<>{{1.0, nan, 2.0}}), std::invalid_argument);
+    BOOST_TEST_THROWS((axis::variable<>{{nan, 1.0, 2.0}}), std::invalid_argument);
+    BOOST_TEST_THROWS((axis::variable<>{{inf, inf}}), std::invalid_argument);
   }
 
   // axis::variable
@@ -37,8 +47,8 @@ int main() {
     BOOST_TEST_EQ(static_cast<const axis::variable<>&>(a).metadata(), "foo");
     a.metadata() = "bar";
     BOOST_TEST_EQ(static_cast<const axis::variable<>&>(a).metadata(), "bar");
-    BOOST_TEST_EQ(a.bin(-1).lower(), -std::numeric_limits<double>::infinity());
-    BOOST_TEST_EQ(a.bin(a.size()).upper(), std::numeric_limits<double>::infinity());
+    BOOST_TEST_EQ(a.bin(-1).lower(), -inf);
+    BOOST_TEST_EQ(a.bin(a.size()).upper(), inf);
     BOOST_TEST_EQ(a.value(0), -1);
     BOOST_TEST_EQ(a.value(0.5), -0.5);
     BOOST_TEST_EQ(a.value(1), 0);
@@ -49,11 +59,11 @@ int main() {
     BOOST_TEST_EQ(a.index(0), 1);
     BOOST_TEST_EQ(a.index(1), 2);
     BOOST_TEST_EQ(a.index(10), 2);
-    BOOST_TEST_EQ(a.index(-std::numeric_limits<double>::infinity()), -1);
-    BOOST_TEST_EQ(a.index(std::numeric_limits<double>::infinity()), 2);
-    BOOST_TEST_EQ(a.index(std::numeric_limits<double>::quiet_NaN()), 2);
+    BOOST_TEST_EQ(a.index(-inf), -1);
+    BOOST_TEST_EQ(a.index(inf), 2);
+    BOOST_TEST_EQ(a.index(nan), 2);
 
-    BOOST_TEST_EQ(detail::cat(a),
+    BOOST_TEST_EQ(str(a),
                   "variable(-1, 0, 1, metadata=\"bar\", options=underflow | overflow)");
 
     axis::variable<> b;
@@ -70,9 +80,32 @@ int main() {
     BOOST_TEST_NE(a, e);
   }
 
+  // infinity values in constructor
+  {
+    axis::variable<> a{{-inf, 1.0, 2.0, inf}};
+    BOOST_TEST_EQ(a.index(-inf), 0);
+    BOOST_TEST_EQ(a.index(0.0), 0);
+    BOOST_TEST_EQ(a.index(1.0), 1);
+    BOOST_TEST_EQ(a.index(2.0), 2);
+    BOOST_TEST_EQ(a.index(inf), 3);
+
+    BOOST_TEST_EQ(a.value(-1), -inf);
+    BOOST_TEST_EQ(a.value(-0.5), -inf);
+    BOOST_TEST_EQ(a.value(0), -inf);
+    BOOST_TEST_EQ(a.value(0.5), -inf);
+    BOOST_TEST_EQ(a.value(1), 1.0);
+    BOOST_TEST_EQ(a.value(1.5), 1.5);
+    BOOST_TEST_EQ(a.value(2), 2.0);
+    BOOST_TEST_EQ(a.value(2.5), inf);
+    BOOST_TEST_EQ(a.value(3), inf);
+    BOOST_TEST_EQ(a.value(4), inf);
+
+    BOOST_TEST_EQ(str(a), "variable(-inf, 1, 2, inf, options=underflow | overflow)");
+  }
+
   // axis::variable circular
   {
-    axis::variable<double, axis::null_type, axis::option::circular_t> a{-1, 1, 2};
+    axis::variable<double, axis::null_type, op::circular_t> a{-1, 1, 2};
     BOOST_TEST_EQ(a.value(-2), -4);
     BOOST_TEST_EQ(a.value(-1), -2);
     BOOST_TEST_EQ(a.value(0), -1);
@@ -92,38 +125,58 @@ int main() {
 
   // axis::regular with growth
   {
-    axis::variable<double, axis::null_type, axis::option::growth_t> a{0, 1};
+    using pii_t = std::pair<axis::index_type, axis::index_type>;
+    axis::variable<double, axis::null_type, op::growth_t> a{0, 1};
     BOOST_TEST_EQ(a.size(), 1);
-    BOOST_TEST_EQ(a.update(0), std::make_pair(0, 0));
+    BOOST_TEST_EQ(a.update(0), pii_t(0, 0));
     BOOST_TEST_EQ(a.size(), 1);
-    BOOST_TEST_EQ(a.update(1.1), std::make_pair(1, -1));
+    BOOST_TEST_EQ(a.update(1.1), pii_t(1, -1));
     BOOST_TEST_EQ(a.size(), 2);
     BOOST_TEST_EQ(a.value(0), 0);
     BOOST_TEST_EQ(a.value(1), 1);
     BOOST_TEST_EQ(a.value(2), 1.5);
-    BOOST_TEST_EQ(a.update(-0.1), std::make_pair(0, 1));
+    BOOST_TEST_EQ(a.update(-0.1), pii_t(0, 1));
     BOOST_TEST_EQ(a.value(0), -0.5);
     BOOST_TEST_EQ(a.size(), 3);
-    BOOST_TEST_EQ(a.update(10), std::make_pair(3, -1));
+    BOOST_TEST_EQ(a.update(10), pii_t(3, -1));
     BOOST_TEST_EQ(a.size(), 4);
     BOOST_TEST_IS_CLOSE(a.value(4), 10, 1e-9);
-    BOOST_TEST_EQ(a.update(-10), std::make_pair(0, 1));
+    BOOST_TEST_EQ(a.update(-10), pii_t(0, 1));
     BOOST_TEST_EQ(a.size(), 5);
     BOOST_TEST_IS_CLOSE(a.value(0), -10, 1e-9);
 
-    BOOST_TEST_EQ(a.update(-std::numeric_limits<double>::infinity()),
-                  std::make_pair(-1, 0));
-    BOOST_TEST_EQ(a.update(std::numeric_limits<double>::infinity()),
-                  std::make_pair(a.size(), 0));
-    BOOST_TEST_EQ(a.update(std::numeric_limits<double>::quiet_NaN()),
-                  std::make_pair(a.size(), 0));
+    BOOST_TEST_EQ(a.update(-inf), pii_t(-1, 0));
+    BOOST_TEST_EQ(a.update(inf), pii_t(a.size(), 0));
+    BOOST_TEST_EQ(a.update(nan), pii_t(a.size(), 0));
+  }
+
+  // axis with overflow bin represents open interval
+  {
+    axis::variable<double, boost::use_default, op::overflow_t> a{0.0, 0.5, 1.0};
+    BOOST_TEST_EQ(a.index(0), 0);
+    BOOST_TEST_EQ(a.index(0.49), 0);
+    BOOST_TEST_EQ(a.index(0.50), 1);
+    BOOST_TEST_EQ(a.index(0.99), 1);
+    BOOST_TEST_EQ(a.index(1), 2);   // overflow bin
+    BOOST_TEST_EQ(a.index(1.1), 2); // overflow bin
+  }
+
+  // axis without overflow bin represents a closed interval
+  {
+    axis::variable<double, boost::use_default, op::none_t> a{0.0, 0.5, 1.0};
+    BOOST_TEST_EQ(a.index(0), 0);
+    BOOST_TEST_EQ(a.index(0.49), 0);
+    BOOST_TEST_EQ(a.index(0.50), 1);
+    BOOST_TEST_EQ(a.index(0.99), 1);
+    BOOST_TEST_EQ(a.index(1), 1);   // last ordinary bin
+    BOOST_TEST_EQ(a.index(1.1), 2); // out of range
   }
 
   // iterators
   {
     test_axis_iterator(axis::variable<>{1, 2, 3}, 0, 2);
-    test_axis_iterator(
-        axis::variable<double, axis::null_type, axis::option::circular_t>{1, 2, 3}, 0, 2);
+    test_axis_iterator(axis::variable<double, axis::null_type, op::circular_t>{1, 2, 3},
+                       0, 2);
   }
 
   // shrink and rebin
@@ -146,7 +199,7 @@ int main() {
 
   // shrink and rebin with circular option
   {
-    using A = axis::variable<double, axis::null_type, axis::option::circular_t>;
+    using A = axis::variable<double, axis::null_type, op::circular_t>;
     auto a = A({1, 2, 3, 4, 5});
     BOOST_TEST_THROWS(A(a, 1, 4, 1), std::invalid_argument);
     BOOST_TEST_THROWS(A(a, 0, 3, 1), std::invalid_argument);

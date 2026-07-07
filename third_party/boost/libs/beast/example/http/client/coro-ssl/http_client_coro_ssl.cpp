@@ -17,9 +17,9 @@
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/version.hpp>
 #include <boost/asio/spawn.hpp>
+#include <boost/asio/ssl.hpp>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -55,7 +55,7 @@ do_session(
 
     // These objects perform our I/O
     tcp::resolver resolver(ioc);
-    beast::ssl_stream<beast::tcp_stream> stream(ioc, ctx);
+    ssl::stream<beast::tcp_stream> stream(ioc, ctx);
 
     // Set SNI Hostname (many hosts need this to handshake successfully)
     if(! SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
@@ -64,6 +64,9 @@ do_session(
         std::cerr << ec.message() << "\n";
         return;
     }
+
+    // Set the expected hostname in the peer certificate for verification
+    stream.set_verify_callback(ssl::host_name_verification(host));
 
     // Look up the domain name
     auto const results = resolver.async_resolve(host, port, yield[ec]);
@@ -118,16 +121,26 @@ do_session(
 
     // Gracefully close the stream
     stream.async_shutdown(yield[ec]);
-    if(ec == net::error::eof)
-    {
-        // Rationale:
-        // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
-        ec = {};
-    }
-    if(ec)
-        return fail(ec, "shutdown");
 
-    // If we get here then the connection is closed gracefully
+    // ssl::error::stream_truncated, also known as an SSL "short read",
+    // indicates the peer closed the connection without performing the
+    // required closing handshake (for example, Google does this to
+    // improve performance). Generally this can be a security issue,
+    // but if your communication protocol is self-terminated (as
+    // it is with both HTTP and WebSocket) then you may simply
+    // ignore the lack of close_notify.
+    //
+    // https://github.com/boostorg/beast/issues/38
+    //
+    // https://security.stackexchange.com/questions/91435/how-to-handle-a-malicious-ssl-tls-shutdown
+    //
+    // When a short read would cut off the end of an HTTP message,
+    // Beast returns the error beast::http::error::partial_message.
+    // Therefore, if we see a short read here, it has occurred
+    // after the message has been completed, so it is safe to ignore it.
+
+    if(ec != net::ssl::error::stream_truncated)
+        return fail(ec, "shutdown");
 }
 
 //------------------------------------------------------------------------------
@@ -163,14 +176,25 @@ int main(int argc, char** argv)
 
     // Launch the asynchronous operation
     boost::asio::spawn(ioc, std::bind(
-        &do_session,
-        std::string(host),
-        std::string(port),
-        std::string(target),
-        version,
-        std::ref(ioc),
-        std::ref(ctx),
-        std::placeholders::_1));
+            &do_session,
+            std::string(host),
+            std::string(port),
+            std::string(target),
+            version,
+            std::ref(ioc),
+            std::ref(ctx),
+            std::placeholders::_1),
+        // on completion, spawn will call this function
+        [](std::exception_ptr ex)
+        {
+            // if an exception occurred in the coroutine,
+            // it's something critical, e.g. out of memory
+            // we capture normal errors in the ec
+            // so we just rethrow the exception here,
+            // which will cause `ioc.run()` to throw
+            if (ex)
+                std::rethrow_exception(ex);
+        });
 
     // Run the I/O service. The call will return when
     // the get operation is complete.

@@ -1,5 +1,5 @@
 /* Example of Outcome used with constructors
-(C) 2017-2019 Niall Douglas <http://www.nedproductions.biz/> (5 commits)
+(C) 2017-2026 Niall Douglas <http://www.nedproductions.biz/> (5 commits)
 
 
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -43,10 +43,16 @@ DEALINGS IN THE SOFTWARE.
 #include <sys/types.h>
 
 #include "../../../include/boost/outcome.hpp"
+
+#if __has_include(<filesystem>) && (__cplusplus >= 201700 || _HAS_CXX17)
+#include <filesystem>
+namespace filesystem = std::filesystem;
+#else
 #include <experimental/filesystem>
+namespace filesystem = std::experimental::filesystem;
+#endif
 
 namespace outcome = BOOST_OUTCOME_V2_NAMESPACE;
-namespace filesystem = std::experimental::filesystem;
 
 //! [file_handle]
 class file_handle
@@ -77,7 +83,11 @@ public:
 
   // Moves but not copies permitted
   file_handle(const file_handle &) = delete;
-  file_handle(file_handle &&o) noexcept : _fd(o._fd) { o._fd = -1; }
+  file_handle(file_handle &&o) noexcept
+      : _fd(o._fd)
+  {
+    o._fd = -1;
+  }
   file_handle &operator=(const file_handle &) = delete;
   file_handle &operator=(file_handle &&o) noexcept
   {
@@ -130,7 +140,7 @@ inline outcome::result<file_handle> file_handle::file(file_handle::path_type pat
   default:
     return std::errc::invalid_argument;
   }
-  ret._fd = ::open(path.u8string().c_str(), flags);
+  ret._fd = ::open((const char *) path.u8string().c_str(), flags);
   if(-1 == ret._fd)
   {
     // Note that if we bail out here, ~file_handle() will correctly not call ::close()

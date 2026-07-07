@@ -8,10 +8,10 @@
   -->
 <head>
 <title>Boost Graph Library: Resource-Constrained Shortest Paths</title>
-<body bgcolor="#ffffff" link="#0000ee" text="#000000" vlink="#551a8b" 
-        alink="#ff0000"> 
-<img src="../../../boost.png" 
-     alt="C++ Boost" width="277" height="86"> 
+<body bgcolor="#ffffff" link="#0000ee" text="#000000" vlink="#551a8b"
+        alink="#ff0000">
+<img src="../../../boost.png"
+     alt="C++ Boost" width="277" height="86">
 
 <br Clear>
 
@@ -57,7 +57,7 @@ void r_c_shortest_paths( const Graph&amp; g,
                          typename graph_traits&lt;Graph&gt;::vertex_descriptor s,
                          typename graph_traits&lt;Graph&gt;::vertex_descriptor t,
                          std::vector&lt;typename graph_traits&lt;Graph&gt;::edge_descriptor&gt;&amp; pareto_optimal_solution,
-                         Resource_Container&gt;&amp; pareto_optimal_resource_container,
+                         Resource_Container&amp; pareto_optimal_resource_container,
                          const Resource_Container&amp; rc,
                          const Resource_Extension_Function&amp; ref,
                          const Dominance_Function&amp; dominance,
@@ -93,7 +93,7 @@ void r_c_shortest_paths( const Graph&amp; g,
                          typename graph_traits&lt;Graph&gt;::vertex_descriptor s,
                          typename graph_traits&lt;Graph&gt;::vertex_descriptor t,
                          std::vector&lt;typename graph_traits&lt;Graph&gt;::edge_descriptor&gt;&amp; pareto_optimal_solution,
-                         Resource_Container&gt;&amp; pareto_optimal_resource_container,
+                         Resource_Container&amp; pareto_optimal_resource_container,
                          const Resource_Container&amp; rc,
                          const Resource_Extension_Function&amp; ref,
                          const Dominance_Function&amp; dominance )
@@ -443,7 +443,7 @@ OUT: <tt>std::vector&lt;Resource_Container&gt;&amp; pareto_optimal_resource_cont
 <blockquote>
 A container for storing the Pareto-optimal resource containers in the overloads where all Pareto-optimal solutions are returned.
 </blockquote>
-OUT: <tt>std::vector&lt;typename graph_traits&lt;Graph&gt;::edge_descriptor&gt;&amp; 
+OUT: <tt>std::vector&lt;typename graph_traits&lt;Graph&gt;::edge_descriptor&gt;&amp;
 pareto_optimal_solution</tt>
 <blockquote>
 A container for storing the first Pareto-optimal (undominated) solution (<i>s</i>-<i>t</i>-path) in the overloads where only one Pareto-optimal solution is returned. The path is returned as a sequence of edge descriptors in reverse order (from <tt>t</tt> to <tt>s</tt>).  This argument is not modified if there are no solutions.
@@ -554,7 +554,7 @@ When <tt>b_result_must_be_equal_to_desired_final_resource_levels==true</tt> (<tt
 
 <p>
 The file <a href="../example/r_c_shortest_paths_example.cpp">
-<rr>example/r_c_shortest_paths_example.cpp</tt></a> provides examples for how SPPRCs can be solved with the <tt>r_c_shortest_paths</tt> functions. There is an example for an SPP without resource constraints and an example for a shortest path problem with time windows.<br>
+<tt>example/r_c_shortest_paths_example.cpp</tt></a> provides examples for how SPPRCs can be solved with the <tt>r_c_shortest_paths</tt> functions. There is an example for an SPP without resource constraints and an example for a shortest path problem with time windows.<br>
 It is obvious that one would not use the algorithm for SPPs without resource constraints, because there are faster algorithms for this problem, but one would expect a code for the SPP with resource constraints to be able to handle such a case.
 </p>
 

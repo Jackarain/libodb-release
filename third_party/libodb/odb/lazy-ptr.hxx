@@ -1,5 +1,4 @@
 // file      : odb/lazy-ptr.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_LAZY_PTR_HXX
@@ -247,14 +246,14 @@ namespace odb
     lazy_unique_ptr (pointer, const deleter_type&) /*noexcept*/;
     lazy_unique_ptr (pointer, deleter_type&&) /*noexcept*/;
 
-    lazy_unique_ptr (lazy_unique_ptr&&) /*noexcept*/;
+    lazy_unique_ptr (lazy_unique_ptr&&) noexcept;
     template <class T1, class D1> lazy_unique_ptr (lazy_unique_ptr<T1, D1>&&) /*noexcept*/;
     //template <class T1> lazy_unique_ptr (std::auto_ptr<T1>&&) /*noexcept*/;
 
 #ifdef ODB_CXX11_NULLPTR
     lazy_unique_ptr& operator= (std::nullptr_t) /*noexcept*/;
 #endif
-    lazy_unique_ptr& operator= (lazy_unique_ptr&&) /*noexcept*/;
+    lazy_unique_ptr& operator= (lazy_unique_ptr&&) noexcept;
     template <class T1, class D1> lazy_unique_ptr& operator= (lazy_unique_ptr<T1, D1>&&) /*noexcept*/;
 
     T& operator* () const;
@@ -408,7 +407,7 @@ namespace odb
 
     lazy_shared_ptr (const lazy_shared_ptr&) /*noexcept*/;
     template <class Y> lazy_shared_ptr (const lazy_shared_ptr<Y>&) /*noexcept*/;
-    lazy_shared_ptr (lazy_shared_ptr&&) /*noexcept*/;
+    lazy_shared_ptr (lazy_shared_ptr&&) noexcept;
     template <class Y> lazy_shared_ptr (lazy_shared_ptr<Y>&&) /*noexcept*/;
     template <class Y> explicit lazy_shared_ptr (const lazy_weak_ptr<Y>&);
     //template <class Y> explicit lazy_shared_ptr (std::auto_ptr<Y>&&);
@@ -418,7 +417,7 @@ namespace odb
 
     lazy_shared_ptr& operator= (const lazy_shared_ptr&) /*noexcept*/;
     template <class Y> lazy_shared_ptr& operator= (const lazy_shared_ptr<Y>&) /*noexcept*/;
-    lazy_shared_ptr& operator= (lazy_shared_ptr&&) /*noexcept*/;
+    lazy_shared_ptr& operator= (lazy_shared_ptr&&) noexcept;
     template <class Y> lazy_shared_ptr& operator= (lazy_shared_ptr<Y>&&) /*noexcept*/;
     //template <class Y> lazy_shared_ptr& operator= (std::auto_ptr<Y>&&);
     template <class Y, class D> lazy_shared_ptr& operator= (std::unique_ptr<Y, D>&&);

@@ -17,14 +17,12 @@
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/version.hpp>
+#include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
 #include <cstdlib>
-#include <functional>
 #include <iostream>
 #include <memory>
-#include <string>
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -45,18 +43,18 @@ fail(beast::error_code ec, char const* what)
 class session : public std::enable_shared_from_this<session>
 {
     tcp::resolver resolver_;
-    beast::ssl_stream<beast::tcp_stream> stream_;
+    ssl::stream<beast::tcp_stream> stream_;
     beast::flat_buffer buffer_; // (Must persist between reads)
     http::request<http::empty_body> req_;
     http::response<http::string_body> res_;
 
 public:
-    // Objects are constructed with a strand to
-    // ensure that handlers do not execute concurrently.
     explicit
-    session(net::io_context& ioc, ssl::context& ctx)
-        : resolver_(net::make_strand(ioc))
-        , stream_(net::make_strand(ioc), ctx)
+    session(
+        net::any_io_executor ex,
+        ssl::context& ctx)
+    : resolver_(ex)
+    , stream_(ex, ctx)
     {
     }
 
@@ -71,10 +69,15 @@ public:
         // Set SNI Hostname (many hosts need this to handshake successfully)
         if(! SSL_set_tlsext_host_name(stream_.native_handle(), host))
         {
-            beast::error_code ec{static_cast<int>(::ERR_get_error()), net::error::get_ssl_category()};
+            beast::error_code ec{
+                static_cast<int>(::ERR_get_error()),
+                net::error::get_ssl_category()};
             std::cerr << ec.message() << "\n";
             return;
         }
+
+        // Set the expected hostname in the peer certificate for verification
+        stream_.set_verify_callback(ssl::host_name_verification(host));
 
         // Set up an HTTP GET request message
         req_.version(version);
@@ -184,16 +187,25 @@ public:
     void
     on_shutdown(beast::error_code ec)
     {
-        if(ec == net::error::eof)
-        {
-            // Rationale:
-            // http://stackoverflow.com/questions/25587403/boost-asio-ssl-async-shutdown-always-finishes-with-an-error
-            ec = {};
-        }
-        if(ec)
-            return fail(ec, "shutdown");
+        // ssl::error::stream_truncated, also known as an SSL "short read",
+        // indicates the peer closed the connection without performing the
+        // required closing handshake (for example, Google does this to
+        // improve performance). Generally this can be a security issue,
+        // but if your communication protocol is self-terminated (as
+        // it is with both HTTP and WebSocket) then you may simply
+        // ignore the lack of close_notify.
+        //
+        // https://github.com/boostorg/beast/issues/38
+        //
+        // https://security.stackexchange.com/questions/91435/how-to-handle-a-malicious-ssl-tls-shutdown
+        //
+        // When a short read would cut off the end of an HTTP message,
+        // Beast returns the error beast::http::error::partial_message.
+        // Therefore, if we see a short read here, it has occurred
+        // after the message has been completed, so it is safe to ignore it.
 
-        // If we get here then the connection is closed gracefully
+        if(ec != net::ssl::error::stream_truncated)
+            return fail(ec, "shutdown");
     }
 };
 
@@ -229,7 +241,12 @@ int main(int argc, char** argv)
     ctx.set_verify_mode(ssl::verify_peer);
 
     // Launch the asynchronous operation
-    std::make_shared<session>(ioc, ctx)->run(host, port, target, version);
+    // The session is constructed with a strand to
+    // ensure that handlers do not execute concurrently.
+    std::make_shared<session>(
+        net::make_strand(ioc),
+        ctx
+        )->run(host, port, target, version);
 
     // Run the I/O service. The call will return when
     // the get operation is complete.

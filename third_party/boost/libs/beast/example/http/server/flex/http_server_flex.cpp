@@ -17,13 +17,13 @@
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/version.hpp>
+#include <boost/asio/dispatch.hpp>
+#include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/config.hpp>
 #include <algorithm>
 #include <cstdlib>
-#include <functional>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -98,18 +98,15 @@ path_cat(
     return result;
 }
 
-// This function produces an HTTP response for the given
-// request. The type of the response object depends on the
-// contents of the request, so the interface requires the
-// caller to pass a generic lambda for receiving the response.
-template<
-    class Body, class Allocator,
-    class Send>
-void
+// Return a response for the given request.
+//
+// The concrete type of the response message (which depends on the
+// request), is type-erased in message_generator.
+template <class Body, class Allocator>
+http::message_generator
 handle_request(
     beast::string_view doc_root,
-    http::request<Body, http::basic_fields<Allocator>>&& req,
-    Send&& send)
+    http::request<Body, http::basic_fields<Allocator>>&& req)
 {
     // Returns a bad request response
     auto const bad_request =
@@ -153,13 +150,13 @@ handle_request(
     // Make sure we can handle the method
     if( req.method() != http::verb::get &&
         req.method() != http::verb::head)
-        return send(bad_request("Unknown HTTP-method"));
+        return bad_request("Unknown HTTP-method");
 
     // Request path must be absolute and not contain "..".
     if( req.target().empty() ||
         req.target()[0] != '/' ||
         req.target().find("..") != beast::string_view::npos)
-        return send(bad_request("Illegal request-target"));
+        return bad_request("Illegal request-target");
 
     // Build the path to the requested file
     std::string path = path_cat(doc_root, req.target());
@@ -173,11 +170,11 @@ handle_request(
 
     // Handle the case where the file doesn't exist
     if(ec == beast::errc::no_such_file_or_directory)
-        return send(not_found(req.target()));
+        return not_found(req.target());
 
     // Handle an unknown error
     if(ec)
-        return send(server_error(ec.message()));
+        return server_error(ec.message());
 
     // Cache the size since we need it after the move
     auto const size = body.size();
@@ -190,7 +187,7 @@ handle_request(
         res.set(http::field::content_type, mime_type(path));
         res.content_length(size);
         res.keep_alive(req.keep_alive());
-        return send(std::move(res));
+        return res;
     }
 
     // Respond to GET request
@@ -202,7 +199,7 @@ handle_request(
     res.set(http::field::content_type, mime_type(path));
     res.content_length(size);
     res.keep_alive(req.keep_alive());
-    return send(std::move(res));
+    return res;
 }
 
 //------------------------------------------------------------------------------
@@ -248,47 +245,8 @@ class session
         return static_cast<Derived&>(*this);
     }
 
-    // This is the C++11 equivalent of a generic lambda.
-    // The function object is used to send an HTTP message.
-    struct send_lambda
-    {
-        session& self_;
-
-        explicit
-        send_lambda(session& self)
-            : self_(self)
-        {
-        }
-
-        template<bool isRequest, class Body, class Fields>
-        void
-        operator()(http::message<isRequest, Body, Fields>&& msg) const
-        {
-            // The lifetime of the message has to extend
-            // for the duration of the async operation so
-            // we use a shared_ptr to manage it.
-            auto sp = std::make_shared<
-                http::message<isRequest, Body, Fields>>(std::move(msg));
-
-            // Store a type-erased version of the shared
-            // pointer in the class to keep it alive.
-            self_.res_ = sp;
-
-            // Write the response
-            http::async_write(
-                self_.derived().stream(),
-                *sp,
-                beast::bind_front_handler(
-                    &session::on_write,
-                    self_.derived().shared_from_this(),
-                    sp->need_eof()));
-        }
-    };
-
     std::shared_ptr<std::string const> doc_root_;
     http::request<http::string_body> req_;
-    std::shared_ptr<void> res_;
-    send_lambda lambda_;
 
 protected:
     beast::flat_buffer buffer_;
@@ -299,7 +257,6 @@ public:
         beast::flat_buffer buffer,
         std::shared_ptr<std::string const> const& doc_root)
         : doc_root_(doc_root)
-        , lambda_(*this)
         , buffer_(std::move(buffer))
     {
     }
@@ -336,12 +293,28 @@ public:
             return fail(ec, "read");
 
         // Send the response
-        handle_request(*doc_root_, std::move(req_), lambda_);
+        send_response(
+            handle_request(*doc_root_, std::move(req_)));
+    }
+
+    void
+    send_response(http::message_generator&& msg)
+    {
+        bool keep_alive = msg.keep_alive();
+
+        // Write the response
+        beast::async_write(
+            derived().stream(),
+            std::move(msg),
+            beast::bind_front_handler(
+                &session::on_write,
+                derived().shared_from_this(),
+                keep_alive));
     }
 
     void
     on_write(
-        bool close,
+        bool keep_alive,
         beast::error_code ec,
         std::size_t bytes_transferred)
     {
@@ -350,15 +323,12 @@ public:
         if(ec)
             return fail(ec, "write");
 
-        if(close)
+        if(! keep_alive)
         {
             // This means we should close the connection, usually because
             // the response indicated the "Connection: close" semantic.
             return derived().do_eof();
         }
-
-        // We're done with the response so delete it
-        res_ = nullptr;
 
         // Read another request
         do_read();
@@ -396,7 +366,14 @@ public:
     void
     run()
     {
-        do_read();
+        // We need to be executing within a strand to perform async operations
+        // on the I/O objects in this session. Although not strictly necessary
+        // for single-threaded contexts, this example code is written to be
+        // thread-safe by default.
+        net::dispatch(stream_.get_executor(),
+                      beast::bind_front_handler(
+                          &session::do_read,
+                          shared_from_this()));
     }
 
     void
@@ -415,7 +392,7 @@ class ssl_session
     : public session<ssl_session>
     , public std::enable_shared_from_this<ssl_session>
 {
-    beast::ssl_stream<beast::tcp_stream> stream_;
+    ssl::stream<beast::tcp_stream> stream_;
 
 public:
     // Create the session
@@ -432,7 +409,7 @@ public:
     }
 
     // Called by the base class
-    beast::ssl_stream<beast::tcp_stream>&
+    ssl::stream<beast::tcp_stream>&
     stream()
     {
         return stream_;
@@ -442,17 +419,23 @@ public:
     void
     run()
     {
-        // Set the timeout.
-        beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(30));
+        auto self = shared_from_this();
+        // We need to be executing within a strand to perform async operations
+        // on the I/O objects in this session.
+        net::dispatch(stream_.get_executor(), [self]() {
+            // Set the timeout.
+            beast::get_lowest_layer(self->stream_).expires_after(
+                std::chrono::seconds(30));
 
-        // Perform the SSL handshake
-        // Note, this is the buffered version of the handshake.
-        stream_.async_handshake(
-            ssl::stream_base::server,
-            buffer_.data(),
-            beast::bind_front_handler(
-                &ssl_session::on_handshake,
-                shared_from_this()));
+            // Perform the SSL handshake
+            // Note, this is the buffered version of the handshake.
+            self->stream_.async_handshake(
+                ssl::stream_base::server,
+                self->buffer_.data(),
+                beast::bind_front_handler(
+                    &ssl_session::on_handshake,
+                    self));
+        });
     }
 
     void

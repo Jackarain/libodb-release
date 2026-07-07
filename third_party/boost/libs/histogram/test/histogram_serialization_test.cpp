@@ -4,17 +4,17 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/assert.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/histogram/axis.hpp>
 #include <boost/histogram/axis/ostream.hpp>
 #include <boost/histogram/ostream.hpp>
 #include <boost/histogram/serialization.hpp>
+#include <cassert>
 #include <cmath>
 #include <string>
+#include "histogram.hpp"
+#include "serialization.hpp"
 #include "throw_exception.hpp"
-#include "utility_histogram.hpp"
-#include "utility_serialization.hpp"
 
 using namespace boost::histogram;
 
@@ -43,7 +43,7 @@ void run_tests(const std::string& filename) {
 }
 
 int main(int argc, char** argv) {
-  BOOST_ASSERT(argc == 2);
+  assert(argc == 2);
   run_tests<static_tag>(join(argv[1], "histogram_serialization_test_static.xml"));
   run_tests<dynamic_tag>(join(argv[1], "histogram_serialization_test_dynamic.xml"));
   return boost::report_errors();

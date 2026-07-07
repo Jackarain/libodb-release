@@ -1,5 +1,4 @@
 // file      : odb/prepared-query.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_PREPARED_QUERY_HXX
@@ -24,6 +23,12 @@ namespace odb
     ~prepared_query_impl ();
 
     prepared_query_impl (connection&);
+
+    // Verify this prepared query and the specified transaction use the
+    // same connection.
+    //
+    virtual bool
+    verify_connection (transaction&);
 
     bool cached;
     connection& conn;

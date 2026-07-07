@@ -1,5 +1,4 @@
 // file      : odb/lazy-ptr-impl.ixx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 namespace odb
@@ -32,7 +31,7 @@ namespace odb
 
 #ifdef ODB_CXX11
   inline lazy_ptr_base::
-  lazy_ptr_base (lazy_ptr_base&& r)
+  lazy_ptr_base (lazy_ptr_base&& r) noexcept
       : id_ (r.id_), db_ (r.db_), loader_ (r.loader_),
         free_ (r.free_), copy_ (r.copy_)
   {
@@ -79,20 +78,20 @@ namespace odb
 
 #ifdef ODB_CXX11
   inline lazy_ptr_base& lazy_ptr_base::
-  operator= (lazy_ptr_base&& r)
+  operator= (lazy_ptr_base&& r) noexcept
   {
     if (id_ != r.id_)
     {
       reset_id ();
       id_ = r.id_;
-      db_ = r.db_;
-      loader_ = r.loader_;
       free_ = r.free_;
       copy_ = r.copy_;
 
       r.id_ = 0;
     }
 
+    db_ = r.db_;
+    loader_ = r.loader_;
     return *this;
   }
 #endif
@@ -273,7 +272,7 @@ namespace odb
 #ifdef ODB_CXX11
   template <typename T>
   inline lazy_ptr_impl<T>::
-  lazy_ptr_impl (lazy_ptr_impl&& r)
+  lazy_ptr_impl (lazy_ptr_impl&& r) noexcept
       : lazy_ptr_base (std::move (r))
   {
   }
@@ -288,7 +287,7 @@ namespace odb
 
   template <typename T>
   inline lazy_ptr_impl<T>& lazy_ptr_impl<T>::
-  operator= (lazy_ptr_impl&& r)
+  operator= (lazy_ptr_impl&& r) noexcept
   {
     lazy_ptr_base& b (*this);
     b = std::move (r);

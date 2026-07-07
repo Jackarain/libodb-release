@@ -18,16 +18,46 @@
 #include <boost/beast/core/read_size.hpp>
 #include <boost/beast/_experimental/unit_test/suite.hpp>
 #include <boost/asio/buffer.hpp>
+#include <boost/asio/buffers_iterator.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <iterator>
 
 namespace boost {
 namespace beast {
 
+template class buffers_adaptor<net::mutable_buffer>;
+
+struct buffers_adaptor_test_hook
+{
+    template<class MutableBufferSequence>
+    static
+    auto
+    make_subrange(
+        buffers_adaptor <MutableBufferSequence> &adaptor,
+        std::size_t pos = 0,
+        std::size_t n = (std::numeric_limits<std::size_t>::max)())
+    -> typename buffers_adaptor<MutableBufferSequence>::mutable_buffers_type
+    {
+        return adaptor.make_subrange(pos, n);
+    }
+
+    template<class MutableBufferSequence>
+    static
+    auto
+    make_subrange(
+        buffers_adaptor<MutableBufferSequence> const& adaptor,
+        std::size_t pos = 0,
+        std::size_t n = (std::numeric_limits<std::size_t>::max)())
+    -> typename buffers_adaptor<MutableBufferSequence>::const_buffers_type
+    {
+        return adaptor.make_subrange(pos, n);
+    }
+};
+
 class buffers_adaptor_test : public unit_test::suite
 {
 public:
-    BOOST_STATIC_ASSERT(
+    BOOST_CORE_STATIC_ASSERT(
         is_mutable_dynamic_buffer<
             buffers_adaptor<buffers_triple>>::value);
 
@@ -86,15 +116,68 @@ public:
     }
 
     void
+    testIssue2459()
+    {
+        char s[13];
+        buffers_triple tb(s, sizeof(s));
+        buffers_adaptor<buffers_triple> b(tb);
+        ignore_unused(net::buffers_begin(b.data()));
+    }
+
+    template<bool isMutable>
+    void
+    testSubrange()
+    {
+        std::string s =
+            "the quick brown fox jumps over the lazy dog";
+
+        auto iterate_test = [&](
+            std::size_t a,
+            std::size_t b,
+            std::size_t c)
+        {
+            auto buffers = std::vector<net::mutable_buffer>();
+            if (a)
+                buffers.push_back(net::buffer(&s[0], a));
+            if (b - a)
+                buffers.push_back(net::buffer(&s[a], (b - a)));
+            if (c - b)
+                buffers.push_back(net::buffer(&s[b], (c - b)));
+            auto adapter = buffers_adaptor<std::vector<net::mutable_buffer>>(buffers);
+
+            using maybe_mutable =
+            typename std::conditional<
+                isMutable,
+                buffers_adaptor<std::vector<net::mutable_buffer>>&,
+                buffers_adaptor<std::vector<net::mutable_buffer>> const&>::type;
+
+            auto sub = buffers_adaptor_test_hook::make_subrange(static_cast<maybe_mutable>(adapter));
+            /*
+            using value_type = typename std::conditional<
+                isMutable, net::mutable_buffer, net::const_buffer>::type;
+            BEAST_EXPECTS(typeid(typename decltype(sub)::value_type) == typeid(value_type), "iterate_test");
+            */
+            BEAST_EXPECT(buffers_to_string(sub) == s.substr(0, c));
+        };
+
+        iterate_test(0, 0, 1);
+
+        for (std::size_t a = 0; a <= s.size(); ++a)
+            for (std::size_t b = a; b <= s.size(); ++b)
+                for (std::size_t c = b; c <= s.size(); ++c)
+                    iterate_test(a, b, c);
+    }
+
+
+    void
     run() override
     {
         testDynamicBuffer();
         testSpecial();
         testIssue386();
-#if 0
-        testBuffersAdapter();
-        testCommit();
-#endif
+        testIssue2459();
+        testSubrange<true>();
+        testSubrange<false>();
     }
 };
 

@@ -1,17 +1,17 @@
 // Boost.Convert test and usage example
-// Copyright (c) 2009-2016 Vladimir Batov.
+// Copyright (c) 2009-2020 Vladimir Batov.
 // Use, modification and distribution are subject to the Boost Software License,
 // Version 1.0. See http://www.boost.org/LICENSE_1_0.txt.
 
 #include "./test.hpp"
 
-#if defined(BOOST_CONVERT_IS_NOT_SUPPORTED)
+#if !defined(BOOST_CONVERT_CXX14)
 int main(int, char const* []) { return 0; }
 #else
 
 #include <boost/convert.hpp>
 #include <boost/convert/stream.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <stdlib.h>
@@ -197,8 +197,8 @@ static
 void
 test_manipulators()
 {
-    boost::cnv::cstream ccnv;
-    boost::cnv::wstream wcnv;
+    auto ccnv = boost::cnv::cstream();
+    auto wcnv = boost::cnv::wstream();
 
     int const hex_v01 = boost::convert<int>("FF", ccnv(std::hex)).value_or(0);
     int const hex_v02 = boost::convert<int>(L"F", wcnv(std::hex)).value_or(0);
@@ -349,6 +349,28 @@ test_user_str()
     //]
 }
 
+static
+void
+test_notation()
+{
+    //[stream_notation
+    boost::cnv::cstream cnv;
+
+    BOOST_TEST(  "-3.14159" == convert<string>(-3.14159, cnv(arg::notation = cnv::notation::fixed)(arg::precision = 5)).value());
+    BOOST_TEST("-3.142e+00" == convert<string>(-3.14159, cnv(arg::notation = cnv::notation::scientific)(arg::precision = 3)).value());
+
+    // precision doesn't affect hexfloat
+    BOOST_TEST("-0x1.921f9f01b866ep+1" == convert<string>(-3.14159, cnv(arg::notation = cnv::notation::hex)).value());
+
+    const auto close = boost::math::fpc::close_at_tolerance<double>(1);
+
+    BOOST_TEST_WITH(-3.14159, convert<double>("-3.14159", cnv(arg::notation = cnv::notation::fixed)).value(), close);
+    BOOST_TEST_WITH(-3.14159, convert<double>("-3.142e+00", cnv(arg::notation = cnv::notation::scientific)).value(), close);
+    // not supported due to https://gcc.gnu.org/bugzilla//show_bug.cgi?id=81122
+    // BOOST_TEST_WITH(-3.14159, convert<double>("-0x1.921f9f01b866ep+1", cnv(arg::notation = cnv::notation::hex)).value(), close);
+    //]
+}
+
 int
 main(int, char const* [])
 {
@@ -366,6 +388,7 @@ main(int, char const* [])
         test_locale();
         test_dbl_to_str();
         test_user_str();
+        test_notation();
     }
     catch(boost::bad_optional_access const&)
     {

@@ -7,7 +7,7 @@
 // See http://www.boost.org/libs/interprocess for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/interprocess/detail/config_begin.hpp>
+
 #include <boost/interprocess/detail/os_file_functions.hpp>
 //[doc_managed_copy_on_write
 #include <boost/interprocess/managed_mapped_file.hpp>
@@ -50,7 +50,7 @@ int main()
    {
       //Create an named integer in a managed mapped file
       managed_mapped_file managed_file(create_only, ManagedFile, 65536);
-      managed_file.construct<int>("MyInt")(0u);
+      managed_file.construct<int>("MyInt")(0);
 
       //Now create a copy on write version
       managed_mapped_file managed_file_cow(open_copy_on_write, ManagedFile);
@@ -58,14 +58,14 @@ int main()
       //Erase the int and create a new one
       if(!managed_file_cow.destroy<int>("MyInt"))
          throw int(0);
-      managed_file_cow.construct<int>("MyInt2");
+      managed_file_cow.construct<int>("MyInt2")();
 
       //Check changes
-      if(managed_file_cow.find<int>("MyInt").first && !managed_file_cow.find<int>("MyInt2").first)
+      if(managed_file_cow.find<int>("MyInt").first || !managed_file_cow.find<int>("MyInt2").first)
          throw int(0);
 
       //Check the original is intact
-      if(!managed_file.find<int>("MyInt").first && managed_file.find<int>("MyInt2").first)
+      if(!managed_file.find<int>("MyInt").first || managed_file.find<int>("MyInt2").first)
          throw int(0);
 
       {  //Dump the modified copy on write segment to a file
@@ -96,4 +96,4 @@ int main()
    return 0;
 }
 //]
-#include <boost/interprocess/detail/config_end.hpp>
+

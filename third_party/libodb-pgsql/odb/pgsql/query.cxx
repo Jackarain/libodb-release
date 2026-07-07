@@ -1,5 +1,4 @@
 // file      : odb/pgsql/query.cxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #include <cstddef> // std::size_t
@@ -273,7 +272,9 @@ namespace odb
           s.compare (0, (n = 6), "HAVING") == 0 ||
           s.compare (0, (n = 6), "having") == 0 ||
           s.compare (0, (n = 4), "WITH") == 0 ||
-          s.compare (0, (n = 4), "with") == 0)
+          s.compare (0, (n = 4), "with") == 0 ||
+          s.compare (0, (n = 4), "CALL") == 0 ||
+          s.compare (0, (n = 4), "call") == 0)
       {
         // It either has to be an exact match, or there should be
         // a whitespace following the keyword.
@@ -282,13 +283,25 @@ namespace odb
           return true;
       }
 
+      // Note that the '/*CALL*/' prefix is normally used as a hint for the
+      // ODB compiler for the SELECT statements in the view definitions that
+      // are used for the stored function calls. Since the ODB compiler
+      // removes this prefix from these statements, this check is actually not
+      // necessary for them. We, however, still recognize this prefix at
+      // runtime in case the user specify it on the query call site rather
+      // than in the view definition. Also note that we don't remove the
+      // prefix here since PostgreSQL allows comments in SQL statements.
+      //
+      if (s.compare (0, (n = 8), "/*CALL*/") == 0)
+        return true;
+
       return false;
     }
 
     void query_base::
     optimize ()
     {
-      // Remove a single TRUE literal or one that is followe by one of
+      // Remove a single TRUE literal or one that is followed by one of
       // the other clauses. This avoids useless WHERE clauses like
       //
       // WHERE TRUE GROUP BY foo

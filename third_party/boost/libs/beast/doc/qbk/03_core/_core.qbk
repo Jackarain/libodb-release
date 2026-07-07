@@ -96,5 +96,10 @@ effect:
 [include 5_buffers.qbk]
 [include 6_files.qbk]
 [include 7_composed.qbk]
+[include 9_ssl_tls_certificate.qbk]
+[include 10_ssl_tls_shutdown.qbk]
+[endsect]
 
+[section:config Configuration]
+[include 8_conf_macros.qbk]
 [endsect]

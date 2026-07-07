@@ -1,5 +1,4 @@
 // file      : odb/details/export.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_DETAILS_EXPORT_HXX
@@ -7,7 +6,7 @@
 
 #include <odb/pre.hxx>
 
-#include <odb/details/config.hxx>
+#include <odb/details/config.hxx> // LIBODB_STATIC if ODB_COMPILER
 
 // Normally we don't export class templates (but do complete specializations),
 // inline functions, and classes with only inline member functions. Exporting
@@ -16,8 +15,6 @@
 // export. Also, MinGW GCC doesn't like seeing non-exported function being
 // used before their inline definition. The workaround is to reorder code. In
 // the end it's all trial and error.
-
-#ifdef LIBODB_BUILD2
 
 #if defined(LIBODB_STATIC)         // Using static.
 #  define LIBODB_EXPORT
@@ -43,36 +40,6 @@
 //
 #  define LIBODB_EXPORT            // Using static or shared.
 #endif
-
-#else // LIBODB_BUILD2
-
-#ifdef LIBODB_STATIC_LIB
-#  define LIBODB_EXPORT
-#else
-#  ifdef _WIN32
-#    ifdef _MSC_VER
-#      ifdef LIBODB_DYNAMIC_LIB
-#        define LIBODB_EXPORT __declspec(dllexport)
-#      else
-#        define LIBODB_EXPORT __declspec(dllimport)
-#      endif
-#    else
-#      ifdef LIBODB_DYNAMIC_LIB
-#        ifdef DLL_EXPORT
-#          define LIBODB_EXPORT __declspec(dllexport)
-#        else
-#          define LIBODB_EXPORT
-#        endif
-#      else
-#        define LIBODB_EXPORT __declspec(dllimport)
-#      endif
-#    endif
-#  else
-#    define LIBODB_EXPORT
-#  endif
-#endif
-
-#endif // LIBODB_BUILD2
 
 #include <odb/post.hxx>
 

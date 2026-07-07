@@ -11,11 +11,13 @@
 #include <boost/container/small_vector.hpp>
 #include <boost/container/stable_vector.hpp>
 #include <boost/container/static_vector.hpp>
+#include <boost/container/detail/pair.hpp>
 
 #include <iostream>
 
 #include "movable_int.hpp"
 #include "dummy_test_allocator.hpp"
+#include <functional> //std::less
 
 using namespace boost::container;
 
@@ -94,7 +96,11 @@ template class flat_tree
 }  //dtl {
 }} //boost::container
 
-#if (__cplusplus > 201103L)
+#if (BOOST_CXX_VERSION >= 201103L)
+//Old GCCs have problems (compiler bugs) with std::vector and flat_xxx
+#if !defined(BOOST_GCC) || (BOOST_GCC >= 50000)
+// flat_map, std::vector
+
 #include <vector>
 
 namespace boost{
@@ -119,6 +125,7 @@ template class flat_tree
 }} //boost::container
 
 #endif
+#endif
 
 int main ()
 {
@@ -131,12 +138,10 @@ int main ()
               std::less<int>, void> tree;
       typedef tree::container_type container_type;
       typedef tree::key_compare key_compare;
-      if (boost::has_trivial_destructor_after_move<tree>::value !=
+      BOOST_CONTAINER_STATIC_ASSERT_MSG ((boost::has_trivial_destructor_after_move<tree>::value ==
           boost::has_trivial_destructor_after_move<container_type>::value &&
-          boost::has_trivial_destructor_after_move<key_compare>::value) {
-         std::cerr << "has_trivial_destructor_after_move(default allocator) test failed" << std::endl;
-         return 1;
-      }
+          boost::has_trivial_destructor_after_move<key_compare>::value)
+          , "has_trivial_destructor_after_move(default allocator) test failed");
    }
    // std::allocator
    {
@@ -144,12 +149,10 @@ int main ()
               std::less<int>, std::allocator<int> > tree;
       typedef tree::container_type container_type;
       typedef tree::key_compare key_compare;
-      if (boost::has_trivial_destructor_after_move<tree>::value !=
+      BOOST_CONTAINER_STATIC_ASSERT_MSG( (boost::has_trivial_destructor_after_move<tree>::value ==
           boost::has_trivial_destructor_after_move<container_type>::value &&
-          boost::has_trivial_destructor_after_move<key_compare>::value) {
-         std::cerr << "has_trivial_destructor_after_move(std::allocator) test failed" << std::endl;
-         return 1;
-      }
+          boost::has_trivial_destructor_after_move<key_compare>::value)
+          , "has_trivial_destructor_after_move(std::allocator) test failed");
    }
 
    return 0;

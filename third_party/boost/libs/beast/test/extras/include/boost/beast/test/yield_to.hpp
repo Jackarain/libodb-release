@@ -19,6 +19,12 @@
 #include <thread>
 #include <vector>
 
+#if BOOST_WORKAROUND(BOOST_GCC, < 80200)
+#define BOOST_BEAST_SYMBOL_HIDDEN __attribute__ ((visibility("hidden")))
+#else
+#define BOOST_BEAST_SYMBOL_HIDDEN
+#endif
+
 namespace boost {
 namespace beast {
 namespace test {
@@ -29,14 +35,13 @@ namespace test {
     functions inside coroutines. This is handy for testing
     asynchronous asio code.
 */
-class enable_yield_to
+class BOOST_BEAST_SYMBOL_HIDDEN enable_yield_to
 {
 protected:
     net::io_context ioc_;
 
 private:
-    net::executor_work_guard<
-        net::io_context::executor_type> work_;
+    net::executor_work_guard<net::io_context::executor_type> work_;
     std::vector<std::thread> threads_;
     std::mutex m_;
     std::condition_variable cv_;
@@ -120,20 +125,33 @@ void
 enable_yield_to::
 spawn(F0&& f, FN&&... fn)
 {
-    asio::spawn(ioc_,
-        [&](yield_context yield)
+    // dispatch of spawn is a workaround for
+    // https://github.com/boostorg/beast/issues/2499
+    asio::dispatch(ioc_, 
+        [&]
         {
-            f(yield);
-            std::lock_guard<std::mutex> lock{m_};
-            if(--running_ == 0)
-                cv_.notify_all();
-        }
-        , boost::coroutines::attributes(2 * 1024 * 1024));
+            asio::spawn(ioc_,
+                std::allocator_arg,
+                boost::context::fixedsize_stack(2 * 1024 * 1024),
+                [&](yield_context yield)
+                {
+                    f(yield);
+                    std::lock_guard<std::mutex> lock{m_};
+                    if(--running_ == 0)
+                        cv_.notify_all();
+                },
+                [](std::exception_ptr e)
+                {
+                    if (e)
+                        std::rethrow_exception(e);
+                });
+        });
     spawn(fn...);
 }
 
 } // test
 } // beast
 } // boost
+
 
 #endif

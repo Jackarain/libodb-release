@@ -16,7 +16,7 @@
 #include <boost/math/concepts/real_concept.hpp>
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <boost/test/floating_point_comparison.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
 #include <boost/math/special_functions/factorials.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/tools/stats.hpp>
@@ -44,6 +44,7 @@ T naive_falling_factorial(T x, unsigned n)
 template <class T>
 void test_spots(T)
 {
+   using std::ldexp;
    //
    // Basic sanity checks.
    //
@@ -307,6 +308,13 @@ void test_spots(T)
       BOOST_CHECK_CLOSE(::boost::math::falling_factorial(ldexp(static_cast<T>(1), -300), 20), static_cast<T>(-5.97167167502482975928590631196751639118233432208390100e-74L), tolerance);
       BOOST_CHECK_CLOSE(::boost::math::falling_factorial(ldexp(static_cast<T>(1), -300), 200), static_cast<T>(-1.93579759151806711025267355739174942986011285920860098569075e282L), 10 * tolerance);
    }
+
+   // for coverage:
+   BOOST_MATH_IF_CONSTEXPR(std::numeric_limits<T>::has_infinity && (std::numeric_limits<T>::max_exponent <= std::numeric_limits<double>::max_exponent))
+   {
+      BOOST_CHECK_EQUAL(::boost::math::falling_factorial(boost::math::tools::epsilon<T>(), 200), -std::numeric_limits<T>::infinity());
+   }
+
 
 
    tolerance = boost::math::tools::epsilon<T>() * 100 * 20;  // 20 eps as a percent.

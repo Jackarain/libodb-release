@@ -1,3 +1,5 @@
+//  (C) Copyright John Maddock 2014-9. 
+//  (C) Copyright Andrey Semashev 2017. 
 //  Use, modification and distribution are subject to the  
 //  Boost Software License, Version 1.0. (See accompanying file  
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
@@ -39,6 +41,11 @@ typedef unsigned int BOOST_MAY_ALIAS aliasing_uint;
 
 struct BOOST_ATTRIBUTE_NODISCARD nodiscard_struct {};
 
+BOOST_ATTRIBUTE_NODISCARD int nodiscard_proc(int i)
+{
+   return i * i;
+}
+
 
 #define test_fallthrough(x) foobar(x)
 
@@ -49,6 +56,16 @@ struct no_unique
    BOOST_ATTRIBUTE_NO_UNIQUE_ADDRESS empty b;
 };
 
+template <bool b>
+struct trait
+{
+   enum { value = b };
+};
+
+void* test_nullptr()
+{
+   return BOOST_NULLPTR;
+}
 
 int main()
 {
@@ -64,6 +81,13 @@ int main()
          always_throw();
       nodiscard_struct s;
       no_unique no_un;
+
+      BOOST_IF_CONSTEXPR(trait<true>::value)
+      {
+         result += 2;
+      }
+
+      test_nullptr();
    }
    catch(int)
    {

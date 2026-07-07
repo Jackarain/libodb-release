@@ -18,6 +18,9 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/strand.hpp>
 #include <thread>
+#if BOOST_ASIO_HAS_CO_AWAIT
+#include <boost/asio/use_awaitable.hpp>
+#endif
 
 namespace boost {
 namespace beast {
@@ -125,6 +128,61 @@ public:
                 w.handshake(ws, res, "localhost", "/");
                 // VFALCO validate res?
                 BEAST_EXPECT(called);
+            }
+            catch(...)
+            {
+                ts.close();
+                throw;
+            }
+            ts.close();
+        });
+
+        // handshake, deflate, supported
+        doStreamLoop([&](test::stream &ts)
+        {
+            echo_server es{log};
+            ws_type ws{ts};
+            ws.next_layer().connect(es.stream());
+            response_type res;
+            try
+            {
+                websocket::permessage_deflate option{};
+                option.client_enable = true;
+                option.client_max_window_bits = 14;
+                ws.set_option(option);
+
+                w.handshake(ws, res, "localhost", "/");
+
+                websocket::permessage_deflate_status status;
+                ws.get_status(status);
+                BEAST_EXPECT(status.active);
+                BEAST_EXPECT(9 == status.server_window_bits);
+                BEAST_EXPECT(14 == status.client_window_bits);
+            }
+            catch(...)
+            {
+                ts.close();
+                throw;
+            }
+            ts.close(); 
+        });
+
+        // handshake, deflate, not supported
+        doStreamLoop([&](test::stream &ts)
+        {
+            echo_server es{log};
+            ws_type_t<false> ws{ts};
+            ws.next_layer().connect(es.stream());
+            response_type res;
+            try
+            {
+                w.handshake(ws, res, "localhost", "/");
+
+                websocket::permessage_deflate_status status;
+                ws.get_status(status);
+                BEAST_EXPECT(!status.active);
+                BEAST_EXPECT(0 == status.server_window_bits);
+                BEAST_EXPECT(0 == status.client_window_bits);
             }
             catch(...)
             {
@@ -697,13 +755,120 @@ public:
             test::connect(ws1.next_layer(), ws2.next_layer());
 
             ws2.set_option(stream_base::decorator(make_big));
-            error_code ec;
             ws2.async_accept(test::success_handler());
             ws1.async_handshake("test", "/", test::success_handler());
             ioc.run();
             ioc.restart();
         }
     }
+
+#if BOOST_ASIO_HAS_CO_AWAIT
+    void testAwaitableCompiles(
+        stream<test::stream>& s,
+        std::string host,
+        std::string port,
+        response_type& resp)
+    {
+        static_assert(std::is_same_v<
+            net::awaitable<void>, decltype(
+            s.async_handshake(host, port, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<void>, decltype(
+            s.async_handshake(resp, host, port, net::use_awaitable))>);
+    }
+#endif
+
+    void
+    testIssue2364()
+    {
+        { // sync unauthorized
+            net::io_context ioc;
+            stream<test::stream> ws{ioc};
+            auto tr = connect(ws.next_layer());
+            std::string const reply =
+                "HTTP/1.1 401 Unauthorized\r\n"
+                "\r\n";
+            ws.next_layer().append(reply);
+            tr.close();
+            try
+            {
+                websocket::response_type response;
+                error_code ec;
+                ws.handshake(response, "localhost:80", "/", ec);
+                BEAST_EXPECT(ec);
+                BEAST_EXPECTS(response.result() == http::status::unauthorized,
+                                 std::to_string(response.result_int()));
+            }
+            catch(system_error const&)
+            {
+                fail();
+            }
+        }
+
+        { // sync invalid response
+            net::io_context ioc;
+            stream<test::stream> ws{ioc};
+            auto tr = connect(ws.next_layer());
+            std::string const reply =
+                    "zzzzzzzzzzzzzzzzzzzzz";
+            ws.next_layer().append(reply);
+            tr.close();
+            try
+            {
+                websocket::response_type response;
+                error_code ec;
+                ws.handshake(response, "localhost:80", "/", ec);
+                BEAST_EXPECT(ec);
+                BEAST_EXPECTS(response.result() == http::status::internal_server_error,
+                              std::to_string(response.result_int()));
+            }
+            catch(system_error const&)
+            {
+                fail();
+            }
+        }
+
+        { // async unauthorized
+            net::io_context ioc;
+            stream<test::stream> ws{ioc};
+            auto tr = connect(ws.next_layer());
+            std::string const reply =
+                "HTTP/1.1 401 Unauthorized\r\n"
+                "\r\n";
+            ws.next_layer().append(reply);
+            tr.close();
+            websocket::response_type response;
+            auto handler = [&](error_code ec)
+            {
+                BEAST_EXPECT(ec);
+                BEAST_EXPECTS(response.result() == http::status::unauthorized,
+                                  std::to_string(response.result_int()));
+            };
+            ws.async_handshake(response, "localhost:80", "/", handler);
+            ioc.run();
+        }
+
+        { // async invalid response
+            net::io_context ioc;
+            stream<test::stream> ws{ioc};
+            auto tr = connect(ws.next_layer());
+            std::string const reply =
+                    "zzzzzzzzzzzzzzzz";
+            ws.next_layer().append(reply);
+            tr.close();
+            websocket::response_type response;
+            auto handler = [&](error_code ec)
+            {
+                BEAST_EXPECT(ec);
+                BEAST_EXPECTS(response.result() == http::status::internal_server_error,
+                              std::to_string(response.result_int()));
+            };
+            ws.async_handshake(response, "localhost:80", "/", handler);
+            ioc.run();
+        }
+    }
+
 
     void
     run() override
@@ -715,6 +880,10 @@ public:
         testMoveOnly();
         testAsync();
         testIssue1460();
+#if BOOST_ASIO_HAS_CO_AWAIT
+        boost::ignore_unused(&handshake_test::testAwaitableCompiles);
+#endif
+        testIssue2364();
     }
 };
 

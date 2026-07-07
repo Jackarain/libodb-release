@@ -52,7 +52,7 @@ void expected_results()
    //
    // Linux:
    //
-   if((std::numeric_limits<long double>::digits <= 64)
+   BOOST_MATH_IF_CONSTEXPR((std::numeric_limits<long double>::digits <= 64)
       && (std::numeric_limits<long double>::digits != std::numeric_limits<double>::digits))
    {
 #ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
@@ -65,7 +65,7 @@ void expected_results()
          ".*", 10, 5);                  // test function
 #endif
    }
-   if(std::numeric_limits<long double>::digits == 64)
+   BOOST_MATH_IF_CONSTEXPR(std::numeric_limits<long double>::digits == 64)
    {
       add_expected_result(
          ".*",                          // compiler
@@ -200,7 +200,9 @@ BOOST_AUTO_TEST_CASE( test_main )
    test_spots(0.0, "double");
 #ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
    test_spots(0.0L, "long double");
+#ifndef BOOST_MATH_NO_REAL_CONCEPT_TESTS
    test_spots(boost::math::concepts::real_concept(0.1), "real_concept");
+#endif
 #endif
 
    expected_results();
@@ -221,11 +223,15 @@ BOOST_AUTO_TEST_CASE( test_main )
 
    test_legendre_p_prime<float>();
    test_legendre_p_prime<double>();
+#ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
    test_legendre_p_prime<long double>();
+#endif
 
    int ulp_distance = test_legendre_p_zeros_double_ulp(1, 100);
    BOOST_CHECK(ulp_distance <= 2);
    test_legendre_p_zeros<float>();
    test_legendre_p_zeros<double>();
+#ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
    test_legendre_p_zeros<long double>();
+#endif
 }

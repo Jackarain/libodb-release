@@ -3,12 +3,9 @@
 # Distributed under the Boost Software License, Version 1.0.
 # See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt
 
-# Partial (add_subdirectory only) and experimental CMake support
-# Subject to change; please do not rely on the contents of this file yet.
+cmake_minimum_required(VERSION 3.5...3.20)
 
-cmake_minimum_required(VERSION 3.5)
-
-project(BoostIterator LANGUAGES CXX)
+project(boost_iterator VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 add_library(boost_iterator INTERFACE)
 add_library(Boost::iterator ALIAS boost_iterator)
@@ -20,15 +17,11 @@ target_link_libraries(boost_iterator
         Boost::assert
         Boost::concept_check
         Boost::config
-        Boost::conversion
         Boost::core
         Boost::detail
-        Boost::function_types
         Boost::fusion
         Boost::mpl
         Boost::optional
-        Boost::smart_ptr
-        Boost::static_assert
         Boost::type_traits
         Boost::utility
 )

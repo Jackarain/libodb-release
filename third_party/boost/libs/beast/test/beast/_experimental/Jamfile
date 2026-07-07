@@ -8,6 +8,7 @@
 #
 
 local SOURCES =
+    _test_detail_stream_state.cpp
     error.cpp
     icy_stream.cpp
     stream.cpp
@@ -18,6 +19,7 @@ local RUN_TESTS ;
 for local f in $(SOURCES)
 {
     RUN_TESTS += [ run $(f)
+        /boost/beast/test//lib-asio-ssl
         /boost/beast/test//lib-test
     ] ;
 }
@@ -26,12 +28,14 @@ alias run-tests : $(RUN_TESTS) ;
 
 exe fat-tests :
     $(SOURCES)
+    /boost/beast/test//lib-asio-ssl
     /boost/beast/test//lib-test
     ;
 
 explicit fat-tests ;
 
 run $(SOURCES)
+    /boost/beast/test//lib-asio-ssl
     /boost/beast/test//lib-test
     : : : : run-fat-tests ;
 

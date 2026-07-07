@@ -58,9 +58,9 @@ Beast requires:
 
 * [*C++11:] Robust support for most language features.
 * [*Boost:] Beast only works with Boost, not stand-alone Asio
-* [*OpenSSL:] Required to build the tests, examples, and to use TLS/Secure sockets.
+* [*OpenSSL:] Version 1.0.2 or higher. Required to build the tests, examples, and to use TLS/Secure sockets.
 
-Tested with these compilers: msvc-14+, gcc 4.8.4+, clang 3.6+.
+Tested with these compilers: msvc-14+, gcc 5.0+, clang 3.6+.
 
 Sources are [*header-only]. Adding additional libraries to the
 linking step for your programs to use Beast is normally not
@@ -133,10 +133,19 @@ Thanks to
 [@https://github.com/djarek Damian Jarek]
 for his generous participation and source code contributions.
 
+Thanks to [@https://github.com/madmongo1 Richard Hodges] (hodges.r@gmail.com)
+for maintaining Beast on behalf of the [@https://cppalliance.org C++ Alliance].
+
+Many thanks to [@https://www.jetbrains.com Jetbrains s.r.o.] for generously providing the
+Beast development team with All Product Developmnent Licenses.
 [endsect]
 
 
 
 [endsect]
+
+[h1 Documentation]
+
+Visit [@https://boost.org/libs/beast https://boost.org/libs/beast] for complete documentation.
 
 [include 1_quick_look.qbk]

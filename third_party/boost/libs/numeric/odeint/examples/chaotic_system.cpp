@@ -15,7 +15,7 @@
 
 
 #include <iostream>
-#include <boost/array.hpp>
+#include <array>
 
 #include <boost/numeric/odeint.hpp>
 
@@ -52,8 +52,8 @@ const size_t n = 3;
 const size_t num_of_lyap = 3;
 const size_t N = n + n*num_of_lyap;
 
-typedef boost::array< double , N > state_type;
-typedef boost::array< double , num_of_lyap > lyap_type;
+typedef std::array< double , N > state_type;
+typedef std::array< double , num_of_lyap > lyap_type;
 
 void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
 {
@@ -61,8 +61,8 @@ void lorenz_with_lyap( const state_type &x , state_type &dxdt , double t )
 
     for( size_t l=0 ; l<num_of_lyap ; ++l )
     {
-        const double *pert = x.begin() + 3 + l * 3;
-        double *dpert = dxdt.begin() + 3 + l * 3;
+        const double *pert = x.data() + 3 + l * 3;
+        double *dpert = dxdt.data() + 3 + l * 3;
         dpert[0] = - sigma * pert[0] + 10.0 * pert[1];
         dpert[1] = ( R - x[2] ) * pert[0] - pert[1] - x[0] * pert[2];
         dpert[2] = x[1] * pert[0] + x[0] * pert[1] - b * pert[2];

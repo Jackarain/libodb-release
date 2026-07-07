@@ -26,6 +26,12 @@
 .file	"make_i386_ms_pe_gas.asm"
 .text
 .p2align 4,,15
+
+/* mark as using no unregistered SEH handlers */
+.globl	@feat.00
+.def	@feat.00;	.scl	3;	.type	0;	.endef
+.set    @feat.00,   1
+
 .globl	_make_fcontext
 .def	_make_fcontext;	.scl	2;	.type	32;	.endef
 _make_fcontext:
@@ -56,7 +62,7 @@ _make_fcontext:
     movl  %ecx, 0x14(%eax)
     /* second arg of make_fcontext() == size of context-stack */
     movl  0x8(%esp), %edx
-    /* negate stack size for LEA instruction (== substraction) */
+    /* negate stack size for LEA instruction (== subtraction) */
     negl  %edx
     /* compute bottom address of context stack (limit) */
     leal  (%ecx,%edx), %ecx
@@ -88,7 +94,7 @@ _make_fcontext:
     /* traverse current seh chain to get the last exception handler installed by Windows */
     /* note that on Windows Server 2008 and 2008 R2, SEHOP is activated by default */
     /* the exception handler chain is tested for the presence of ntdll.dll!FinalExceptionHandler */
-    /* at its end by RaiseException all seh andlers are disregarded if not present and the */
+    /* at its end by RaiseException all seh handlers are disregarded if not present and the */
     /* program is aborted */
     /* load NT_TIB into ECX */
     movl  %fs:(0x0), %ecx

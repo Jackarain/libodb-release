@@ -1,5 +1,4 @@
 // file      : odb/pgsql/pgsql-oid.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 // Generated file of OIDs extracted from the PostgreSQL 8.4.8 source file
@@ -37,6 +36,8 @@ namespace odb
       bytea_oid = 17,
       bit_oid = 1560,
       varbit_oid = 1562,
+
+      void_oid = 2278,
 
       uuid_oid = 2950
     };

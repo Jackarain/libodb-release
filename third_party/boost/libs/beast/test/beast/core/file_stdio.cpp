@@ -17,7 +17,7 @@
 namespace boost {
 namespace beast {
 
-BOOST_STATIC_ASSERT(! std::is_copy_constructible<file_stdio>::value);
+BOOST_CORE_STATIC_ASSERT(! std::is_copy_constructible<file_stdio>::value);
 
 class file_stdio_test
     : public beast::unit_test::suite
@@ -26,7 +26,11 @@ public:
     void
     run()
     {
+#ifdef BOOST_MSVC
+        test_file<file_stdio, true>();
+#else
         test_file<file_stdio>();
+#endif
     }
 };
 

@@ -1,5 +1,4 @@
 // file      : odb/vector.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_VECTOR_HXX
@@ -92,10 +91,16 @@ namespace odb
     {return v_.get_allocator ();}
 
 #ifdef ODB_CXX11
-    vector(vector&& x): vector_base (std::move (x)), v_ (std::move (x.v_)) {}
+    vector(vector&& x) noexcept
+      : vector_base (std::move (x)), v_ (std::move (x.v_)) {}
+
     vector(const vector& x, const A& a): vector_base (x), v_ (x.v_, a) {}
     vector(vector&& x, const A& a)
         : vector_base (std::move (x)), v_ (std::move (x.v_), a) {}
+
+    // Note: noexcept is not specified since it can throw while reallocating
+    // impl_.
+    //
     vector& operator=(vector&&);
 #ifdef ODB_CXX11_INITIALIZER_LIST
     vector(std::initializer_list<T> il, const A& a = A()): v_ (il, a) {}

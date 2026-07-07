@@ -6,21 +6,21 @@
 
 // This test is inspired by the corresponding boost/beast test of detail_variant.
 
-#include <boost/assert.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/histogram/axis/integer.hpp>
 #include <boost/histogram/axis/ostream.hpp>
 #include <boost/histogram/axis/regular.hpp>
 #include <boost/histogram/axis/variant.hpp>
 #include <boost/histogram/serialization.hpp>
+#include <cassert>
+#include "axis.hpp"
+#include "serialization.hpp"
 #include "throw_exception.hpp"
-#include "utility_axis.hpp"
-#include "utility_serialization.hpp"
 
 using namespace boost::histogram::axis;
 
 int main(int argc, char** argv) {
-  BOOST_ASSERT(argc == 2);
+  assert(argc == 2);
 
   const auto filename = join(argv[1], "axis_variant_serialization_test.xml");
 
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   BOOST_TEST_EQ(a, b);
 
   variant<I> c; // load incompatible version
-  BOOST_TEST_THROWS(load_xml(filename, c), boost::archive::archive_exception);
+  BOOST_TEST_THROWS(load_xml(filename, c), std::runtime_error);
 
   return boost::report_errors();
 }

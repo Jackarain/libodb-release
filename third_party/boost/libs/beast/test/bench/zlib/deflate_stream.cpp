@@ -16,7 +16,7 @@
 #include <random>
 #include <string>
 
-#include "zlib-1.2.11/zlib.h"
+#include "zlib-1.3.1/zlib.h"
 
 namespace boost {
 namespace beast {
@@ -68,7 +68,6 @@ public:
     doDeflateBeast(string_view const& in)
     {
         z_params zs;
-        memset(&zs, 0, sizeof(zs));
         deflate_stream ds;
         ds.reset(
             Z_DEFAULT_COMPRESSION,

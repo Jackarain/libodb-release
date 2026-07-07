@@ -8,7 +8,9 @@
 // See http://www.boost.org/libs/interprocess for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-#include <boost/interprocess/detail/config_begin.hpp>
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 #include <boost/interprocess/detail/workaround.hpp>
 
 //[doc_shared_ptr
@@ -141,4 +143,4 @@ int main ()
    return 0;
 }
 //]
-#include <boost/interprocess/detail/config_end.hpp>
+

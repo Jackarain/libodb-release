@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <vector>
-#include <ciso646>
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/sort/sort.hpp>
@@ -37,8 +36,11 @@ void test1 (void)
     std::vector< uint64_t > V1;
     V1.reserve (NElem);
     
+    //------------------- sort 0 elements ------------------------------------
+    block_indirect_sort ( V1.end (), V1.end ( ), 4);
+    
     //------------------ sorted elements  4 threads --------------------------
-    V1.clear ( );
+    V1.clear ();
     for (uint32_t i = 0; i < NElem; ++i) V1.push_back (i);
 
     block_indirect_sort ( V1.begin ( ), V1.end ( ), 4);
@@ -162,7 +164,7 @@ void test_int_array(uint32_t NELEM)
 
     bsp::block_indirect_sort(V1.begin(), V1.end());
     for (unsigned i = 1; i < NELEM; i++)
-    {   BOOST_CHECK(not (V1[i] < V1[i-1]));
+    {   BOOST_CHECK (! (V1[i] < V1[i-1]));
     };
 };    
 void test3 (void)

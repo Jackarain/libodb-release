@@ -1,5 +1,4 @@
 // file      : odb/details/function-wrapper.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_DETAILS_FUNCTION_WRAPPER_HXX

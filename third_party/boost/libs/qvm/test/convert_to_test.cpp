@@ -1,10 +1,14 @@
-//Copyright (c) 2008-2016 Emil Dotchevski and Reverge Studios, Inc.
+// Copyright 2008-2024 Emil Dotchevski and Reverge Studios, Inc.
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-//Distributed under the Boost Software License, Version 1.0. (See accompanying
-//file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#ifdef BOOST_QVM_TEST_SINGLE_HEADER
+#   include BOOST_QVM_TEST_SINGLE_HEADER
+#else
+#   include <boost/qvm/operations.hpp>
+#   include <boost/qvm/map_mat_mat.hpp>
+#endif
 
-#include <boost/qvm/operations.hpp>
-#include <boost/qvm/map_mat_mat.hpp>
 #include "test_qvm_matrix.hpp"
 #include "test_qvm_quaternion.hpp"
 #include "test_qvm_vector.hpp"
@@ -49,13 +53,13 @@ namespace
             }
             {
             test_qvm::matrix<M1,4,4> const my=convert_to< test_qvm::matrix<M1,4,4> >(x);
-            BOOST_TEST(my.a[0][3]==0);
-            BOOST_TEST(my.a[1][3]==0);
-            BOOST_TEST(my.a[2][3]==0);
-            BOOST_TEST(my.a[3][0]==0);
-            BOOST_TEST(my.a[3][1]==0);
-            BOOST_TEST(my.a[3][2]==0);
-            BOOST_TEST(my.a[3][3]==1);
+            BOOST_TEST_EQ(my.a[0][3], 0);
+            BOOST_TEST_EQ(my.a[1][3], 0);
+            BOOST_TEST_EQ(my.a[2][3], 0);
+            BOOST_TEST_EQ(my.a[3][0], 0);
+            BOOST_TEST_EQ(my.a[3][1], 0);
+            BOOST_TEST_EQ(my.a[3][2], 0);
+            BOOST_TEST_EQ(my.a[3][3], 1);
             test_qvm::quaternion<Q1> const qy=convert_to< test_qvm::quaternion<Q1> >(del_row_col<3,3>(my));
             BOOST_QVM_TEST_CLOSE(x.a,qy.a,0.00001f);
             }

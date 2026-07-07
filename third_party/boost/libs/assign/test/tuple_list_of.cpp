@@ -11,7 +11,7 @@
 
 #include <boost/detail/workaround.hpp>
 
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+#if BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x564))
 #  pragma warn -8091 // suppress warning in Boost.Test
 #  pragma warn -8057 // unused argument argc/argv in Boost.Test
 #endif
@@ -36,7 +36,7 @@ void check_tuple_list_of()
 
     std::map<std::string,int> m = pair_list_of( "foo", 3 )( "bar", 5 );
     BOOST_CHECK( m.size() == 2 );
-    BOOST_CHECK( m["foo"] == 3 ); 
+    BOOST_CHECK( m["foo"] == 3 );
 }
 
 #include <boost/test/unit_test.hpp>

@@ -43,14 +43,24 @@ When using `lightweight_test.hpp`, *do not forget* to
 #define BOOST_TEST_GE(expr1, expr2) /*unspecified*/
 #define BOOST_TEST_CSTR_EQ(expr1, expr2) /*unspecified*/
 #define BOOST_TEST_CSTR_NE(expr1, expr2) /*unspecified*/
+#define BOOST_TEST_WITH(expr1, expr2, pred) /*unspecified*/
 #define BOOST_TEST_ALL_EQ(begin1, end1, begin2, end2) /* unspecified */
 #define BOOST_TEST_ALL_WITH(begin1, end1, begin2, end2, predicate) /* unspecified */
 #define BOOST_TEST_THROWS(expr, excep) /*unspecified*/
+#define BOOST_TEST_NO_THROW(expr) /*unspecified*/
 
 namespace boost
 {
-    int report_errors();
-}
+
+int report_errors();
+
+namespace core
+{
+
+void lwt_init();
+
+} // namespace core
+} // namespace boost
 ``
 
 [endsect]
@@ -174,6 +184,17 @@ Specialization of `BOOST_TEST_NE` which interprets `expr1` and `expr2` as pointe
 
 [endsect]
 
+[section BOOST_TEST_WITH]
+
+``
+BOOST_TEST_WITH(expr1, expr2, pred)
+``
+
+If `pred(expr1, expr2)` is not true increases the error count and outputs a
+message containing both expressions.
+
+[endsect]
+
 [section BOOST_TEST_ALL_EQ]
 
 ``
@@ -209,6 +230,20 @@ nothing and `expr` is not evaluated.
 
 [endsect]
 
+[section BOOST_TEST_NO_THROW]
+
+``
+BOOST_TEST_NO_THROW(expr)
+``
+
+If `BOOST_NO_EXCEPTIONS` is *not* defined and if `expr` throws an exception,
+increases the error count and outputs a message containing the expression
+and (if possible) the exception message.
+
+If `BOOST_NO_EXCEPTIONS` is defined, `expr` is evaluated.
+
+[endsect]
+
 [section report_errors]
 
 ``
@@ -216,6 +251,25 @@ int boost::report_errors()
 ``
 
 Return the error count from `main`.
+
+[endsect]
+
+[section lwt_init]
+
+``
+void boost::core::lwt_init()
+``
+
+Performs one-time initialization. Disables the interactive message
+boxes displayed by the Microsoft Windows debug runtime library on
+`abort`, failing `assert`, and other abnormal program terminations
+(to facilitate unattended testing), and ensures that in case
+`boost::report_errors` is not called (a common mistake), the program
+ends with a nonzero exit code.
+
+`lwt_init` is automatically called by the test macros. There is
+no need to call it explicitly, except in cases where a test fails due
+to e.g. an assertion failure before the first test macro is invoked.
 
 [endsect]
 
@@ -299,14 +353,14 @@ parentheses.)
 
 ``
 #include <boost/core/lightweight_test_trait.hpp>
-#include <boost/core/is_same.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 template<class T, class U> struct X
 {
     typedef T type;
 };
 
-using boost::core::is_same;
+using boost::is_same;
 
 int main()
 {

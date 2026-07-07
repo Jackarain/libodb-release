@@ -1,5 +1,4 @@
 // file      : odb/database.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_DATABASE_HXX
@@ -49,6 +48,8 @@ namespace odb
 #ifdef ODB_CXX11
     //database (database&&) = default; // VC 2013
 
+    // Note: noexcept is not specified since *_map_ (std::map) can throw.
+    //
     database (database&& d)
         : id_ (d.id_),
           tracer_ (d.tracer_),
@@ -378,11 +379,11 @@ namespace odb
 
     template <typename T>
     prepared_query<T>
-    lookup_query (const char* name) const;
+    lookup_query (const char* name);
 
     template <typename T, typename P>
     prepared_query<T>
-    lookup_query (const char* name, P*& params) const;
+    lookup_query (const char* name, P*& params);
 
     // Prepared query factory.
     //

@@ -7,10 +7,10 @@
 #include <boost/math/concepts/real_concept.hpp>
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <boost/test/floating_point_comparison.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
 #include <boost/math/special_functions/math_fwd.hpp>
-#include <boost/type_traits/is_floating_point.hpp>
 #include <boost/array.hpp>
+#include <type_traits>
 #include "functor.hpp"
 
 #include "handle_test_result.hpp"
@@ -70,7 +70,7 @@ void do_test_spherical_harmonic(const T& data, const char* type_name, const char
 }
 
 template <class Real, class T>
-void test_complex_spherical_harmonic(const T& data, const char* /* name */, boost::mpl::true_ const &)
+void test_complex_spherical_harmonic(const T& data, const char* /* name */, std::true_type const &)
 {
    typedef Real                   value_type;
 
@@ -101,7 +101,7 @@ void test_complex_spherical_harmonic(const T& data, const char* /* name */, boos
 }
 
 template <class Real, class T>
-void test_complex_spherical_harmonic(const T& /* data */, const char* /* name */, boost::mpl::false_ const &)
+void test_complex_spherical_harmonic(const T& /* data */, const char* /* name */, std::false_type const &)
 {
    // T is not a built in type, can't use std::complex with it...
 }
@@ -119,7 +119,7 @@ void test_spherical_harmonic(T, const char* name)
 
    do_test_spherical_harmonic<T>(spherical_harmonic, name, "Spherical Harmonics");
 
-   test_complex_spherical_harmonic<T>(spherical_harmonic, name, boost::is_floating_point<T>());
+   test_complex_spherical_harmonic<T>(spherical_harmonic, name, typename std::is_floating_point<T>::type());
 }
 
 template <class T>
@@ -179,6 +179,15 @@ void test_spots(T, const char* t)
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_r(40, -15, static_cast<T>(0.75), static_cast<T>(2.25)), static_cast<T>(0.2806904825045745687343492963236868973484L), tolerance);
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_i(40, -15, static_cast<T>(0.75), static_cast<T>(2.25)), static_cast<T>(0.2933918444656603582282372590387544902135L), tolerance);
 
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(40, -15, static_cast<T>(-0.75), static_cast<T>(2.25))), static_cast<T>(-0.2806904825045745687343492963236868973484L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(40, -15, static_cast<T>(-0.75), static_cast<T>(2.25))), static_cast<T>(-0.2933918444656603582282372590387544902135L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(40, -15, static_cast<T>(-0.75), static_cast<T>(-2.25))), static_cast<T>(-0.2806904825045745687343492963236868973484L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(40, -15, static_cast<T>(-0.75), static_cast<T>(-2.25))), static_cast<T>(0.2933918444656603582282372590387544902135L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(40, -15, static_cast<T>(0.75), static_cast<T>(-2.25))), static_cast<T>(0.2806904825045745687343492963236868973484L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(40, -15, static_cast<T>(0.75), static_cast<T>(-2.25))), static_cast<T>(-0.2933918444656603582282372590387544902135L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(40, -15, static_cast<T>(0.75), static_cast<T>(2.25))), static_cast<T>(0.2806904825045745687343492963236868973484L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(40, -15, static_cast<T>(0.75), static_cast<T>(2.25))), static_cast<T>(0.2933918444656603582282372590387544902135L), tolerance);
+
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_r(20, -14, static_cast<T>(-0.75), static_cast<T>(2.25)), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_i(20, -14, static_cast<T>(-0.75), static_cast<T>(2.25)), static_cast<T>(-0.0293201066685263879566422194539567289974L), tolerance);
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_r(20, -14, static_cast<T>(-0.75), static_cast<T>(-2.25)), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
@@ -187,6 +196,15 @@ void test_spots(T, const char* t)
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_i(20, -14, static_cast<T>(0.75), static_cast<T>(-2.25)), static_cast<T>(0.0293201066685263879566422194539567289974L), tolerance);
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_r(20, -14, static_cast<T>(0.75), static_cast<T>(2.25)), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_i(20, -14, static_cast<T>(0.75), static_cast<T>(2.25)), static_cast<T>(-0.0293201066685263879566422194539567289974L), tolerance);
+
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(20, -14, static_cast<T>(-0.75), static_cast<T>(2.25))), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(20, -14, static_cast<T>(-0.75), static_cast<T>(2.25))), static_cast<T>(-0.0293201066685263879566422194539567289974L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(20, -14, static_cast<T>(-0.75), static_cast<T>(-2.25))), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(20, -14, static_cast<T>(-0.75), static_cast<T>(-2.25))), static_cast<T>(0.0293201066685263879566422194539567289974L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(20, -14, static_cast<T>(0.75), static_cast<T>(-2.25))), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(20, -14, static_cast<T>(0.75), static_cast<T>(-2.25))), static_cast<T>(0.0293201066685263879566422194539567289974L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(real(::boost::math::spherical_harmonic(20, -14, static_cast<T>(0.75), static_cast<T>(2.25))), static_cast<T>(0.3479218186133435466692822481919867452442L), tolerance);
+   BOOST_CHECK_CLOSE_FRACTION(imag(::boost::math::spherical_harmonic(20, -14, static_cast<T>(0.75), static_cast<T>(2.25))), static_cast<T>(-0.0293201066685263879566422194539567289974L), tolerance);
 
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_r(20, 14, static_cast<T>(-4), static_cast<T>(2.25)), static_cast<T>(0.5253373768014719124617844890495875474590L), tolerance);
    BOOST_CHECK_CLOSE_FRACTION(::boost::math::spherical_harmonic_i(20, 14, static_cast<T>(-4), static_cast<T>(2.25)), static_cast<T>(0.0442712905622650144694916590407495495699L), tolerance);

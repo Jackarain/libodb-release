@@ -20,8 +20,6 @@
 
 #include <boost/config.hpp> // for BOOST_PLATFORM, BOOST_COMPILER,  BOOST_STDLIB ...
 #include <boost/version.hpp>   // for BOOST_MSVC versions.
-#include <boost/cstdint.hpp>
-#include <boost/exception/exception.hpp>  // boost::exception
 #include <boost/math/constants/constants.hpp> // For exp_minus_one == 3.67879441171442321595523770161460867e-01.
 #include <boost/math/policies/policy.hpp>
 
@@ -57,7 +55,7 @@ template<typename T>
 void show_value(T z)
 {
   std::streamsize precision = std::cout.precision(std::numeric_limits<T>::max_digits10);  // Save.
-  std::cout.precision(std::numeric_limits<T>::max_digits10); // Show all posssibly significant digits.
+  std::cout.precision(std::numeric_limits<T>::max_digits10); // Show all possibly significant digits.
   std::ios::fmtflags flags(std::cout.flags());
   std::cout.setf(std::ios_base::showpoint); // Include any trailing zeros.
   std::cout << z;

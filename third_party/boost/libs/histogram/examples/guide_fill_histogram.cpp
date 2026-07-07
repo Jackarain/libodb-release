@@ -7,6 +7,7 @@
 //[ guide_fill_histogram
 
 #include <boost/histogram.hpp>
+#include <boost/core/span.hpp>
 #include <cassert>
 #include <functional>
 #include <numeric>
@@ -28,16 +29,22 @@ int main() {
   auto xy = std::make_tuple(1, 0.3);
   h(xy);
 
-  // functional-style processing is also supported, generate some data...
-  std::vector<std::tuple<int, double>> input_data;
-  input_data.emplace_back(0, 0.8);
-  input_data.emplace_back(2, 0.4);
-  input_data.emplace_back(5, 0.7); // goes into overflow bin of first axis
+  // chunk-wise filling is also supported and more efficient, make some data...
+  std::vector<double> x = {0, 2, 5};
+  std::vector<double> y = {0.8, 0.4, 0.7};
 
-  // std::for_each takes the functor by value, a reference wrapper avoid copies
-  std::for_each(input_data.begin(), input_data.end(), std::ref(h));
+  // fill accepts an iterable over iterables, to avoid copying data we use
+  // std::vector<boost::span<double>> and not std::vector<std::vector<double>>
+  std::vector<boost::span<double>> xy2 = {boost::make_span(x), boost::make_span(y)};
 
-  // once histogram is filled, access cells using operator[] or at(...)
+  // alternatively, if the number of axes is known at compile-time,
+  // it is better to use an array of spans, which avoids the heap allocation
+  // std::array<boost::span<double>, 2> xy2 = {boost::make_span(x), boost::make_span(y)};
+
+  // ... and call fill method
+  h.fill(xy2);
+
+  // once histogram is filled, access individual cells using operator[] or at(...)
   // - operator[] can only accept a single argument in the current version of C++,
   //   it is convenient when you have a 1D histogram
   // - at(...) can accept several values, so use this by default
@@ -56,7 +63,7 @@ int main() {
 
   // iteration over values works, but see next example for a better way
   // - iteration using begin() and end() includes under- and overflow bins
-  // - iteration order is an implementation detail and may change in future versions
+  // - iteration order is an implementation detail and should not be relied upon
   const double sum = std::accumulate(h.begin(), h.end(), 0.0);
   assert(sum == 6);
 }

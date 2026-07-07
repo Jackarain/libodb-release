@@ -129,13 +129,19 @@ void test_legendre_stieltjes()
             BOOST_CHECK_SMALL(En(zero), 50*tol);
         }
     }
+
+#ifndef BOOST_MATH_NO_EXCEPTIONS
+    BOOST_CHECK_THROW(legendre_stieltjes<Real>(0), std::domain_error);
+#endif
 }
 
 
 BOOST_AUTO_TEST_CASE(LegendreStieltjesZeros)
 {
     test_legendre_stieltjes<double>();
+#ifndef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
     test_legendre_stieltjes<long double>();
+#endif
     test_legendre_stieltjes<cpp_bin_float_quad>();
     //test_legendre_stieltjes<boost::multiprecision::cpp_bin_float_100>();
 }

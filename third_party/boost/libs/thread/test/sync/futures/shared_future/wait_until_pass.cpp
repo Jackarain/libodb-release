@@ -29,7 +29,7 @@
 #include <boost/thread/future.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/chrono/chrono_io.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/core/lightweight_test.hpp>
 #include "../../../timming.hpp"
 
 #if defined BOOST_THREAD_USES_CHRONO
@@ -48,22 +48,6 @@ namespace boost
   {
     os << underlying_cast<int>(st) << " ";
     return os;
-  }
-  template <typename T>
-  struct wrap
-  {
-    wrap(T const& v) :
-      value(v)
-    {
-    }
-    T value;
-
-  };
-
-  template <typename T>
-  exception_ptr make_exception_ptr(T v)
-  {
-    return copy_exception(wrap<T> (v));
   }
 }
 

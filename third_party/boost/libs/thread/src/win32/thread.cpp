@@ -34,10 +34,10 @@
 #include <mutex>
 #include <atomic>
 #include <Activation.h>
-#include <wrl\client.h>
-#include <wrl\event.h>
-#include <wrl\wrappers\corewrappers.h>
-#include <wrl\ftm.h>
+#include <wrl/client.h>
+#include <wrl/event.h>
+#include <wrl/wrappers/corewrappers.h>
+#include <wrl/ftm.h>
 #include <windows.system.threading.h>
 #pragma comment(lib, "runtimeobject.lib")
 #endif
@@ -577,10 +577,18 @@ namespace boost
                 } Reason;
             } REASON_CONTEXT, *PREASON_CONTEXT;
             typedef BOOL (WINAPI *setwaitabletimerex_t)(HANDLE, const LARGE_INTEGER *, LONG, PTIMERAPCROUTINE, LPVOID, PREASON_CONTEXT, ULONG);
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100) // unreferenced formal parameter
+#endif
             static inline BOOL WINAPI SetWaitableTimerEx_emulation(HANDLE hTimer, const LARGE_INTEGER *lpDueTime, LONG lPeriod, PTIMERAPCROUTINE pfnCompletionRoutine, LPVOID lpArgToCompletionRoutine, PREASON_CONTEXT WakeContext, ULONG TolerableDelay)
             {
                 return SetWaitableTimer(hTimer, lpDueTime, lPeriod, pfnCompletionRoutine, lpArgToCompletionRoutine, FALSE);
             }
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 6387) // MSVC sanitiser warns that GetModuleHandleA() might fail
@@ -641,9 +649,15 @@ namespace boost
                 timer_handle=CreateWaitableTimer(NULL,false,NULL);
                 if(timer_handle!=0)
                 {
-                    ULONG tolerable=32; // Empirical testing shows Windows ignores this when <= 26
+                    ULONG const min_tolerable=32; // Empirical testing shows Windows ignores this when <= 26
+                    ULONG const max_tolerable=1000;
+                    ULONG tolerable=min_tolerable;
                     if(time_left_msec/20>tolerable)  // 5%
+                    {
                         tolerable=static_cast<ULONG>(time_left_msec/20);
+                        if(tolerable>max_tolerable)
+                            tolerable=max_tolerable;
+                    }
                     LARGE_INTEGER due_time={{0,0}};
                     if(time_left_msec>0)
                     {
@@ -733,9 +747,15 @@ namespace boost
                 timer_handle=CreateWaitableTimer(NULL,false,NULL);
                 if(timer_handle!=0)
                 {
-                    ULONG tolerable=32; // Empirical testing shows Windows ignores this when <= 26
+                    ULONG const min_tolerable=32; // Empirical testing shows Windows ignores this when <= 26
+                    ULONG const max_tolerable=1000;
+                    ULONG tolerable=min_tolerable;
                     if(time_left_msec/20>tolerable)  // 5%
+                    {
                         tolerable=static_cast<ULONG>(time_left_msec/20);
+                        if(tolerable>max_tolerable)
+                            tolerable=max_tolerable;
+                    }
                     LARGE_INTEGER due_time={{0,0}};
                     if(time_left_msec>0)
                     {

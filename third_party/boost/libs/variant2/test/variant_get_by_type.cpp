@@ -1,10 +1,12 @@
-
-// Copyright 2017 Peter Dimov.
-//
+// Copyright 2017, 2026 Peter Dimov.
 // Distributed under the Boost Software License, Version 1.0.
-//
-// See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt
+// https://www.boost.org/LICENSE_1_0.txt
+
+#if defined( __clang__ ) && defined( __has_warning )
+# if __has_warning( "-Wdeprecated-volatile" )
+#  pragma clang diagnostic ignored "-Wdeprecated-volatile"
+# endif
+#endif
 
 #include <boost/variant2/variant.hpp>
 #include <boost/core/lightweight_test.hpp>
@@ -211,6 +213,9 @@ int main()
         BOOST_TEST_EQ( get<int>(v), 0 );
         BOOST_TEST_EQ( get_if<int>(&v), &get<int>(v) );
 
+        BOOST_TEST_THROWS( get<float>(v), bad_variant_access );
+        BOOST_TEST_EQ( get_if<float>(&v), nullptr );
+
         BOOST_TEST_EQ( get<int>(std::move(v)), 0 );
     }
 
@@ -219,6 +224,9 @@ int main()
 
         BOOST_TEST_EQ( get<int>(v), 0 );
         BOOST_TEST_EQ( get_if<int>(&v), &get<int>(v) );
+
+        BOOST_TEST_THROWS( get<float>(v), bad_variant_access );
+        BOOST_TEST_EQ( get_if<float>(&v), nullptr );
 
         BOOST_TEST_EQ( get<int>(std::move(v)), 0 );
     }
@@ -229,6 +237,9 @@ int main()
         BOOST_TEST_EQ( get<int>(v), 1 );
         BOOST_TEST_EQ( get_if<int>(&v), &get<int>(v) );
 
+        BOOST_TEST_THROWS( get<float>(v), bad_variant_access );
+        BOOST_TEST_EQ( get_if<float>(&v), nullptr );
+
         BOOST_TEST_EQ( get<int>(std::move(v)), 1 );
     }
 
@@ -238,11 +249,17 @@ int main()
         BOOST_TEST_EQ( get<int>(v), 1 );
         BOOST_TEST_EQ( get_if<int>(&v), &get<int>(v) );
 
+        BOOST_TEST_THROWS( get<float>(v), bad_variant_access );
+        BOOST_TEST_EQ( get_if<float>(&v), nullptr );
+
         BOOST_TEST_EQ( get<int>(std::move(v)), 1 );
     }
 
     {
         variant<int, int, float> v( 3.14f );
+
+        BOOST_TEST_THROWS( get<int>(v), bad_variant_access );
+        BOOST_TEST_EQ( get_if<int>(&v), nullptr );
 
         BOOST_TEST_EQ( get<float>(v), 3.14f );
         BOOST_TEST_EQ( get_if<float>(&v), &get<float>(v) );
@@ -252,6 +269,9 @@ int main()
 
     {
         variant<int, int, float> const v( 3.14f );
+
+        BOOST_TEST_THROWS( get<int>(v), bad_variant_access );
+        BOOST_TEST_EQ( get_if<int>(&v), nullptr );
 
         BOOST_TEST_EQ( get<float>(v), 3.14f );
         BOOST_TEST_EQ( get_if<float>(&v), &get<float>(v) );
@@ -295,11 +315,13 @@ int main()
 
     {
         variant<int, int, float> * p = 0;
+        BOOST_TEST_EQ( get_if<int>(p), nullptr );
         BOOST_TEST_EQ( get_if<float>(p), nullptr );
     }
 
     {
         variant<int, int, float> const * p = 0;
+        BOOST_TEST_EQ( get_if<int>(p), nullptr );
         BOOST_TEST_EQ( get_if<float>(p), nullptr );
     }
 

@@ -1,0 +1,45 @@
+# file      : build/bootstrap.build
+# copyright : not copyrighted - public domain
+
+project = libsqlite3
+
+# SQLite releases usually have 3-component versions but once in a while they
+# will make a 4-component release for what appears to be important bug fixes
+# only. So instead of dragging the fourth component around (and confusing a
+# lot of people in the process) we will always have three components and will
+# handle an occasional bugfix release with a revision.
+#
+# See also: https://www.sqlite.org/versionnumbers.html
+#
+# The SQLite documentation says that as long as the major version stays the
+# same, then it is backwards-compatible. And since we have the major version
+# already embedded into the library name, it doesn't make much sense to repeat
+# it.
+#
+# Note, however, that the binary-compatible API doesn't mean all the builds of
+# SQLite are binary-compatible since they can be built with different sets of
+# enabled/disabled functionality. In fact, one easy way to break backwards-
+# compatibility is to disable some feature that was previously enabled.
+#
+# So what we seem to need is not an ABI version but an ABI id that identifies
+# a specific set of features. And this will not be easy/possible if we want
+# to use platform-native versioning (e.g., libsqlite3.so.<num> on Linux). The
+# only way to make this work would be to "reserve" some range for build2-based
+# builds (e.g., 1000-2000 so that we will have libsqlite3.so.1000; that sure
+# looks weird).
+#
+# Another alternative is to use platform-neutral versioning by embedding the
+# id into the library name, similar to '3'. This is probably better since
+# there is no "newer" semantics here. While ideally we should use something
+# like -build2-0 (i.e., "build2 build, id 0"), that will look rather ugly. So
+# we will use just the number but start with -1 in order not to clash with .0
+# used by the autotools build (which becomes -0 on, e.g., Windows; I don't
+# believe it will ever be incremented though).
+#
+abi_major = 1
+
+using version
+using config
+using dist
+using test
+using install

@@ -1,5 +1,4 @@
 // file      : odb/pgsql/database.ixx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #include <utility> // move()
@@ -118,6 +117,13 @@ namespace odb
     persist (const typename object_traits<T>::pointer_type& pobj)
     {
       return persist_<T, id_pgsql> (pobj);
+    }
+
+    template <typename I>
+    inline void database::
+    persist (I b, I e, bool cont)
+    {
+      persist_<I, id_pgsql> (b, e, cont);
     }
 
     template <typename T>
@@ -281,6 +287,13 @@ namespace odb
       update_<T, id_pgsql> (pobj);
     }
 
+    template <typename I>
+    inline void database::
+    update (I b, I e, bool cont)
+    {
+      update_<I, id_pgsql> (b, e, cont);
+    }
+
     template <typename T>
     inline void database::
     update (const T& obj, const section& s)
@@ -368,6 +381,20 @@ namespace odb
     erase (const typename object_traits<T>::pointer_type& pobj)
     {
       erase_<T, id_pgsql> (pobj);
+    }
+
+    template <typename T, typename I>
+    inline void database::
+    erase (I idb, I ide, bool cont)
+    {
+      erase_id_<I, T, id_pgsql> (idb, ide, cont);
+    }
+
+    template <typename I>
+    inline void database::
+    erase (I ob, I oe, bool cont)
+    {
+      erase_object_<I, id_pgsql> (ob, oe, cont);
     }
 
     template <typename T>
@@ -595,7 +622,7 @@ namespace odb
     {
       // Throws if not in transaction.
       //
-      pgsql::connection& c (transaction::current ().connection ());
+      pgsql::connection& c (transaction::current ().connection (*this));
       return c.prepare_query<T> (n, q);
     }
 

@@ -10,7 +10,6 @@
 // Test that header file is self-contained.
 #include <boost/beast/http/write.hpp>
 
-#include <boost/beast/http/buffer_body.hpp>
 #include <boost/beast/http/empty_body.hpp>
 #include <boost/beast/http/fields.hpp>
 #include <boost/beast/http/message.hpp>
@@ -19,14 +18,23 @@
 #include <boost/beast/core/buffers_to_string.hpp>
 #include <boost/beast/core/error.hpp>
 #include <boost/beast/core/multi_buffer.hpp>
+#include <boost/beast/core/static_string.hpp>
 #include <boost/beast/_experimental/test/stream.hpp>
 #include <boost/beast/test/yield_to.hpp>
 #include <boost/beast/_experimental/unit_test/suite.hpp>
+#include <boost/asio/bind_cancellation_slot.hpp>
 #include <boost/asio/error.hpp>
 #include <boost/asio/io_context.hpp>
+#include <boost/asio/connect_pipe.hpp>
+#include <boost/asio/readable_pipe.hpp>
+#include <boost/asio/writable_pipe.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <boost/asio/strand.hpp>
 #include <sstream>
 #include <string>
+#if BOOST_ASIO_HAS_CO_AWAIT
+#include <boost/asio/use_awaitable.hpp>
+#endif
 
 namespace boost {
 namespace beast {
@@ -640,7 +648,7 @@ public:
             m.method(verb::get);
             m.version(11);
             m.target("/");
-            m.set("Content-Length", 5);
+            m.set("Content-Length", "5");
             m.body() = "*****";
             async_write(ts, m, handler{});
             BEAST_EXPECT(handler::count() > 0);
@@ -663,7 +671,7 @@ public:
                 m.method(verb::get);
                 m.version(11);
                 m.target("/");
-                m.set("Content-Length", 5);
+                m.set("Content-Length", "5");
                 m.body() = "*****";
                 async_write(ts, m, handler{});
                 BEAST_EXPECT(handler::count() > 0);
@@ -995,6 +1003,122 @@ public:
         }
     }
 
+#if BOOST_ASIO_HAS_CO_AWAIT
+    void testAwaitableCompiles(
+        test::stream& stream,
+        serializer<true, string_body>& request_serializer,
+        request<string_body>& req,
+        request<string_body> const& creq,
+        serializer<false, string_body>& response_serializer,
+        response<string_body>& resp,
+        response<string_body> const& cresp)
+    {
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write(stream, request_serializer, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write(stream, response_serializer, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write(stream, req, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write(stream, creq, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write(stream, resp, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write(stream, cresp, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write_some(stream, request_serializer, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write_some(stream, response_serializer, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write_header(stream, request_serializer, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            http::async_write_header(stream, response_serializer, net::use_awaitable))>);
+    }
+#endif
+
+    void
+    testCancellation(yield_context do_yield)
+    {
+        // this is tested on a pipe
+        // because the test::stream doesn't implement cancellation 
+        {
+            response<string_body> m;
+            m.version(10);
+            m.result(status::ok);
+            m.set(field::server, "test");
+            m.set(field::content_length, "5");
+            // make the content big enough so it overflows the buffer 
+            // that'll make the op never complete if we don't cancel
+            m.body().assign(10000000, '*');
+            error_code ec;
+            net::writable_pipe ts{ioc_};
+            net::readable_pipe tr{ioc_};
+            net::connect_pipe(tr, ts);
+            net::cancellation_signal cl;
+            net::post(ioc_, [&]{cl.emit(net::cancellation_type::all);});
+            net::steady_timer timeout(ioc_, std::chrono::seconds(5));
+            timeout.async_wait(
+                [&](error_code ec)
+                {
+                    BEAST_EXPECT(ec == net::error::operation_aborted);
+                    if (!ec) // this means the cancel failed!
+                        ts.close();
+                });
+
+            async_write(ts, m, net::bind_cancellation_slot(cl.slot(), do_yield[ec]));
+            timeout.cancel();
+            net::post(ioc_, do_yield); // wait for the timeout to finish
+            BEAST_EXPECT(ec == net::error::operation_aborted);
+        }
+        {
+            response<string_body> m;
+            m.version(11);
+            m.result(status::ok);
+            m.set(field::server, "test");
+            m.set(field::transfer_encoding, "chunked");
+            m.body().assign(10000000, '*');
+            error_code ec;
+            net::writable_pipe ts{ioc_};
+            net::readable_pipe tr{ioc_};
+            net::connect_pipe(tr, ts);
+            net::cancellation_signal cl;
+            net::post(ioc_, [&]{cl.emit(net::cancellation_type::all);});
+            net::steady_timer timeout(ioc_, std::chrono::seconds(5));
+            timeout.async_wait(
+                [&](error_code ec)
+                {
+                    BEAST_EXPECT(ec == net::error::operation_aborted);
+                    if (!ec) // this means the cancel failed!
+                        ts.close();
+                });
+            async_write(ts, m, net::bind_cancellation_slot(cl.slot(), do_yield[ec]));
+            timeout.cancel();
+            net::post(ioc_, do_yield); // wait for the timeout to finish
+            BEAST_EXPECT(ec == net::error::operation_aborted);
+        }
+        // the timer handler may be invoked after the test suite is complete if we don't post.
+        asio::post(ioc_, do_yield);
+    }
+
     void
     run() override
     {
@@ -1018,6 +1142,14 @@ public:
             });
         testAsioHandlerInvoke();
         testBodyWriters();
+#if BOOST_ASIO_HAS_CO_AWAIT
+        boost::ignore_unused(&write_test::testAwaitableCompiles);
+#endif
+        yield_to(
+            [&](yield_context yield)
+            {
+                testCancellation(yield);
+            });
     }
 };
 

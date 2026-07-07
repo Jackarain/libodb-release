@@ -8,7 +8,7 @@
 #include <boost/multiprecision/complex128.hpp>
 #endif
 
-#include "libs/multiprecision/test/test_arithmetic.hpp"
+#include "test_arithmetic.hpp"
 
 int main()
 {
@@ -17,4 +17,3 @@ int main()
 #endif
    return boost::report_errors();
 }
-

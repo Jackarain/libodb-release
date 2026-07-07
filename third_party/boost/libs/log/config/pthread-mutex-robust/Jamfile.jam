@@ -6,14 +6,14 @@
 #
 
 import project ;
-import log-platform-config ;
+import ../../build/log-platform-config ;
 
-project /boost/log/pthread-mutex-robust
+project
     : source-location .
     : requirements
         <conditional>@log-platform-config.set-platform-defines
-
         <pch>off
     ;
 
 obj pthread_mutex_robust : pthread_mutex_robust.cpp ;
+explicit pthread_mutex_robust ;

@@ -1,5 +1,4 @@
 // file      : odb/boost/details/config.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_BOOST_DETAILS_CONFIG_HXX
@@ -8,13 +7,7 @@
 // no pre
 
 #ifdef ODB_COMPILER
-#  define LIBODB_BOOST_STATIC_LIB
-#elif !defined(LIBODB_BOOST_BUILD2)
-#  ifdef _MSC_VER
-#    include <odb/boost/details/config-vc.h>
-#  else
-#    include <odb/boost/details/config.h>
-#  endif
+#  define LIBODB_BOOST_STATIC
 #endif
 
 // no post

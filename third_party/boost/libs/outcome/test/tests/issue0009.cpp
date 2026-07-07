@@ -1,5 +1,5 @@
 /* Unit testing for outcomes
-(C) 2013-2019 Niall Douglas <http://www.nedproductions.biz/> (5 commits)
+(C) 2013-2026 Niall Douglas <http://www.nedproductions.biz/> (5 commits)
 
 
 Boost Software License - Version 1.0 - August 17th, 2003
@@ -27,14 +27,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-#include <boost/outcome/outcome.hpp>
+#include <boost/outcome.hpp>
 #include <boost/outcome/try.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_monitor.hpp>
 
-BOOST_OUTCOME_AUTO_TEST_CASE(issues_9, "Alternative TRY macros?")
+BOOST_OUTCOME_AUTO_TEST_CASE(issues_0009_test, "Alternative TRY macros?")
 {
 #ifdef BOOST_OUTCOME_TRYX
+#pragma GCC diagnostic ignored "-Wpedantic"
   using namespace BOOST_OUTCOME_V2_NAMESPACE;
   struct udt  // NOLINT
   {
@@ -43,7 +44,8 @@ BOOST_OUTCOME_AUTO_TEST_CASE(issues_9, "Alternative TRY macros?")
     udt(const udt &) = default;
     udt(udt &&) = default;
   };
-  auto f = []() -> result<udt> {
+  auto f = []() -> result<udt>
+  {
     auto g = [] { return result<int>(5); };
     return udt(BOOST_OUTCOME_TRYX(g()));
   };

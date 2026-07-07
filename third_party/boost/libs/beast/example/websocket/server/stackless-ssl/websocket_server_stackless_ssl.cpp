@@ -16,10 +16,11 @@
 #include "example/common/server_certificate.hpp"
 
 #include <boost/beast/core.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/beast/websocket/ssl.hpp>
 #include <boost/asio/coroutine.hpp>
+#include <boost/asio/dispatch.hpp>
+#include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
 #include <algorithm>
 #include <cstdlib>
@@ -51,7 +52,7 @@ class session
     : public boost::asio::coroutine
     , public std::enable_shared_from_this<session>
 {
-    websocket::stream<beast::ssl_stream<beast::tcp_stream>> ws_;
+    websocket::stream<ssl::stream<beast::tcp_stream>> ws_;
     beast::flat_buffer buffer_;
 
 public:
@@ -65,7 +66,15 @@ public:
     void
     run()
     {
-        loop({}, 0);
+        // We need to be executing within a strand to perform async operations
+        // on the I/O objects in this session. Although not strictly necessary
+        // for single-threaded contexts, this example code is written to be
+        // thread-safe by default.
+        net::dispatch(ws_.get_executor(),
+                      beast::bind_front_handler(&session::loop,
+                                                shared_from_this(),
+                                                beast::error_code{},
+                                                0));
     }
 
     #include <boost/asio/yield.hpp>
@@ -137,7 +146,7 @@ public:
                     return;
                 }
                 if(ec)
-                    fail(ec, "read");
+                    return fail(ec, "read");
 
                 // Echo the message
                 ws_.text(ws_.got_text());

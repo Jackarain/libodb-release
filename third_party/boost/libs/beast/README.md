@@ -3,10 +3,10 @@
 
 # HTTP and WebSocket built on Boost.Asio in C++11
 
-Branch      | Linux/OSX | Windows | Coverage | Documentation | Matrix
-------------|-----------|---------|----------|---------------|--------
-[master](https://github.com/boostorg/beast/tree/master)   | [![Build Status](https://travis-ci.org/boostorg/beast.svg?branch=master)](https://travis-ci.org/boostorg/beast)  | [![Build status](https://ci.appveyor.com/api/projects/status/2nh66khjjhtgasvo/branch/master?svg=true)](https://ci.appveyor.com/project/vinniefalco/beast/branch/master)   | [![codecov](https://img.shields.io/codecov/c/github/boostorg/beast/master.svg)](https://codecov.io/gh/boostorg/beast/branch/master)   | [![Documentation](https://img.shields.io/badge/documentation-master-brightgreen.svg)](http://www.boost.org/doc/libs/master/libs/beast/doc/html/index.html)  | [![Matrix](https://img.shields.io/badge/matrix-master-brightgreen.svg)](http://www.boost.org/development/tests/master/developer/beast.html)
-[develop](https://github.com/boostorg/beast/tree/develop) | [![Build Status](https://travis-ci.org/boostorg/beast.svg?branch=develop)](https://travis-ci.org/boostorg/beast) | [![Build status](https://ci.appveyor.com/api/projects/status/2nh66khjjhtgasvo/branch/develop?svg=true)](https://ci.appveyor.com/project/vinniefalco/beast/branch/develop) | [![codecov](https://img.shields.io/codecov/c/github/boostorg/beast/develop.svg)](https://codecov.io/gh/boostorg/beast/branch/develop) | [![Documentation](https://img.shields.io/badge/documentation-develop-brightgreen.svg)](https://www.boost.org/doc/libs/develop/libs/beast/index.html) | [![Matrix](https://img.shields.io/badge/matrix-develop-brightgreen.svg)](https://www.boost.org/development/tests/develop/developer/beast.html)
+Branch                                                    | Linux / Windows                                                                                                                          | Coverage                                                                                                                              | Documentation                                                                                                                                              | Matrix                                                                                                                                         |
+----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+[master](https://github.com/boostorg/beast/tree/master)   | [![Build Status](https://drone.cpp.al/api/badges/boostorg/beast/status.svg?ref=refs/heads/master)](https://drone.cpp.al/boostorg/beast)  | [![codecov](https://img.shields.io/codecov/c/github/boostorg/beast/master.svg)](https://codecov.io/gh/boostorg/beast/branch/master)   | [![Documentation](https://img.shields.io/badge/documentation-master-brightgreen.svg)](http://www.boost.org/doc/libs/master/libs/beast/doc/html/index.html) | [![Matrix](https://img.shields.io/badge/matrix-master-brightgreen.svg)](http://www.boost.org/development/tests/master/developer/beast.html)    |
+[develop](https://github.com/boostorg/beast/tree/develop) | [![Build Status](https://drone.cpp.al/api/badges/boostorg/beast/status.svg?ref=refs/heads/develop)](https://drone.cpp.al/boostorg/beast) | [![codecov](https://img.shields.io/codecov/c/github/boostorg/beast/develop.svg)](https://codecov.io/gh/boostorg/beast/branch/develop) | [![Documentation](https://img.shields.io/badge/documentation-develop-brightgreen.svg)](https://www.boost.org/doc/libs/develop/libs/beast/index.html)       | [![Matrix](https://img.shields.io/badge/matrix-develop-brightgreen.svg)](https://www.boost.org/development/tests/develop/developer/beast.html) |
 
 ## Contents
 
@@ -47,7 +47,7 @@ This library is designed for:
 | ------------ | ------------ |
 | <a href="https://www.youtube.com/watch?v=7FQwAjELMek"><img width="320" height = "180" alt="Beast" src="https://raw.githubusercontent.com/vinniefalco/CppCon2018/master/CppCon2018.png"></a> | <a href="https://youtu.be/4TtyYbGDAj0"><img width="320" height = "180" alt="Beast Security Review" src="https://raw.githubusercontent.com/vinniefalco/BeastAssets/master/BishopFox2018.png"></a> |
 
-| <a href="https://github.com/vinniefalco/CppCon2018">CppCon 2017</a> | <a href="http://cppcast.com/2017/01/vinnie-falco/">CppCast 2017</a> | <a href="https://raw.githubusercontent.com/vinniefalco/BeastAssets/master/CppCon2016.pdf">CppCon 2016</a> |
+| <a href="https://github.com/vinniefalco/CppCon2018">CppCon 2017</a> | <a href="https://cppcast.com/vinnie-falco/">CppCast 2017</a> | <a href="https://raw.githubusercontent.com/vinniefalco/BeastAssets/master/CppCon2016.pdf">CppCon 2016</a> |
 | ------------ | ------------ | ----------- |
 | <a href="https://www.youtube.com/watch?v=WsUnnYEKPnI"><img width="320" height = "180" alt="Beast" src="https://raw.githubusercontent.com/vinniefalco/CppCon2017/master/CppCon2017.png"></a> | <a href="http://cppcast.com/2017/01/vinnie-falco/"><img width="180" height="180" alt="Vinnie Falco" src="https://avatars1.githubusercontent.com/u/1503976?v=3&u=76c56d989ef4c09625256662eca2775df78a16ad&s=180"></a> | <a href="https://www.youtube.com/watch?v=uJZgRcvPFwI"><img width="320" height = "180" alt="Beast" src="https://raw.githubusercontent.com/vinniefalco/BeastAssets/master/CppCon2016.png"></a> |
 
@@ -170,6 +170,9 @@ Using [brew](https://github.com/Homebrew/brew):
 ```bash
 brew install openssl
 export OPENSSL_ROOT=$(brew --prefix openssl)
+# install bjam tool user specific configuration file to read OPENSSL_ROOT
+# see https://www.bfgroup.xyz/b2/manual/release/index.html
+cp ./libs/beast/tools/user-config.jam $HOME
 ```
 
 Make sure the bjam tool (also called "b2") is available in the path
@@ -177,6 +180,7 @@ your shell uses to find executables. The Beast project is located in
 "libs/beast" relative to the directory containing the Boot superproject.
 To build the Beast tests, examples, and documentation use these commands:
 ```
+export PATH=$PWD:$PATH
 b2 -j2 libs/beast/test cxxstd=11      # bjam must be in your $PATH
 b2 -j2 libs/beast/example cxxstd=11   # "-j2" means use two processors
 b2 libs/beast/doc                     # Doxygen and Saxon are required for this
@@ -194,11 +198,9 @@ CMake may be used to generate a very nice Visual Studio solution and
 a set of Visual Studio project files using these commands:
 
 ```
-cd libs/beast
-mkdir bin
-cd bin
-cmake ..                                    # for 32-bit Windows builds, or
-cmake -G"Visual Studio 15 2017 Win64" ..    # for 64-bit Windows builds (VS2017)
+cmake -G "Visual Studio 17 2022" -A win32 -B bin -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="C:/boost/libs/beast/cmake/toolchains/msvc.cmake"
+
+cmake -G "Visual Studio 17 2022" -A x64 -B bin64 -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="C:/boost/libs/beast/cmake/toolchains/msvc.cmake"
 ```
 
 The files in the repository are laid out thusly:
@@ -259,12 +261,12 @@ Here are some resources to learn more about
 code reviews:
 
 * <a href="https://blog.scottnonnenberg.com/top-ten-pull-request-review-mistakes/">Top 10 Pull Request Review Mistakes</a>
-* <a href="https://smartbear.com/SmartBear/media/pdfs/best-kept-secrets-of-peer-code-review.pdf">Best Kept Secrets of Peer Code Review (pdf)</a>
-* <a href="http://support.smartbear.com/support/media/resources/cc/11_Best_Practices_for_Peer_Code_Review.pdf">11 Best Practices for Peer Code Review (pdf)</a>
+* <a href="https://static1.smartbear.co/smartbear/media/pdfs/best-kept-secrets-of-peer-code-review_redirected.pdf">Best Kept Secrets of Peer Code Review (pdf)</a>
+* <a href="https://static1.smartbear.co/support/media/resources/cc/11_best_practices_for_peer_code_review_redirected.pdf">11 Best Practices for Peer Code Review (pdf)</a>
 * <a href="http://www.evoketechnologies.com/blog/code-review-checklist-perform-effective-code-reviews/">Code Review Checklist – To Perform Effective Code Reviews</a>
 * <a href="https://www.codeproject.com/Articles/524235/Codeplusreviewplusguidelines">Code review guidelines</a>
 * <a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md">C++ Core Guidelines</a>
-* <a href="https://doc.lagout.org/programmation/C/CPP101.pdf">C++ Coding Standards (Sutter & Andrescu)</a>
+* <a href="https://www.oreilly.com/library/view/c-coding-standards/0321113586/">C++ Coding Standards (Sutter & Alexandrescu)</a>
 
 Beast thrives on code reviews and any sort of feedback from users and
 stakeholders about its interfaces. Even if you just have questions,

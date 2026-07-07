@@ -26,15 +26,15 @@
 #include <windows.h> // for error codes
 #include <cstddef>
 #include <limits>
+#include <memory>
 #include <string>
 #include <utility>
 #include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/memory_order.hpp>
+#include <boost/core/snprintf.hpp>
 #include <boost/atomic/atomic.hpp>
-#include <boost/log/detail/snprintf.hpp>
-#include "unique_ptr.hpp"
 #include "windows/ipc_sync_wrappers.hpp"
 #include <boost/log/detail/header.hpp>
 
@@ -217,8 +217,18 @@ bool interprocess_semaphore::is_semaphore_zero_count_nt_query_semaphore(boost::w
     if (BOOST_UNLIKELY(err != 0u))
     {
         char buf[sizeof(unsigned int) * 2u + 4u];
-        boost::log::aux::snprintf(buf, sizeof(buf), "0x%08x", static_cast< unsigned int >(err));
-        BOOST_LOG_THROW_DESCR_PARAMS(boost::log::system_error, std::string("Failed to test an interprocess semaphore object for zero count, NT status: ") + buf, (ERROR_INVALID_HANDLE));
+        int res = boost::core::snprintf(buf, sizeof(buf), "0x%08x", static_cast< unsigned int >(err));
+        if (BOOST_UNLIKELY(res < 0))
+        {
+            buf[0] = '?';
+            buf[1] = '\0';
+            res = 1;
+        }
+        else if (BOOST_UNLIKELY(static_cast< unsigned int >(res) >= sizeof(buf)))
+        {
+            res = sizeof(buf) - 1u;
+        }
+        BOOST_LOG_THROW_DESCR_PARAMS(boost::log::system_error, std::string("Failed to test an interprocess semaphore object for zero count, NT status: ").append(buf, res), (ERROR_INVALID_HANDLE));
     }
 
     return info.current_count == 0u;
@@ -332,7 +342,7 @@ inline void interprocess_mutex::clear_waiting_and_try_lock(uint32_t& old_state)
     {
         new_state = ((old_state & lock_flag_value) ? old_state : ((old_state - 1u) | lock_flag_value)) & ~event_set_flag_value;
     }
-    while (!m_shared_state->m_lock_state.compare_exchange_strong(old_state, new_state, boost::memory_order_acq_rel, boost::memory_order_relaxed));
+    while (!m_shared_state->m_lock_state.compare_exchange_weak(old_state, new_state, boost::memory_order_acq_rel, boost::memory_order_relaxed));
 }
 
 
@@ -403,7 +413,7 @@ interprocess_condition_variable::semaphore_info* interprocess_condition_variable
     {
         // We need to open the semaphore. It is possible that the semaphore does not exist because all processes that had it opened terminated.
         // Because of this we also attempt to create it.
-        boost::log::aux::unique_ptr< semaphore_info > p(new semaphore_info(id));
+        std::unique_ptr< semaphore_info > p(new semaphore_info(id));
         generate_semaphore_name(id);
         p->m_semaphore.create_or_open(m_semaphore_name.c_str(), m_perms);
 

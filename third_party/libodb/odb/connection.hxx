@@ -1,5 +1,4 @@
 // file      : odb/connection.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_CONNECTION_HXX
@@ -90,11 +89,11 @@ namespace odb
 
     template <typename T>
     prepared_query<T>
-    lookup_query (const char* name) const;
+    lookup_query (const char* name);
 
     template <typename T, typename P>
     prepared_query<T>
-    lookup_query (const char* name, P*& params) const;
+    lookup_query (const char* name, P*& params);
 
     // SQL statement tracing.
     //
@@ -200,8 +199,9 @@ namespace odb
     friend class prepared_query_impl;
     prepared_query_impl* prepared_queries_;
 
-  protected:
-    friend class transaction;
+    // Implementation details.
+    //
+  public:
     tracer_type* transaction_tracer_;
   };
 

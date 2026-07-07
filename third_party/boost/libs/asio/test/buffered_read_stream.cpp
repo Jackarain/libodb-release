@@ -2,7 +2,7 @@
 // buffered_read_stream.cpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2026 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,6 +17,7 @@
 #include <boost/asio/buffered_read_stream.hpp>
 
 #include <cstring>
+#include <functional>
 #include "archetypes/async_result.hpp"
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/io_context.hpp>
@@ -29,12 +30,6 @@
 #else // defined(BOOST_ASIO_HAS_BOOST_ARRAY)
 # include <array>
 #endif // defined(BOOST_ASIO_HAS_BOOST_ARRAY)
-
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-# include <boost/bind.hpp>
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
-# include <functional>
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
 
 typedef boost::asio::buffered_read_stream<
     boost::asio::ip::tcp::socket> stream_type;
@@ -247,13 +242,9 @@ void test_async_operations()
 {
   using namespace std; // For memcmp.
 
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context io_context;
 
@@ -332,7 +323,7 @@ void test_async_operations()
 BOOST_ASIO_TEST_SUITE
 (
   "buffered_read_stream",
-  BOOST_ASIO_TEST_CASE(test_compile)
+  BOOST_ASIO_COMPILE_TEST_CASE(test_compile)
   BOOST_ASIO_TEST_CASE(test_sync_operations)
   BOOST_ASIO_TEST_CASE(test_async_operations)
 )

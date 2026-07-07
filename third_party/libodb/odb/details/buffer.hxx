@@ -1,5 +1,4 @@
 // file      : odb/details/buffer.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_BUFFER_DETAILS_HXX
@@ -64,6 +63,22 @@ namespace odb
       data () const
       {
         return static_cast<T*> (data_);
+      }
+
+      // Note that strictly speaking the return type should be void* const*
+      // but that would make using this function too awkward since we often
+      // store the result as void*.
+      //
+      void**
+      data_ptr ()
+      {
+        return &data_;
+      }
+
+      const void* const*
+      data_ptr () const
+      {
+        return &data_;
       }
     };
 

@@ -1,19 +1,49 @@
-// file      : odb/boost/version.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
+// file      : odb/boost/version.hxx.in
 // license   : GNU GPL v2; see accompanying LICENSE file
 
-#ifdef LIBODB_BOOST_BUILD2
-#  include <odb/boost/version-build2.hxx>
-#else
+#ifndef LIBODB_BOOST_VERSION // Note: using the version macro itself.
 
-#ifndef ODB_BOOST_VERSION_HXX
-#define ODB_BOOST_VERSION_HXX
+// New numeric version format is AAAAABBBBBCCCCCDDDE where:
+//
+// AAAAA - major version number
+// BBBBB - minor version number
+// CCCCC - bugfix version number
+// DDD   - alpha / beta (DDD + 500) version number
+// E     - final (0) / snapshot (1)
+//
+// When DDDE is not 0, 1 is subtracted from AAAAABBBBBCCCCC. For example:
+//
+// Version      AAAAABBBBBCCCCCDDDE
+//
+// 0.1.0        0000000001000000000
+// 0.1.2        0000000001000020000
+// 1.2.3        0000100002000030000
+// 2.2.0-a.1    0000200001999990010
+// 3.0.0-b.2    0000299999999995020
+// 2.2.0-a.1.z  0000200001999990011
+//
+#define LIBODB_BOOST_VERSION_FULL  200005000000000ULL
+#define LIBODB_BOOST_VERSION_STR   "2.5.0"
+#define LIBODB_BOOST_VERSION_ID    "2.5.0"
 
-#include <odb/pre.hxx>
+#define LIBODB_BOOST_VERSION_MAJOR 2
+#define LIBODB_BOOST_VERSION_MINOR 5
+#define LIBODB_BOOST_VERSION_PATCH 0
+
+#define LIBODB_BOOST_PRE_RELEASE   false
+
+#define LIBODB_BOOST_SNAPSHOT      0ULL
+#define LIBODB_BOOST_SNAPSHOT_ID   ""
 
 #include <odb/version.hxx>
 
-// Version format is AABBCCDD where
+#ifdef LIBODB_VERSION_FULL
+#  if !(LIBODB_VERSION_FULL == 200005000000000ULL)
+#    error incompatible libodb version, libodb == 2.5.0 is required
+#  endif
+#endif
+
+// Old/deprecated numeric version format is AABBCCDD where:
 //
 // AA - major version number
 // BB - minor version number
@@ -30,27 +60,19 @@
 // 3.0.0.b2    02999952
 //
 
-// Check that we have compatible ODB version.
-//
-#if ODB_VERSION != 20465
-#  error incompatible odb interface version detected
-#endif
-
 // ODB Boost interface version: odb interface version plus the Boost interface
 // version.
 //
-#define ODB_BOOST_VERSION     2046500
-#define ODB_BOOST_VERSION_STR "2.5.0-b.15"
+// NOTE: also hardcoded in *.options.
+//
+#define ODB_BOOST_VERSION     2050000
+#define ODB_BOOST_VERSION_STR "2.5.0"
 
 // libodb-boost version: odb interface version plus the bugfix version. Note
 // that LIBODB_BOOST_VERSION is always greater or equal to ODB_BOOST_VERSION
 // since if the Boost interface virsion is incremented then the bugfix version
 // must be incremented as well.
 //
-#define LIBODB_BOOST_VERSION     2049965
-#define LIBODB_BOOST_VERSION_STR "2.5.0-b.15"
+#define LIBODB_BOOST_VERSION 2050000
 
-#include <odb/post.hxx>
-
-#endif // ODB_BOOST_VERSION_HXX
-#endif // LIBODB_BOOST_BUILD2
+#endif // LIBODB_BOOST_VERSION

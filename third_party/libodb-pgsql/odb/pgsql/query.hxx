@@ -1,5 +1,4 @@
 // file      : odb/pgsql/query.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_PGSQL_QUERY_HXX
@@ -149,13 +148,14 @@ namespace odb
           kind_bool
         };
 
-        clause_part (kind_type k): kind (k) {}
-        clause_part (kind_type k, const std::string& p): kind (k), part (p) {}
+        clause_part (kind_type k): kind (k), bool_part (false) {}
+        clause_part (kind_type k, const std::string& p)
+            : kind (k), part (p), bool_part (false) {}
         clause_part (bool p): kind (kind_bool), bool_part (p) {}
 
         kind_type kind;
         std::string part; // If kind is param, then part is conversion expr.
-        bool bool_part = false;
+        bool bool_part;
       };
 
       query_base ()
@@ -192,8 +192,10 @@ namespace odb
         append (table, column);
       }
 
+      // Don't use the 'explicit' specifier to support stored procedure and
+      // function parameters.
+      //
       template <typename T>
-      explicit
       query_base (val_bind<T> v)
         : binding_ (0, 0), native_binding_ (0, 0, 0, 0)
       {
@@ -201,7 +203,6 @@ namespace odb
       }
 
       template <typename T, database_type_id ID>
-      explicit
       query_base (val_bind_typed<T, ID> v)
         : binding_ (0, 0), native_binding_ (0, 0, 0, 0)
       {
@@ -209,7 +210,6 @@ namespace odb
       }
 
       template <typename T>
-      explicit
       query_base (ref_bind<T> r)
         : binding_ (0, 0), native_binding_ (0, 0, 0, 0)
       {
@@ -217,7 +217,6 @@ namespace odb
       }
 
       template <typename T, database_type_id ID>
-      explicit
       query_base (ref_bind_typed<T, ID> r)
         : binding_ (0, 0), native_binding_ (0, 0, 0, 0)
       {
@@ -1671,7 +1670,7 @@ namespace odb
       bind (bind_type* b)
       {
         b->type = bind::numeric;
-        b->buffer = buffer_.data ();
+        b->buffer = buffer_.data_ptr ();
         b->capacity = buffer_.capacity ();
         b->size = &size_;
       }
@@ -1836,7 +1835,7 @@ namespace odb
       bind (bind_type* b)
       {
         b->type = bind::text;
-        b->buffer = buffer_.data ();
+        b->buffer = buffer_.data_ptr ();
         b->capacity = buffer_.capacity ();
         b->size = &size_;
       }
@@ -1881,7 +1880,7 @@ namespace odb
       bind (bind_type* b)
       {
         b->type = bind::bytea;
-        b->buffer = buffer_.data ();
+        b->buffer = buffer_.data_ptr ();
         b->capacity = buffer_.capacity ();
         b->size = &size_;
       }
@@ -1926,7 +1925,7 @@ namespace odb
       bind (bind_type* b)
       {
         b->type = bind::bit;
-        b->buffer = buffer_.data ();
+        b->buffer = buffer_.data_ptr ();
         b->capacity = buffer_.capacity ();
         b->size = &size_;
       }
@@ -1970,7 +1969,7 @@ namespace odb
       bind (bind_type* b)
       {
         b->type = bind::varbit;
-        b->buffer = buffer_.data ();
+        b->buffer = buffer_.data_ptr ();
         b->capacity = buffer_.capacity ();
         b->size = &size_;
       }

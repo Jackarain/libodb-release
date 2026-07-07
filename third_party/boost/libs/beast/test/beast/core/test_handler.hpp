@@ -14,9 +14,7 @@
 #include <boost/beast/_experimental/unit_test/suite.hpp>
 #include <boost/asio/associated_allocator.hpp>
 #include <boost/asio/associated_executor.hpp>
-#include <boost/asio/handler_alloc_hook.hpp>
 #include <boost/asio/handler_continuation_hook.hpp>
-#include <boost/asio/handler_invoke_hook.hpp>
 
 namespace boost {
 namespace beast {
@@ -57,7 +55,7 @@ class simple_executor
     std::size_t id_;
 
 public:
-    simple_executor()
+    simple_executor() noexcept
         : id_([]
         {
             static std::size_t n = 0;
@@ -66,12 +64,20 @@ public:
     {
     }
 
+#if defined(BOOST_ASIO_NO_TS_EXECUTORS)
+    void* query(net::execution::context_t) const { return nullptr; }
+    template<class F>
+    void execute(F&&) const {}
+    simple_executor prefer(net::execution::outstanding_work_t::tracked_t) const { return *this; }
+    simple_executor require(net::execution::blocking_t::never_t) const { return *this; };
+#else
     void* context() { return nullptr; }
     void on_work_started() {}
     void on_work_finished() {}
     template<class F> void dispatch(F&&) {}
     template<class F> void post(F&&) {}
     template<class F> void defer(F&&) {}
+#endif
 
     friend
     bool operator==(
@@ -89,6 +95,10 @@ public:
         return lhs.id_ != rhs.id_;
     }
 };
+
+#if defined(BOOST_ASIO_NO_TS_EXECUTORS)
+BOOST_CORE_STATIC_ASSERT(net::execution::is_executor<simple_executor>::value);
+#endif
 
 // A move-only handler
 struct move_only_handler
@@ -116,33 +126,7 @@ struct legacy_handler
     void
     test(F const& f)
     {
-        {
-            bool hook_invoked = false;
-            bool lambda_invoked = false;
-            auto h = f(legacy_handler{hook_invoked});
-            using net::asio_handler_invoke;
-            asio_handler_invoke(
-                [&lambda_invoked]
-                {
-                    lambda_invoked =true;
-                }, &h);
-            BEAST_EXPECT(hook_invoked);
-            BEAST_EXPECT(lambda_invoked);
-        }
-        {
-            bool hook_invoked = false;
-            auto h = f(legacy_handler{hook_invoked});
-            using net::asio_handler_allocate;
-            asio_handler_allocate(0, &h);
-            BEAST_EXPECT(hook_invoked);
-        }
-        {
-            bool hook_invoked = false;
-            auto h = f(legacy_handler{hook_invoked});
-            using net::asio_handler_deallocate;
-            asio_handler_deallocate(nullptr, 0, &h);
-            BEAST_EXPECT(hook_invoked);
-        }
+#if !defined(BOOST_ASIO_NO_DEPRECATED)
         {
             bool hook_invoked = false;
             auto h = f(legacy_handler{hook_invoked});
@@ -150,37 +134,11 @@ struct legacy_handler
             asio_handler_is_continuation(&h);
             BEAST_EXPECT(hook_invoked);
         }
+#else  // !defined(BOOST_ASIO_NO_DEPRECATED)
+    boost::ignore_unused(f);
+#endif // !defined(BOOST_ASIO_NO_DEPRECATED)
     }
 };
-
-template<class Function>
-void
-asio_handler_invoke(
-    Function&& f,
-    legacy_handler* p)
-{
-    p->hook_invoked = true;
-    f();
-}
-
-inline
-void*
-asio_handler_allocate(
-    std::size_t,
-    legacy_handler* p)
-{
-    p->hook_invoked = true;
-    return nullptr;
-}
-
-inline
-void
-asio_handler_deallocate(
-    void*, std::size_t,
-    legacy_handler* p)
-{
-    p->hook_invoked = true;
-}
 
 inline
 bool
@@ -204,8 +162,8 @@ struct associated_allocator<
     using type = std::allocator<int>;
 
     static type get(
-        boost::beast::legacy_handler const& h,
-        Allocator const& a = Allocator()) noexcept
+        boost::beast::legacy_handler const&,
+        Allocator const& = Allocator()) noexcept
     {
         return type{};
     }

@@ -1,5 +1,4 @@
 // file      : odb/pgsql/transaction.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_PGSQL_TRANSACTION_HXX
@@ -41,6 +40,9 @@ namespace odb
       //
       connection_type&
       connection ();
+
+      connection_type&
+      connection (odb::database&);
 
       // Return current transaction or throw if there is no transaction
       // in effect.

@@ -8,7 +8,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/interprocess/detail/config_begin.hpp>
 #include <ios> //std::streamoff
 #include <fstream>   //std::ofstream, std::ifstream
 #include <iostream>
@@ -21,14 +20,6 @@
 
 using namespace boost::interprocess;
 
-inline std::string get_filename()
-{
-   std::string ret (ipcdetail::get_temporary_path());
-   ret += "/";
-   ret += test::get_process_id_name();
-   return ret;
-}
-
 file_mapping get_file_mapping()
 {
    file_mapping f;
@@ -37,8 +28,44 @@ file_mapping get_file_mapping()
 
 int main ()
 {
-   try{
+   BOOST_INTERPROCESS_TRY{
       const std::size_t FileSize = 99999*2;
+      {
+         {
+            std::ofstream file(get_filename().c_str(), std::ios::binary | std::ios::trunc);
+         }
+         {
+            //Create an empty file mapping
+            file_mapping mapping(get_filename().c_str(), read_write);
+
+            //Obtain zero file size
+            offset_t filesize = 5;
+            if(!mapping.get_size(filesize) || filesize != 0)
+               return 1;
+
+            //Check mapping of empty file does not work
+            bool thrown = false;
+            BOOST_INTERPROCESS_TRY{
+               mapped_region region (mapping, read_write);
+            }
+            BOOST_INTERPROCESS_CATCH(...){
+               thrown = true;               
+            } BOOST_INTERPROCESS_CATCH_END
+            if(!thrown)
+               return file_mapping().swap(mapping), file_mapping::remove(get_filename().c_str()), 1;
+
+            thrown = false;
+            BOOST_INTERPROCESS_TRY{
+               mapped_region region (mapping, read_only);
+            }
+            BOOST_INTERPROCESS_CATCH(...){
+               thrown = true;               
+            } BOOST_INTERPROCESS_CATCH_END
+            if(!thrown)
+               return file_mapping().swap(mapping), file_mapping::remove(get_filename().c_str()), 1;
+         }
+         file_mapping::remove(get_filename().c_str());
+      }
       {
          //Create file with given size
          std::ofstream file(get_filename().c_str(), std::ios::binary | std::ios::trunc);
@@ -142,6 +169,27 @@ int main ()
             }
          }
       }
+      #ifdef BOOST_INTERPROCESS_WCHAR_NAMED_RESOURCES
+      {
+         //Create a file mapping
+         file_mapping mapping(get_wfilename().c_str(), read_only);
+
+         //Create a single regions, mapping all the file
+         mapped_region region (mapping
+                              ,read_only
+                              );
+
+         //Check pattern
+         unsigned char *pattern = static_cast<unsigned char*>(region.get_address());
+         for(std::size_t i = 0
+            ;i < FileSize
+            ;++i, ++pattern){
+            if(*pattern != static_cast<unsigned char>(i)){
+               return 1;
+            }
+         }
+      }
+      #endif   //BOOST_INTERPROCESS_WCHAR_NAMED_RESOURCES
       {
          //Now test move semantics
          file_mapping mapping(get_filename().c_str(), read_only);
@@ -152,13 +200,11 @@ int main ()
          file_mapping ret(get_file_mapping());
       }
    }
-   catch(std::exception &exc){
+   BOOST_INTERPROCESS_CATCH(std::exception &exc){
       file_mapping::remove(get_filename().c_str());
-      std::cout << "Unhandled exception: " << exc.what() << std::endl;
-      throw;
-   }
+      std::cout << "Unexpected Exception: " << exc.what() << std::endl;
+      BOOST_INTERPROCESS_RETHROW
+   } BOOST_INTERPROCESS_CATCH_END
    file_mapping::remove(get_filename().c_str());
    return 0;
 }
-
-#include <boost/interprocess/detail/config_end.hpp>

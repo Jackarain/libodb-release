@@ -6,7 +6,7 @@
         "Hailin Jin",
         "Christian Henning"
     ],
-    "description": "Generic Image Library",
+    "description": "(C++14) Generic Image Library",
     "category": [
         "Algorithms",
         "Containers",
@@ -15,7 +15,10 @@
         "Iterators"
     ],
     "maintainers": [
-        "Stefan Seefeld <stefan -at- seefeld.name>",
-        "Mateusz Loskot <mateusz -at- loskot.net>"
-    ]
+        "Samuel Debionne",
+        "Pranam Lashkari <plashkari628 -at- gmail.com>",
+        "Mateusz Loskot <mateusz -at- loskot.net>",
+        "Stefan Seefeld <stefan -at- seefeld.name>"
+    ],
+    "cxxstd": "14"
 }

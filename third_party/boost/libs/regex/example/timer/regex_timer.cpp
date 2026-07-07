@@ -13,6 +13,8 @@
 #pragma warning(disable: 4996 4127)
 #endif
 
+#define BOOST_TIMER_ENABLE_DEPRECATED
+
 #include <boost/config.hpp>
 #include <boost/regex.hpp>
 #include <boost/cregex.hpp>
@@ -89,7 +91,7 @@ public:
 };
 
 namespace boost{
-#if defined(BOOST_MSVC) || (defined(__BORLANDC__) && (__BORLANDC__ == 0x550)) || defined(__SGI_STL_PORT)
+#if defined(BOOST_MSVC) || (defined(BOOST_BORLANDC) && (BOOST_BORLANDC == 0x550)) || defined(__SGI_STL_PORT)
 //
 // problem with std::getline under MSVC6sp3
 // and C++ Builder 5.5, is this really that hard?
@@ -367,16 +369,9 @@ int main(int argc, char**argv)
 }
 
 #if defined(_WIN32) && defined(BOOST_REGEX_USE_WIN32_LOCALE) && !defined(UNDER_CE)
+#if !defined(BOOST_EMBTC)
 #pragma comment(lib, "user32.lib")
+#else
+#pragma comment(lib, "user32.a")
 #endif
-
-
-
-
-
-
-
-
-
-
-
+#endif

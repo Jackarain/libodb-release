@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <iosfwd>
 #include <limits>
-#include "std_ostream.hpp"
+#include "ostream.hpp"
 
 namespace boost {
 namespace histogram {
@@ -54,7 +54,7 @@ int main() {
     BOOST_TEST_EQ(c, 255);
   }
 
-  const auto vmax = std::numeric_limits<std::uint64_t>::max();
+  const auto vmax = (std::numeric_limits<std::uint64_t>::max)();
 
   // ctors, assign
   {

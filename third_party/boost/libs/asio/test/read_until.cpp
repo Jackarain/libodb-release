@@ -2,7 +2,7 @@
 // read_until.cpp
 // ~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2026 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,17 +17,12 @@
 #include <boost/asio/read_until.hpp>
 
 #include <cstring>
+#include <functional>
 #include "archetypes/async_result.hpp"
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/post.hpp>
 #include <boost/asio/streambuf.hpp>
 #include "unit_test.hpp"
-
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-# include <boost/bind.hpp>
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
-# include <functional>
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
 
 class test_stream
 {
@@ -42,7 +37,7 @@ public:
   {
   }
 
-  executor_type get_executor() BOOST_ASIO_NOEXCEPT
+  executor_type get_executor() noexcept
   {
     return io_context_.get_executor();
   }
@@ -88,7 +83,7 @@ public:
     size_t bytes_transferred = read_some(buffers);
     boost::asio::post(get_executor(),
         boost::asio::detail::bind_handler(
-          BOOST_ASIO_MOVE_CAST(Handler)(handler),
+          static_cast<Handler&&>(handler),
           boost::system::error_code(), bytes_transferred));
   }
 
@@ -675,13 +670,9 @@ void async_read_handler(
 
 void test_dynamic_string_async_read_until_char()
 {
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context ioc;
   test_stream s(ioc);
@@ -833,18 +824,29 @@ void test_dynamic_string_async_read_until_char()
   BOOST_ASIO_CHECK(i == 42);
   ioc.restart();
   ioc.run();
+
+  s.reset(read_data, sizeof(read_data));
+  s.next_read_length(10);
+  ec = boost::system::error_code();
+  length = 0;
+  called = false;
+  sb2.consume(sb2.size());
+  boost::asio::async_read_until(s, sb2, 'Y')(
+      bindns::bind(async_read_handler, _1, &ec,
+        _2, &length, &called));
+  ioc.restart();
+  ioc.run();
+  BOOST_ASIO_CHECK(called);
+  BOOST_ASIO_CHECK(!ec);
+  BOOST_ASIO_CHECK(length == 25);
 }
 
 void test_streambuf_async_read_until_char()
 {
 #if !defined(BOOST_ASIO_NO_DYNAMIC_BUFFER_V1)
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context ioc;
   test_stream s(ioc);
@@ -993,18 +995,29 @@ void test_streambuf_async_read_until_char()
   BOOST_ASIO_CHECK(i == 42);
   ioc.restart();
   ioc.run();
+
+  s.reset(read_data, sizeof(read_data));
+  s.next_read_length(10);
+  ec = boost::system::error_code();
+  length = 0;
+  called = false;
+  sb2.consume(sb2.size());
+  boost::asio::async_read_until(s, sb2, 'Y')(
+      bindns::bind(async_read_handler, _1, &ec,
+        _2, &length, &called));
+  ioc.restart();
+  ioc.run();
+  BOOST_ASIO_CHECK(called);
+  BOOST_ASIO_CHECK(!ec);
+  BOOST_ASIO_CHECK(length == 25);
 #endif // !defined(BOOST_ASIO_NO_DYNAMIC_BUFFER_V1)
 }
 
 void test_dynamic_string_async_read_until_string()
 {
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context ioc;
   test_stream s(ioc);
@@ -1156,18 +1169,29 @@ void test_dynamic_string_async_read_until_string()
   BOOST_ASIO_CHECK(i == 42);
   ioc.restart();
   ioc.run();
+
+  s.reset(read_data, sizeof(read_data));
+  s.next_read_length(10);
+  ec = boost::system::error_code();
+  length = 0;
+  called = false;
+  sb2.consume(sb2.size());
+  boost::asio::async_read_until(s, sb2, "WXY")(
+      bindns::bind(async_read_handler, _1, &ec,
+        _2, &length, &called));
+  ioc.restart();
+  ioc.run();
+  BOOST_ASIO_CHECK(called);
+  BOOST_ASIO_CHECK(!ec);
+  BOOST_ASIO_CHECK(length == 25);
 }
 
 void test_streambuf_async_read_until_string()
 {
 #if !defined(BOOST_ASIO_NO_DYNAMIC_BUFFER_V1)
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context ioc;
   test_stream s(ioc);
@@ -1316,18 +1340,29 @@ void test_streambuf_async_read_until_string()
   BOOST_ASIO_CHECK(i == 42);
   ioc.restart();
   ioc.run();
+
+  s.reset(read_data, sizeof(read_data));
+  s.next_read_length(10);
+  ec = boost::system::error_code();
+  length = 0;
+  called = false;
+  sb2.consume(sb2.size());
+  boost::asio::async_read_until(s, sb2, "WXY")(
+      bindns::bind(async_read_handler, _1, &ec,
+        _2, &length, &called));
+  ioc.restart();
+  ioc.run();
+  BOOST_ASIO_CHECK(called);
+  BOOST_ASIO_CHECK(!ec);
+  BOOST_ASIO_CHECK(length == 25);
 #endif // !defined(BOOST_ASIO_NO_DYNAMIC_BUFFER_V1)
 }
 
 void test_dynamic_string_async_read_until_match_condition()
 {
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context ioc;
   test_stream s(ioc);
@@ -1479,18 +1514,29 @@ void test_dynamic_string_async_read_until_match_condition()
   BOOST_ASIO_CHECK(i == 42);
   ioc.restart();
   ioc.run();
+
+  s.reset(read_data, sizeof(read_data));
+  s.next_read_length(10);
+  ec = boost::system::error_code();
+  length = 0;
+  called = false;
+  sb2.consume(sb2.size());
+  boost::asio::async_read_until(s, sb2, match_char('Y'))(
+      bindns::bind(async_read_handler, _1, &ec,
+        _2, &length, &called));
+  ioc.restart();
+  ioc.run();
+  BOOST_ASIO_CHECK(called);
+  BOOST_ASIO_CHECK(!ec);
+  BOOST_ASIO_CHECK(length == 25);
 }
 
 void test_streambuf_async_read_until_match_condition()
 {
 #if !defined(BOOST_ASIO_NO_DYNAMIC_BUFFER_V1)
-#if defined(BOOST_ASIO_HAS_BOOST_BIND)
-  namespace bindns = boost;
-#else // defined(BOOST_ASIO_HAS_BOOST_BIND)
   namespace bindns = std;
-  using std::placeholders::_1;
-  using std::placeholders::_2;
-#endif // defined(BOOST_ASIO_HAS_BOOST_BIND)
+  using bindns::placeholders::_1;
+  using bindns::placeholders::_2;
 
   boost::asio::io_context ioc;
   test_stream s(ioc);
@@ -1639,6 +1685,21 @@ void test_streambuf_async_read_until_match_condition()
   BOOST_ASIO_CHECK(i == 42);
   ioc.restart();
   ioc.run();
+
+  s.reset(read_data, sizeof(read_data));
+  s.next_read_length(10);
+  ec = boost::system::error_code();
+  length = 0;
+  called = false;
+  sb2.consume(sb2.size());
+  boost::asio::async_read_until(s, sb2, match_char('Y'))(
+      bindns::bind(async_read_handler, _1, &ec,
+        _2, &length, &called));
+  ioc.restart();
+  ioc.run();
+  BOOST_ASIO_CHECK(called);
+  BOOST_ASIO_CHECK(!ec);
+  BOOST_ASIO_CHECK(length == 25);
 #endif // !defined(BOOST_ASIO_NO_DYNAMIC_BUFFER_V1)
 }
 

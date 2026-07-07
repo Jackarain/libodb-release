@@ -1,6 +1,6 @@
 /* Boost.MultiIndex test for rearrange operations.
  *
- * Copyright 2003-2013 Joaquin M Lopez Munoz.
+ * Copyright 2003-2025 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -13,6 +13,7 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <iterator>
+#include <boost/core/ref.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include "pre_multi_index.hpp"
 #include <boost/multi_index_container.hpp>
@@ -20,7 +21,6 @@
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
-#include <boost/ref.hpp>
 #include <vector>
 
 using namespace boost::multi_index;
@@ -36,15 +36,6 @@ using namespace boost::multi_index;
 
 #undef CHECK_VOID_RANGE
 #define CHECK_VOID_RANGE(p) BOOST_TEST((p).first==(p).second)
-
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-/* The "ISO C++ Template Parser" option makes CW8.3 incorrectly fail at
- * expressions of the form sizeof(x) where x is an array local to a
- * template function.
- */
-
-#pragma parse_func_templ off
-#endif
 
 template<typename Sequence>
 static void local_test_rearrange()
@@ -109,10 +100,6 @@ static void local_test_rearrange()
   sc.rearrange(v.begin());
   BOOST_TEST(std::equal(sc.begin(),sc.end(),v.begin()));
 }
-
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-#pragma parse_func_templ reset
-#endif
 
 void test_rearrange()
 {

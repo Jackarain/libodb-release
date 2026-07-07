@@ -7,21 +7,23 @@
 #include <boost/core/lightweight_test.hpp>
 #include <boost/histogram/axis/ostream.hpp>
 #include <boost/histogram/axis/regular.hpp>
-#include <boost/histogram/detail/cat.hpp>
 #include <limits>
 #include <sstream>
 #include <type_traits>
+#include "axis.hpp"
 #include "is_close.hpp"
-#include "std_ostream.hpp"
+#include "ostream.hpp"
+#include "str.hpp"
 #include "throw_exception.hpp"
-#include "utility_axis.hpp"
-
-using namespace boost::histogram;
-namespace tr = axis::transform;
-using def = use_default;
 
 int main() {
+  using namespace boost::histogram;
+  using def = use_default;
+  namespace tr = axis::transform;
+  namespace op = axis::option;
+
   BOOST_TEST(std::is_nothrow_move_assignable<axis::regular<>>::value);
+  BOOST_TEST(std::is_nothrow_move_constructible<axis::regular<>>::value);
 
   // bad_ctors
   {
@@ -48,9 +50,10 @@ int main() {
   {
     axis::regular<> a{4, -2, 2, "foo"};
     BOOST_TEST_EQ(a.metadata(), "foo");
-    BOOST_TEST_EQ(static_cast<const axis::regular<>&>(a).metadata(), "foo");
-    a.metadata() = "bar";
-    BOOST_TEST_EQ(static_cast<const axis::regular<>&>(a).metadata(), "bar");
+    const auto& cref = a;
+    BOOST_TEST_EQ(cref.metadata(), "foo");
+    cref.metadata() = "bar"; // this is allowed
+    BOOST_TEST_EQ(cref.metadata(), "bar");
     BOOST_TEST_EQ(a.value(0), -2);
     BOOST_TEST_EQ(a.value(1), -1);
     BOOST_TEST_EQ(a.value(2), 0);
@@ -72,7 +75,7 @@ int main() {
     BOOST_TEST_EQ(a.index(std::numeric_limits<double>::infinity()), 4);
     BOOST_TEST_EQ(a.index(std::numeric_limits<double>::quiet_NaN()), 4);
 
-    BOOST_TEST_EQ(detail::cat(a),
+    BOOST_TEST_EQ(str(a),
                   "regular(4, -2, 2, metadata=\"bar\", options=underflow | overflow)");
   }
 
@@ -115,7 +118,9 @@ int main() {
 
     BOOST_TEST_THROWS((axis::regular<double, tr::log>{2, -1, 0}), std::invalid_argument);
 
-    BOOST_TEST_EQ(detail::cat(a), "regular_log(2, 1, 100, options=underflow | overflow)");
+    BOOST_TEST_CSTR_EQ(
+        str(a).c_str(),
+        "regular(transform::log{}, 2, 1, 100, options=underflow | overflow)");
   }
 
   // with sqrt transform
@@ -137,7 +142,8 @@ int main() {
     BOOST_TEST_EQ(a.index(100), 2);
     BOOST_TEST_EQ(a.index(std::numeric_limits<double>::infinity()), 2);
 
-    BOOST_TEST_EQ(detail::cat(a), "regular_sqrt(2, 0, 4, options=underflow | overflow)");
+    BOOST_TEST_EQ(str(a),
+                  "regular(transform::sqrt{}, 2, 0, 4, options=underflow | overflow)");
   }
 
   // with pow transform
@@ -159,8 +165,8 @@ int main() {
     BOOST_TEST_EQ(a.index(100), 2);
     BOOST_TEST_EQ(a.index(std::numeric_limits<double>::infinity()), 2);
 
-    BOOST_TEST_EQ(detail::cat(a),
-                  "regular_pow(2, 0, 4, options=underflow | overflow, power=0.5)");
+    BOOST_TEST_EQ(str(a),
+                  "regular(transform::pow{0.5}, 2, 0, 4, options=underflow | overflow)");
   }
 
   // with step
@@ -196,35 +202,54 @@ int main() {
 
   // with growth
   {
-    axis::regular<double, def, def, axis::option::growth_t> a{1, 0, 1};
+    using pii_t = std::pair<axis::index_type, axis::index_type>;
+    axis::regular<double, def, def, op::growth_t> a{1, 0, 1};
     BOOST_TEST_EQ(a.size(), 1);
-    BOOST_TEST_EQ(a.update(0), std::make_pair(0, 0));
+    BOOST_TEST_EQ(a.update(0), pii_t(0, 0));
     BOOST_TEST_EQ(a.size(), 1);
-    BOOST_TEST_EQ(a.update(1), std::make_pair(1, -1));
+    BOOST_TEST_EQ(a.update(1), pii_t(1, -1));
     BOOST_TEST_EQ(a.size(), 2);
     BOOST_TEST_EQ(a.value(0), 0);
     BOOST_TEST_EQ(a.value(2), 2);
-    BOOST_TEST_EQ(a.update(-1), std::make_pair(0, 1));
+    BOOST_TEST_EQ(a.update(-1), pii_t(0, 1));
     BOOST_TEST_EQ(a.size(), 3);
     BOOST_TEST_EQ(a.value(0), -1);
     BOOST_TEST_EQ(a.value(3), 2);
-    BOOST_TEST_EQ(a.update(-10), std::make_pair(0, 9));
+    BOOST_TEST_EQ(a.update(-10), pii_t(0, 9));
     BOOST_TEST_EQ(a.size(), 12);
     BOOST_TEST_EQ(a.value(0), -10);
     BOOST_TEST_EQ(a.value(12), 2);
-    BOOST_TEST_EQ(a.update(std::numeric_limits<double>::infinity()),
-                  std::make_pair(a.size(), 0));
-    BOOST_TEST_EQ(a.update(std::numeric_limits<double>::quiet_NaN()),
-                  std::make_pair(a.size(), 0));
-    BOOST_TEST_EQ(a.update(-std::numeric_limits<double>::infinity()),
-                  std::make_pair(-1, 0));
+    BOOST_TEST_EQ(a.update(std::numeric_limits<double>::infinity()), pii_t(a.size(), 0));
+    BOOST_TEST_EQ(a.update(std::numeric_limits<double>::quiet_NaN()), pii_t(a.size(), 0));
+    BOOST_TEST_EQ(a.update(-std::numeric_limits<double>::infinity()), pii_t(-1, 0));
+  }
+
+  // axis with overflow bin represents open interval
+  {
+    axis::regular<double, def, def, op::overflow_t> a{2, 0, 1};
+    BOOST_TEST_EQ(a.index(0), 0);
+    BOOST_TEST_EQ(a.index(0.49), 0);
+    BOOST_TEST_EQ(a.index(0.50), 1);
+    BOOST_TEST_EQ(a.index(0.99), 1);
+    BOOST_TEST_EQ(a.index(1), 2);   // overflow bin
+    BOOST_TEST_EQ(a.index(1.1), 2); // overflow bin
+  }
+
+  // axis without overflow bin represents a closed interval
+  {
+    axis::regular<double, def, def, op::none_t> a{2, 0, 1};
+    BOOST_TEST_EQ(a.index(0), 0);
+    BOOST_TEST_EQ(a.index(0.49), 0);
+    BOOST_TEST_EQ(a.index(0.50), 1);
+    BOOST_TEST_EQ(a.index(0.99), 1);
+    BOOST_TEST_EQ(a.index(1), 1);   // last ordinary bin
+    BOOST_TEST_EQ(a.index(1.1), 2); // out of range
   }
 
   // iterators
   {
     test_axis_iterator(axis::regular<>(5, 0, 1), 0, 5);
-    test_axis_iterator(axis::regular<double, def, def, axis::option::none_t>(5, 0, 1), 0,
-                       5);
+    test_axis_iterator(axis::regular<double, def, def, op::none_t>(5, 0, 1), 0, 5);
     test_axis_iterator(axis::circular<>(5, 0, 1), 0, 5);
   }
 
@@ -243,7 +268,7 @@ int main() {
   // null_type streamable
   {
     auto a = axis::regular<float, def, axis::null_type>(2, 0, 1);
-    BOOST_TEST_EQ(detail::cat(a), "regular(2, 0, 1, options=underflow | overflow)");
+    BOOST_TEST_EQ(str(a), "regular(2, 0, 1, options=underflow | overflow)");
   }
 
   // shrink and rebin

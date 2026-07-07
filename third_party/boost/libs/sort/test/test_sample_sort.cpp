@@ -10,7 +10,6 @@
 ///
 /// @remarks
 //-----------------------------------------------------------------------------
-#include <ciso646>
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
@@ -50,18 +49,21 @@ void test1()
         };
     };
     V3 = V2 = V1;
+    // sort 0 elements
+    bss::sample_sort(V1.end(), V1.end());
+    
     bss::sample_sort(V1.begin(), V1.end());
     std::stable_sort(V2.begin(), V2.end());
     bss::sample_sort(V3.begin(), V3.end(), 0);
 
     BOOST_CHECK(V1.size() == V2.size());
     for (uint32_t i = 0; i < V1.size(); ++i)
-    {   BOOST_CHECK(V1[i].num == V2[i].num and V1[i].tail == V2[i].tail);
+    {   BOOST_CHECK(V1[i].num == V2[i].num && V1[i].tail == V2[i].tail);
     };
 
     BOOST_CHECK(V3.size() == V2.size());
     for (uint32_t i = 0; i < V3.size(); ++i)
-    {   BOOST_CHECK(V3[i].num == V2[i].num and V3[i].tail == V2[i].tail);
+    {   BOOST_CHECK(V3[i].num == V2[i].num && V3[i].tail == V2[i].tail);
     };
 };
 
@@ -165,7 +167,7 @@ void test5 (void)
     };
     bss::sample_sort( V.begin() , V.end());
     for ( uint32_t i =0 ; i < ( NELEM * 10); ++i)
-    {   BOOST_CHECK ( V[i].num == (i / 10) and V[i].tail == (i %10) );
+    {   BOOST_CHECK ( V[i].num == (i / 10) && V[i].tail == (i %10) );
     };
 }
 

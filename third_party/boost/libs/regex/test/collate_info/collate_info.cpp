@@ -11,7 +11,7 @@
 
 // most of the workarounds and headers we need are already in here:
 #include <boost/regex.hpp> 
-#include <boost/regex/v4/primary_transform.hpp>
+#include <boost/regex/v5/primary_transform.hpp>
 #include <assert.h>
 #include <boost/detail/lightweight_main.hpp>
 #include <iostream>
@@ -19,15 +19,6 @@
 
 #ifdef BOOST_INTEL
 #pragma warning(disable:1418 981 983 2259)
-#endif
-
-#ifdef BOOST_NO_STDC_NAMESPACE
-namespace std{
-   using ::strxfrm;
-#ifndef BOOST_NO_WREGEX
-   using ::wcsxfrm;
-#endif
-}
 #endif
 
 #include <iostream>
@@ -230,7 +221,7 @@ int cpp_main(int /*argc*/, char * /*argv*/[])
    print_cpp_info(wchar_t(0), "wchar_t");
 #endif
 
-#if !BOOST_WORKAROUND(__BORLANDC__, < 0x560)
+#if !BOOST_WORKAROUND(BOOST_BORLANDC, < 0x560)
    boost::c_regex_traits<char> a;
    print_sort_syntax(a, "boost::c_regex_traits<char>");
 #ifndef BOOST_NO_WREGEX

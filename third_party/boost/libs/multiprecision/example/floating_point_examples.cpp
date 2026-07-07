@@ -42,8 +42,9 @@ system with 4-byte single-precision float, 8-byte double-precision double and al
 `cpp_dec_float_50` data type from Boost.Multiprecision with 50 decimal digits
 of precision.
 
-We can compute and print the approximate area of a circle with radius 123/100 for
-`float`, `double` and `cpp_dec_float_50` with the program below.
+We can compute and print the approximate area of a circle 
+with radius 123/100  for `float`, `double` and `cpp_dec_float_50` with the program below
+(see next section for choosing 123/100  instead of 1.23).
 
 */
 
@@ -51,8 +52,10 @@ We can compute and print the approximate area of a circle with radius 123/100 fo
 
 //[AOS3
 
-/*`In the next example we'll look at calling both standard library and Boost.Math functions from within generic code.
-We'll also show how to cope with template arguments which are expression-templates rather than number types.*/
+/*`In later examples we'll look at calling both standard library and Boost.Math functions from within generic code.
+We'll also show how to cope with template arguments which are expression-templates rather than number types.
+
+But first some warnings about how multiprecision types are slightly but significantly different __fundamental_types. */
 
 //]
 
@@ -118,8 +121,8 @@ Which outputs:
 
 [pre 9.82266396479604757017335009796882833995903762577173e-01]
 
-Now that we've seen some non-template examples, lets repeat the code again, but this time as a template
-that can be called either with a builtin type (`float`, `double` etc), or with a multiprecision type:
+Now that we've seen some non-template examples, let's repeat the code again, but this time as a template
+that can be called either with a builtin type (`float`, `double` etc.), or with a multiprecision type:
 
 */
 

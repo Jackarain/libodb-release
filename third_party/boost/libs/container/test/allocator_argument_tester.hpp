@@ -13,6 +13,7 @@
 
 #include <boost/container/uses_allocator.hpp>
 #include <boost/container/detail/mpl.hpp>
+#include <boost/container/detail/operator_new_helpers.hpp>
 #include <boost/move/core.hpp>
 
 template<class T, unsigned int Id, bool HasTrueTypes = false>
@@ -68,11 +69,11 @@ class propagation_test_allocator
    std::size_t max_size() const
    {  return std::size_t(-1);  }
 
-   T* allocate(std::size_t n)
-   {  return (T*)::new char[n*sizeof(T)];  }
+   value_type* allocate(std::size_t count)
+   {  return boost::container::dtl::operator_new_allocate<value_type>(count);  }
 
-   void deallocate(T*p, std::size_t)
-   {  delete []static_cast<char*>(static_cast<void*>(p));  }
+   void deallocate(value_type *ptr, std::size_t n)
+   {  return boost::container::dtl::operator_delete_deallocate<T>(ptr, n);  }
 
    bool m_move_contructed;
    bool m_move_assigned;
@@ -192,19 +193,31 @@ struct allocator_argument_tester
 
    //Move constructors
    allocator_argument_tester(BOOST_RV_REF(allocator_argument_tester) other)
-      : construction_type(NotUsesAllocator), value(other.value)
-   {  other.value = 0;  other.construction_type = NotUsesAllocator;  }
+      : construction_type(NotUsesAllocator), value(((allocator_argument_tester &)other).value)
+   {
+      allocator_argument_tester &o = other;
+      o.value = 0;
+      o.construction_type = NotUsesAllocator;
+   }
 
    allocator_argument_tester( BOOST_RV_REF(allocator_argument_tester) other
                             , typename base_type::allocator_constructor_type)
-      : construction_type(ConstructibleSuffix), value(other.value)
-   {  other.value = 0;  other.construction_type = ConstructibleSuffix;  }
+      : construction_type(ConstructibleSuffix), value(((allocator_argument_tester &)other).value)
+   {
+      allocator_argument_tester &o = other;
+      o.value = 0;
+      o.construction_type = ConstructibleSuffix;
+   }
 
    allocator_argument_tester( typename base_type::allocator_arg_type
                             , typename base_type::allocator_constructor_type
                             , BOOST_RV_REF(allocator_argument_tester) other)
-      : construction_type(ConstructiblePrefix), value(other.value)
-   {  other.value = 0;  other.construction_type = ConstructiblePrefix;  }
+      : construction_type(ConstructiblePrefix), value(((allocator_argument_tester &)other).value)
+   {
+      allocator_argument_tester &o = other;
+      o.value = 0;
+      o.construction_type = ConstructiblePrefix;
+   }
 
    ConstructionTypeEnum construction_type;
    int                  value;

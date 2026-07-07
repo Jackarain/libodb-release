@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright (c) 2003 Eric Friedman, Itay Maman
-// Copyright (c) 2013-2019 Antony Polukhin
+// Copyright (c) 2013-2026 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -29,9 +29,9 @@
 #include <sstream>
 #include <vector>
 #include <map>
-#if !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_HDR_TUPLE)
 #include <tuple>
-#endif // !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_HDR_TUPLE)
+
+struct Nil {};
 
 struct printer
     : boost::static_visitor<std::string>
@@ -59,7 +59,6 @@ struct printer
         return ost.str();
     }
 
-#if !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_HDR_TUPLE)
     template <int...> struct indices {};
     template <typename... Ts, int... Is>
     std::string operator()(const std::tuple<Ts...>& tup, indices<Is...>) const
@@ -81,7 +80,6 @@ struct printer
     {
         return printer()(tup, make_indices<sizeof...(Ts)>());
     }
-#endif // !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_HDR_TUPLE)
 
     template <typename T>
     std::string operator()(const T& operand) const
@@ -213,7 +211,6 @@ void test_recursive_variant()
         >::type var6_t;
     var6_t var6;
 
-#if !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_HDR_TUPLE)
     typedef boost::make_recursive_variant<
           int,
           std::tuple<int, boost::recursive_variant_>
@@ -226,7 +223,6 @@ void test_recursive_variant()
 
     std::cout << "result7: " << result7 << '\n';
     BOOST_TEST(result7 == "( 2 ( 1 0 ) ) ");
-#endif // !defined(BOOST_VARIANT_DO_NOT_USE_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_HDR_TUPLE)
 }
 
 void test_recursive_variant_over()
@@ -355,10 +351,21 @@ void test_recursive_variant_over()
     BOOST_TEST(result5 == "( 3.5 ( 3 5 ( 3 5 ) 7 ) 17.25 ) ");
 }
 
+void test_recursive_variant_from_variant()
+{
+    // See https://github.com/boostorg/variant/issues/100
+    typedef boost::variant<Nil, double> Atom;
+    typedef boost::variant<Nil, boost::recursive_wrapper<Atom> > Variant;
+
+    BOOST_STATIC_ASSERT(!boost::is_constructible<Variant, Atom>::value);
+    BOOST_STATIC_ASSERT(boost::is_constructible<boost::variant<Nil, Atom>, Atom>::value);
+}
+
 int main()
 {
     test_recursive_variant();
     test_recursive_variant_over();
+    test_recursive_variant_from_variant();
 
     return boost::report_errors();
 }

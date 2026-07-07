@@ -1,0 +1,139 @@
+# file      : libsqlite3/buildfile
+# copyright : not copyrighted - public domain
+
+lib{sqlite3}: {h c}{*}
+
+tclass = $c.target.class
+
+bsd     = ($tclass == 'bsd')
+windows = ($tclass == 'windows')
+
+gcc        = ($c.class == 'gcc')
+clang_msvc = ($c.id == 'clang' && $c.target.system == 'win32-msvc')
+msvc       = ($c.class == 'msvc')
+
+# Build options.
+#
+# The set of features we enable by default is inspired by Debian, Fedora, and
+# the official documentation.
+#
+# Note that we "prefix" them to what might have been specified by the user so
+# that it is possible to override the defaults by specifying them as =0.
+#
+# PREUPDATE_HOOK is required by SESSION.
+#
+# GEOPOLY (alternative interface to the R-Tree extension) is always enabled by
+# upstream together with RTREE.
+#
+# ROWID_IN_VIEW restores some legacy behavior.
+#
+# Note that if disabling any previously-released features, then will need to
+# increment abi_major.
+#
+c.poptions =+ \
+  -DSQLITE_ALLOW_ROWID_IN_VIEW=1 \
+  -DSQLITE_ENABLE_COLUMN_METADATA=1 \
+  -DSQLITE_ENABLE_DBPAGE_VTAB=1 \
+  -DSQLITE_ENABLE_DBSTAT_VTAB=1 \
+  -DSQLITE_ENABLE_EXPLAIN_COMMENTS=1 \
+  -DSQLITE_ENABLE_FTS3=1 \
+  -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 \
+  -DSQLITE_ENABLE_FTS4=1 \
+  -DSQLITE_ENABLE_FTS5=1 \
+  -DSQLITE_ENABLE_GEOPOLY=1 \
+  -DSQLITE_ENABLE_JSON1=1 \
+  -DSQLITE_ENABLE_LOAD_EXTENSION=1 \
+  -DSQLITE_ENABLE_MATH_FUNCTIONS=1 \
+  -DSQLITE_ENABLE_PERCENTILE=1 \
+  -DSQLITE_ENABLE_PREUPDATE_HOOK=1 \
+  -DSQLITE_ENABLE_RTREE=1 \
+  -DSQLITE_ENABLE_SESSION=1 \
+  -DSQLITE_ENABLE_STMTVTAB=1 \
+  -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+  -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT=1 \
+  -DSQLITE_ENABLE_STMT_SCANSTATUS=1 \
+  -DSQLITE_LIKE_DOESNT_MATCH_BLOBS=1 \
+  -DSQLITE_MAX_SCHEMA_RETRY=25 \
+  -DSQLITE_MAX_VARIABLE_NUMBER=250000 \
+  -DSQLITE_STRICT_SUBTYPE=1 \
+  -DSQLITE_SECURE_DELETE=1 \
+  -DSQLITE_SOUNDEX=1 \
+  -DSQLITE_THREADSAFE=1 \
+  -DSQLITE_USE_URI=1
+
+# Raise the maximum number of attached databases from 10 up to the limit.
+#
+c.poptions =+ -DSQLITE_MAX_ATTACHED=125
+
+if! $windows
+{
+  # Note that the upstream package normally defines a number of other HAVE_*
+  # macros, which we currently don't care about.
+  #
+  c.poptions =+ -DHAVE_USLEEP=1
+
+  # SQLITE_THREADSAFE requres -lpthread
+  # SQLITE_ENABLE_LOAD_EXTENSION requires -ldl
+  # SQLITE_ENABLE_FTS5 requires -lm (calls log(1))
+  #
+  # You may be wondering why we didn't import them instead. While it would be
+  # almost equivalent, there is a subtle difference: if we import them, then
+  # build2 will start selecting static/shared libraries and we probably don't
+  # want that here. These libraries are in a sense an extension of -lc and we
+  # want them to be linked in the same way as -lc (e.g., the user will have to
+  # specify -static to force static linking and so on).
+  #
+  # We also assume these are implementation dependencies (so there is no
+  # c.export.libs listing them).
+  #
+  # Note that we use -pthread instead of -lpthread for efficiency.
+  #
+  c.libs += -pthread -lm
+
+  if! $bsd
+    c.libs += -ldl
+}
+
+# Both Debian and Fedora add this so gotta be important.
+#
+if $gcc
+  c.coptions += -fno-strict-aliasing
+
+if $clang_msvc
+  c.coptions += -Wno-deprecated-declarations
+
+# Disable warnings that pop up with -Wextra. Upstream doesn't seem to care
+# about these and it is not easy to disable specific warnings in a way that
+# works across compilers/version (some -Wno-* options are only recognized in
+# newer versions). Some warnings may still appear for certain (newer)
+# platforms/compilers. We pass them through but disable treating them as
+# errors.
+#
+if $gcc
+  c.coptions += -Wno-extra -Wno-error
+
+# Also disable treating VC warnings as errors.
+#
+if $msvc
+  c.coptions += /WX-
+
+# Export options.
+#
+# It would have been cleaner to handle this in a header but that will require
+# modifying sqlite3.h. Note that this is also sub-optimal if we are not using
+# an export stub (no dllimport).
+#
+lib{sqlite3}: cc.export.poptions = "-I$src_base"
+
+if $windows
+{
+  objs{*}: c.poptions += '-DSQLITE_API=__declspec(dllexport)'
+  libs{sqlite3}: cc.export.poptions += '-DSQLITE_API=__declspec(dllimport)'
+}
+
+# See bootstrap.build for details.
+#
+if $version.pre_release
+  lib{sqlite3}: bin.lib.version = @"-$version.project_id"
+else
+  lib{sqlite3}: bin.lib.version = @"-$abi_major"

@@ -22,8 +22,6 @@
 #include <boost/intrusive/link_mode.hpp>
 
 
-namespace boost {
-namespace intrusive {
 
 struct BPtr_Value
 {
@@ -210,6 +208,8 @@ struct ValueContainer< BPtr_Value >
    typedef bounded_reference_cont< BPtr_Value > type;
 };
 
+namespace boost {
+namespace intrusive {
 namespace test{
 
 template <>
@@ -258,6 +258,19 @@ class delete_disposer< BPtr_Value >
    {
       p->~value_type();
       allocator_type().deallocate(p, 1);
+   }
+};
+
+template <>
+class delete_noexcept_disposer< BPtr_Value >
+   : public delete_disposer< BPtr_Value >
+{
+   public:
+   typedef delete_disposer< BPtr_Value > base_t;
+
+   void operator () (typename base_t::pointer p) BOOST_NOEXCEPT
+   {
+      this->delete_disposer< BPtr_Value >::operator()(p);
    }
 };
 

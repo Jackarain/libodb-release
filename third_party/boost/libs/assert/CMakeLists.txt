@@ -1,14 +1,11 @@
-# Copyright 2018 Mike Dev
-# Copyright 2018 Peter Dimov
+# Copyright 2018-2025 Peter Dimov
 # Distributed under the Boost Software License, Version 1.0.
-# See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt
+# https://www.boost.org/LICENSE_1_0.txt
 
-# Partial (add_subdirectory only) and experimental CMake support
-# Subject to change; please do not rely on the contents of this file yet
+# We support CMake 3.5, but prefer 3.31 policies and behavior
+cmake_minimum_required(VERSION 3.5...3.31)
 
-cmake_minimum_required(VERSION 3.5)
-
-project(BoostAssert VERSION 1.71.0 LANGUAGES CXX)
+project(boost_assert VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 add_library(boost_assert INTERFACE)
 add_library(Boost::assert ALIAS boost_assert)
@@ -16,39 +13,39 @@ add_library(Boost::assert ALIAS boost_assert)
 target_include_directories(boost_assert INTERFACE include)
 
 target_link_libraries(boost_assert
-    INTERFACE
-        Boost::config
+  INTERFACE
+    Boost::config
 )
 
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+# Add headers and .natvis to project, for better IDE integration
 
-    # `function` confuses FetchContent, sees empty CMAKE_CURRENT_LIST_DIR
-    macro(fetch_and_include name)
+if(NOT CMAKE_VERSION VERSION_LESS 3.19)
 
-        message(STATUS "Fetching ${name}")
+  # Using target_sources with PRIVATE or PUBLIC on INTERFACE targets requires 3.19
 
-        file(DOWNLOAD
-            "https://raw.githubusercontent.com/pdimov/mincmake/master/${name}"
-            "${CMAKE_BINARY_DIR}/fetch_and_include/${name}"
-        )
+  file(GLOB_RECURSE headers CONFIGURE_DEPENDS include/*.hpp)
+  target_sources(boost_assert PRIVATE ${headers})
+  unset(headers)
 
-        include("${CMAKE_BINARY_DIR}/fetch_and_include/${name}")
+  if(MSVC)
 
-    endmacro()
+    # Only Visual Studio needs this, but the generator may also be Ninja
+    target_sources(boost_assert PUBLIC extra/boost_assert.natvis)
 
-    fetch_and_include(cmake/boost_fetch.cmake)
-    fetch_and_include(cmake/boost_test.cmake)
+  endif()
 
-    boost_fetch(boostorg/config TAG develop)
-    boost_fetch(boostorg/core TAG develop)
+  # Make IDE project folders match directory structure
 
-    enable_testing()
-    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG>)
+  get_target_property(sources boost_assert SOURCES)
+  source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${sources})
+  unset(sources)
 
 endif()
 
-if(COMMAND boost_test)
+# BUILD_TESTING is the standard CTest variable that enables testing
 
-    add_subdirectory(test)
+if(BUILD_TESTING)
+
+  add_subdirectory(test)
 
 endif()

@@ -12,7 +12,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/test/included/unit_test.hpp>
-#include <boost/test/floating_point_comparison.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
 #include <boost/math/differentiation/lanczos_smoothing.hpp>
 #include <boost/multiprecision/cpp_bin_float.hpp>
 #include <boost/math/special_functions/next.hpp> // for float_distance
@@ -190,7 +190,7 @@ void test_interior_velocity_filter()
                     cond += pow(Real(j), l)*f[j];
                 }
                 Real expected = -pow(Real(f.size() - 1), l)*f[f.size()-1];
-                BOOST_CHECK_CLOSE_FRACTION(expected, cond.sum(), 7*cond()*tol);
+                BOOST_CHECK_CLOSE_FRACTION(expected, cond.sum(), 15*cond()*tol);
             }
             //std::cout << "(n,p) = (" << n  << "," << p << ") = {";
             //for (auto & x : f)

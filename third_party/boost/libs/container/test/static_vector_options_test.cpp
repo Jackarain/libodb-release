@@ -12,6 +12,7 @@
 #include <boost/core/lightweight_test.hpp>
 #include <new> //for bad_alloc
 #include <boost/assert.hpp>
+#include <cstdlib>
 using namespace boost::container;
 
 //User-defined assertion to test throw_on_overflow
@@ -21,12 +22,20 @@ struct throw_on_overflow_off
 namespace boost {
    void assertion_failed(char const *, char const *, char const *, long)
    {
+      #ifdef BOOST_NO_EXCEPTIONS
+      std::abort();
+      #else
       throw throw_on_overflow_off();
+      #endif
    }
 
    void assertion_failed_msg(char const *, char const *, char const *, char const *, long )
    {
+      #ifdef BOOST_NO_EXCEPTIONS
+      std::abort();
+      #else
       throw throw_on_overflow_off();
+      #endif
    }
 }
 
@@ -35,7 +44,7 @@ void test_alignment()
    const std::size_t Capacity = 10u;
    {  //extended alignment
       const std::size_t extended_alignment = sizeof(int)*4u;
-      BOOST_STATIC_ASSERT(extended_alignment > dtl::alignment_of<int>::value);
+      BOOST_CONTAINER_STATIC_ASSERT(extended_alignment > dtl::alignment_of<int>::value);
       #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
       using options_t = static_vector_options_t< inplace_alignment<extended_alignment> >;
       #else
@@ -76,15 +85,18 @@ void test_throw_on_overflow()
 
       v.resize(Capacity);
       bool expected_type_thrown = false;
-      try{
+
+      BOOST_CONTAINER_TRY{
          v.push_back(0);
       }
-      catch(std::bad_alloc&)
+      BOOST_CONTAINER_CATCH(bad_alloc_t&)
       {
          expected_type_thrown = true;
       }
-      catch(...)
+      BOOST_CONTAINER_CATCH(...)
       {}
+      BOOST_CONTAINER_CATCH_END
+
       BOOST_TEST(expected_type_thrown == true);
       BOOST_TEST(v.capacity() == Capacity);
    }
@@ -101,24 +113,67 @@ void test_throw_on_overflow()
 
       v.resize(Capacity);
       bool expected_type_thrown = false;
-      try{
+
+      BOOST_CONTAINER_TRY{
          v.push_back(0);
       }
-      catch(throw_on_overflow_off)
+      BOOST_CONTAINER_CATCH(throw_on_overflow_off)
       {
          expected_type_thrown = true;
       }
-      catch(...)
+      BOOST_CONTAINER_CATCH(...)
       {}
+      BOOST_CONTAINER_CATCH_END
+
       BOOST_TEST(expected_type_thrown == true);
       BOOST_TEST(v.capacity() == Capacity);
    }
    #endif
 }
 
+template<class Unsigned, class VectorType>
+void test_stored_size_type_impl()
+{
+   #ifndef BOOST_NO_EXCEPTIONS
+   VectorType v;
+   typedef typename VectorType::size_type    size_type;
+   typedef typename VectorType::value_type   value_type;
+   size_type const max = Unsigned(-1);
+   v.resize(5);
+   v.resize(max);
+   BOOST_TEST_THROWS(v.resize(max+1),                    std::exception);
+   BOOST_TEST_THROWS(v.push_back(value_type(1)),         std::exception);
+   BOOST_TEST_THROWS(v.insert(v.begin(), value_type(1)), std::exception);
+   BOOST_TEST_THROWS(v.emplace(v.begin(), value_type(1)),std::exception);
+   BOOST_TEST_THROWS(v.reserve(max+1),                   std::exception);
+   BOOST_TEST_THROWS(VectorType v2(max+1),               std::exception);
+   #endif
+}
+
+template<class Unsigned>
+void test_stored_size_type()
+{
+   #if !defined(BOOST_NO_CXX11_TEMPLATE_ALIASES)
+   using options_t = static_vector_options_t< stored_size<Unsigned> >;
+   #else
+   typedef typename static_vector_options
+      < stored_size<Unsigned> >::type options_t;
+   #endif
+
+   typedef static_vector<unsigned char, Unsigned(-1)> normal_static_vector_t;
+
+   {
+      typedef static_vector<unsigned char, Unsigned(-1), options_t> static_vector_t;
+      BOOST_CONTAINER_STATIC_ASSERT(sizeof(normal_static_vector_t) > sizeof(static_vector_t));
+      test_stored_size_type_impl<Unsigned, static_vector_t>();
+   }
+}
+
 int main()
 {
    test_alignment();
    test_throw_on_overflow();
+   test_stored_size_type<unsigned char>();
+   test_stored_size_type<unsigned short>();
    return ::boost::report_errors();
 }

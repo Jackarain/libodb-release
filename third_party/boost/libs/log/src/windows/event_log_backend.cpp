@@ -13,9 +13,11 @@
  *         for signalling application events.
  */
 
+#include <boost/log/detail/config.hpp>
+
 #ifndef BOOST_LOG_WITHOUT_EVENT_LOG
 
-#include <boost/log/detail/config.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 #include <ostream>
@@ -32,7 +34,6 @@
 #include <boost/log/utility/formatting_ostream.hpp>
 #include <windows.h>
 #include <psapi.h>
-#include "unique_ptr.hpp"
 #include "windows/event_log_registry.hpp"
 #include "windows/simple_event_log.h"
 #include <boost/log/detail/header.hpp>
@@ -261,7 +262,7 @@ BOOST_LOG_API void basic_simple_event_log_backend< CharT >::construct(
         aux::init_event_log_registry(log_name, source_name, reg_mode == event_log::forced, reg_params);
     }
 
-    log::aux::unique_ptr< implementation > p(new implementation());
+    std::unique_ptr< implementation > p(new implementation());
 
     const char_type* target_unc = NULL;
     if (!target.empty())
@@ -517,7 +518,7 @@ BOOST_LOG_API void basic_event_log_backend< CharT >::construct(
         aux::init_event_log_registry(log_name, source_name, reg_mode == event_log::forced, reg_params);
     }
 
-    log::aux::unique_ptr< implementation > p(new implementation());
+    std::unique_ptr< implementation > p(new implementation());
 
     const char_type* target_unc = NULL;
     if (!target.empty())

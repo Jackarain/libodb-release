@@ -1,0 +1,6 @@
+# file      : test/buildfile
+# copyright : not copyrighted - public domain
+
+import libs = libsqlite3%lib{sqlite3}
+
+exe{driver}: {h c}{*} $libs

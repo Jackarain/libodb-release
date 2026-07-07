@@ -9,16 +9,14 @@
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/core/lightweight_test_trait.hpp>
-#include <boost/histogram/detail/detect.hpp>
 #include <boost/histogram/detail/iterator_adaptor.hpp>
-#include "std_ostream.hpp"
-#include "utility_iterator.hpp"
-
 #include <deque>
 #include <set>
+#include <type_traits>
 #include <vector>
+#include "iterator.hpp"
+#include "ostream.hpp"
 
-using namespace boost::histogram;
 using boost::histogram::detail::iterator_adaptor;
 
 typedef std::deque<int> storage;
@@ -48,7 +46,7 @@ public:
   ptr_iterator() {}
   ptr_iterator(V* d) : super_t(d) {}
 
-  template <class V2, class = detail::requires_convertible<V2*, V*>>
+  template <class V2, class = std::enable_if_t<std::is_convertible<V2*, V*>::value>>
   ptr_iterator(const ptr_iterator<V2>& x) : super_t(x.base()) {}
 
   V& operator*() const { return *(this->base()); }
@@ -185,6 +183,35 @@ int main() {
     BOOST_TEST(k >= i);
     BOOST_TEST(k - i == 0);
     BOOST_TEST(i - k == 0);
+  }
+
+  {
+    using C = std::vector<int>;
+    C a = {{1, 2, 3, 4}};
+
+    struct skip_iterator : iterator_adaptor<skip_iterator, C::iterator> {
+      using difference_type = typename iterator_adaptor_::difference_type;
+      using iterator_adaptor_::iterator_adaptor_;
+
+      skip_iterator& operator+=(difference_type n) {
+        iterator_adaptor_::operator+=(n * 2);
+        return *this;
+      }
+    };
+
+    {
+      skip_iterator it(a.begin());
+      BOOST_TEST_EQ(it.base() - a.begin(), 0);
+      BOOST_TEST_EQ(*it++, 1);
+      BOOST_TEST_EQ(*it++, 3);
+      BOOST_TEST_EQ(a.end() - it.base(), 0);
+    }
+
+    {
+      int i = 0;
+      for (auto it = skip_iterator(a.begin()); it != skip_iterator(a.end()); ++it) ++i;
+      BOOST_TEST_EQ(i, 2);
+    }
   }
 
   return boost::report_errors();

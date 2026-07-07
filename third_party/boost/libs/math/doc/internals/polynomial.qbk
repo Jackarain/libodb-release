@@ -21,14 +21,14 @@
       polynomial(){}
       template <class U>
       polynomial(const U* data, unsigned order);
-      template <class I>
-      polynomial(I first, I last);
+      template <class Iterator>
+      polynomial(Iterator first, Iterator last);
       template <class U>
       explicit polynomial(const U& point, 
-            typename boost::enable_if<boost::is_convertible<U, T> >::type* = 0);
+            typename std::enable_if<std::is_convertible<U, T> >::type* = nullptr);
       template <class Range>
       explicit polynomial(const Range& r, 
-            typename boost::enable_if<boost::math::tools::detail::is_const_iterable<Range> >::type* = 0); // C++14
+            typename std::enable_if<boost::math::tools::detail::is_const_iterable<Range> >::type* = nullptr); // C++14
       polynomial(std::initializer_list<T> l); // C++11
 
       polynomial(std::vector<T>&& p);

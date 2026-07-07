@@ -1,6 +1,6 @@
 # Boost.Outcome Library test Jamfile
 #
-# Copyright (C) 2017-2019 Niall Douglas
+# Copyright (C) 2017-2024 Niall Douglas
 #
 # Use, modification, and distribution is subject to the Boost Software
 # License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -9,8 +9,10 @@
 # See http://www.boost.org/libs/outcome for documentation.
 
 import testing ;
-import ../../config/checks/config : requires ;
-import ../../predef/tools/check/predef : check require : predef-check predef-require ;
+import-search /boost/config/checks ;
+import config : requires ;
+import-search /boost/predef/tools/check ;
+import predef : check require : predef-check predef-require ;
 
 project
     : requirements
@@ -18,12 +20,14 @@ project
       [ predef-require "!BOOST_COMP_GNUC" or "BOOST_COMP_GNUC >= 6.0" ]
       [ predef-require "!BOOST_COMP_CLANG" or "BOOST_COMP_CLANG >= 4.0" ]
       <define>BOOST_TEST_MODULE=Outcome
-      <library>../../test/build//boost_unit_test_framework
-    ;
+      <library>/boost/test//boost_unit_test_framework
+      <library>/boost/outcome//boost_outcome
+   ;
 
 {
   test-suite outcome :
 
+    [ compile-fail compile-fail/issue0071-fail.cpp ]
     [ compile-fail compile-fail/outcome-int-int-1.cpp ]
     [ compile-fail compile-fail/result-int-int-1.cpp ]
     [ compile-fail compile-fail/result-int-int-2.cpp ]
@@ -53,6 +57,14 @@ project
     [ run tests/issue0115.cpp ]
     [ run tests/issue0116.cpp ]
     [ run tests/issue0140.cpp ]
+#    [ run tests/issue0182.cpp ]  ## not applicable to Boost
+    [ run tests/issue0203.cpp ]
+    [ run tests/issue0210.cpp ]
+    [ run tests/issue0220.cpp ]
+    [ run tests/issue0244.cpp ]
+    [ run tests/issue0247.cpp ]
+    [ run tests/issue0255.cpp ]
+    [ run tests/issue0259.cpp ]
     [ run tests/noexcept-propagation.cpp ]
     [ run tests/propagate.cpp ]
     [ run tests/serialisation.cpp ]

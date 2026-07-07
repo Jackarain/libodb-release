@@ -16,11 +16,10 @@
 #include "example/common/server_certificate.hpp"
 
 #include <boost/beast/core.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/beast/websocket/ssl.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ssl/stream.hpp>
+#include <boost/asio/ssl.hpp>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -38,12 +37,12 @@ using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 // Echoes back all received WebSocket messages
 void
-do_session(tcp::socket& socket, ssl::context& ctx)
+do_session(tcp::socket socket, ssl::context& ctx)
 {
     try
     {
         // Construct the websocket stream around the socket
-        websocket::stream<beast::ssl_stream<tcp::socket&>> ws{socket, ctx};
+        websocket::stream<ssl::stream<tcp::socket&>> ws{socket, ctx};
 
         // Perform the SSL handshake
         ws.next_layer().handshake(ssl::stream_base::server);
@@ -123,10 +122,10 @@ int main(int argc, char* argv[])
             acceptor.accept(socket);
 
             // Launch the session, transferring ownership of the socket
-            std::thread{std::bind(
+            std::thread(
                 &do_session,
                 std::move(socket),
-                std::ref(ctx))}.detach();
+                std::ref(ctx)).detach();
         }
     }
     catch (const std::exception& e)

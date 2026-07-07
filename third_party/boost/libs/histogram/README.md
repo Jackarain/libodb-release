@@ -1,29 +1,49 @@
-# Histogram
+<!--
+  Copyright Hans Dembinski 2016 - 2019.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  https://www.boost.org/LICENSE_1_0.txt)
+-->
 
-**Fast multi-dimensional histogram with convenient interface for C++14**
+![](doc/logo/color.svg)
+
+**Multi-dimensional generalised histograms with convenient interface**
 
 Coded with ❤. Powered by the [Boost community](https://www.boost.org) and the [Scikit-HEP Project](http://scikit-hep.org).
 
-💡 Boost.Histogram is a mature library, but there are still many ways to improve. Tell us what you want to do with Boost.Histogram that can't be done right now, or how to improve the documentation by [submitting an issue](https://github.com/boostorg/histogram/issues). Or chat with us on the [Boost channel on Slack](https://cpplang.slack.com) or on [Gitter](https://gitter.im/boostorg/histogram).
+## License
 
-Branch  | Linux and OSX | Windows | Coverage
-------- | ------------- |-------- | --------
-develop | [![Build Status Travis](https://travis-ci.org/boostorg/histogram.svg?branch=develop)](https://travis-ci.org/boostorg/histogram/branches) | [![Build status Appveyor](https://ci.appveyor.com/api/projects/status/p27laa26ti1adyf1/branch/develop?svg=true)](https://ci.appveyor.com/project/HDembinski/histogram-d5g5k/branch/develop) | [![Coveralls](https://coveralls.io/repos/github/boostorg/histogram/badge.svg?branch=develop)](https://coveralls.io/github/boostorg/histogram?branch=develop)
-master  | [![Build Status Travis](https://travis-ci.org/boostorg/histogram.svg?branch=master)](https://travis-ci.org/boostorg/histogram/branches) | [![Build status Appveyor](https://ci.appveyor.com/api/projects/status/p27laa26ti1adyf1/branch/master?svg=true)](https://ci.appveyor.com/project/HDembinski/histogram-d5g5k/branch/master) | [![Coveralls](https://coveralls.io/repos/github/boostorg/histogram/badge.svg?branch=master)](https://coveralls.io/github/boostorg/histogram?branch=master)
+Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
+
+## Properties
 
 **Supported compiler versions** gcc >= 5.5, clang >= 3.8, msvc >= 14.1
+**Supported C++ versions** 14, 17, 20
 
-This **header-only** open-source library provides an easy-to-use state-of-the-art multi-dimensional [histogram](https://en.wikipedia.org/wiki/Histogram) class for the professional statistician and everyone who needs to count things. The histogram is easy to use for the casual user and yet so customizable that it does not restrict the power-user. The library offers a unique safety guarantee: cell counts *cannot overflow* or *be capped* in the standard configuration [[1]](#note1). And it can do more than counting. The histogram can be equipped with arbitrary accumulators to compute means, medians, and whatever you fancy in each cell. The library is very fast single-threaded (see benchmarks) and several parallelization options are provided for multi-threaded programming.
+Branch  | Linux, OSX, Windows    | Coverage
+------- | ---------------------- | --------
+develop | ![Fast](https://github.com/boostorg/histogram/workflows/Fast/badge.svg?branch=develop) | [![Coveralls](https://coveralls.io/repos/github/boostorg/histogram/badge.svg?branch=develop)](https://coveralls.io/github/boostorg/histogram?branch=develop)
+master  | ![Fast](https://github.com/boostorg/histogram/workflows/Fast/badge.svg?branch=master) | [![Coveralls](https://coveralls.io/repos/github/boostorg/histogram/badge.svg?branch=master)](https://coveralls.io/github/boostorg/histogram?branch=master)
 
-The library passed Boost review in September 2018 and was first released with [Boost-1.70](http://www.boost.org) on April 12th, 2019. The library is licensed under the [Boost Software License](http://www.boost.org/LICENSE_1_0.txt).
+Boost.Histogram is a very fast state-of-the-art multi-dimensional generalised [histogram](https://en.wikipedia.org/wiki/Histogram) class for the beginner and expert alike.
 
-Check out the [full documentation](https://www.boost.org/doc/libs/develop/libs/histogram/doc/html/index.html). [Python bindings](https://github.com/hdembinski/histogram-python) to this library are available elsewhere.
+* Header-only
+* Easy to use, easy to customise
+* Designed for performance
+* Just count or use accumulators to compute means, minimum, maximum, ...
+* Supports multi-threading and restricted environments (no heap allocation, exceptions or RTTI)
+* Open hacker-friendly modular design
+* Has [official Python bindings](https://github.com/scikit-hep/boost-histogram)
+
+Check out the [full documentation](https://www.boost.org/doc/libs/master/libs/histogram/doc/html/index.html).
+
+💡 Boost.Histogram is a mature library with 100 % of code lines covered by unit tests, is benchmarked for performance, and has extensive documentation. If you still find some issue or find the documentation lacking, tell us about it by [submitting an issue](https://github.com/boostorg/histogram/issues). Chat with us on the [Boost channel on Slack](https://cpplang.slack.com) and [Gitter](https://gitter.im/boostorg/histogram).
 
 ## Code example
 
-The following stripped-down example was taken from the [Getting started](https://www.boost.org/doc/libs/develop/libs/histogram/doc/html/histogram/getting_started.html) section in the documentation. Have a look into the docs to see the full version with comments and more examples.
+The following stripped-down example was taken from the [Getting started](https://www.boost.org/doc/libs/master/libs/histogram/doc/html/histogram/getting_started.html) section in the documentation. Have a look into the docs to see the full version with comments and more examples.
 
-Example: Make and fill a 1d-histogram ([try it live on Wandbox](https://wandbox.org/permlink/FfVtlXg6fC5b52rn))
+Example: Make and fill a 1d-histogram ([try it live on Wandbox](https://wandbox.org/permlink/NSM2ZiDyntUi6RDC)). The core of this example [compiles into 53 lines of assembly code](https://godbolt.org/z/632yzE).
 
 ```cpp
 #include <boost/histogram.hpp>
@@ -65,6 +85,7 @@ int main() {
 * Counters with high dynamic range, cannot overflow or be capped [[1]](#note1)
 * Better performance than other libraries (see benchmarks for details)
 * Efficient use of memory [[1]](#note1)
+* Hand-crafted C++17 deduction guides for axes and histogram types
 * Support for custom axis types: define how input values should map to indices
 * Support for under-/overflow bins (can be disabled individually to reduce memory consumption)
 * Support for axes that grow automatically with input values [[2]](#note2)
@@ -100,3 +121,10 @@ Details on the benchmark are given in the [documentation](https://www.boost.org/
 **John Buonagurio** | Manager at [**E<sup><i>x</i></sup>ponent<sup>&reg;</sup>**](https://www.exponent.com)
 
 *"I just wanted to say 'thanks' for your awesome Histogram library. I'm working on a software package for processing meteorology data and I'm using it to generate wind roses with the help of Qt and QwtPolar. Looks like you thought of just about everything here &ndash; the circular axis type was practically designed for this application, everything 'just worked'."*
+
+## More information
+
+* [Ask questions](http://stackoverflow.com/questions/ask?tags=c%2B%2B,boost,boost-template)
+* [Report bugs](https://github.com/boostorg/template/issues): Be sure to mention Boost version, platform and compiler you're using. A small compilable code sample to reproduce the problem is always good as well.
+* Submit your patches as pull requests against **develop** branch. Note that by submitting patches you agree to license your modifications under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
+* Discussions about the library are held on the [Boost developers mailing list](http://www.boost.org/community/groups.html#main). Be sure to read the [discussion policy](http://www.boost.org/community/policy.html) before posting and add the `[template]` tag at the beginning of the subject line.

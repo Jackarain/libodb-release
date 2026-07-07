@@ -43,8 +43,6 @@
 
 [/ Networking Identifiers ]
 
-[def __asio_handler_allocate__  [@boost:/doc/html/boost_asio/reference/asio_handler_allocate.html `asio_handler_allocate`]]
-[def __asio_handler_invoke__    [@boost:/doc/html/boost_asio/reference/asio_handler_invoke.html `asio_handler_invoke`]]
 [def __basic_stream_socket__    [@boost:/doc/html/boost_asio/reference/basic_stream_socket.html `basic_stream_socket`]]
 [def __const_buffer__           [@boost:/doc/html/boost_asio/reference/const_buffer.html `const_buffer`]]
 [def __deduced__                [@boost:/doc/html/boost_asio/reference/asynchronous_operations.html#boost_asio.reference.asynchronous_operations.automatic_deduction_of_initiating_function_return_type ['DEDUCED]]]
@@ -59,6 +57,7 @@
 [def __ssl_context__            [@boost:/doc/html/boost_asio/reference/ssl__context.html `net::ssl::context`]]
 [def __ssl_stream__             [@boost:/doc/html/boost_asio/reference/ssl__stream.html `net::ssl::stream`]]
 [def __streambuf__              [@boost:/doc/html/boost_asio/reference/streambuf.html `net::streambuf`]]
+[def __system_executor__        [@boost:/doc/html/boost_asio/reference/system_executor.html `net::system_executor`]]
 [def __use_future__             [@boost:/doc/html/boost_asio/reference/use_future_t.html `net::use_future`]]
 [def __yield_context__          [@boost:/doc/html/boost_asio/reference/yield_context.html `net::yield_context`]]
 
@@ -86,6 +85,8 @@
 [def __SyncReadStream__         [@boost:/doc/html/boost_asio/reference/SyncReadStream.html ['SyncReadStream]]]
 [def __SyncWriteStream__        [@boost:/doc/html/boost_asio/reference/SyncWriteStream.html ['SyncWriteStream]]]
 [def __WriteHandler__           [@boost:/doc/html/boost_asio/reference/WriteHandler.html ['WriteHandler]]]
+[def __DynamicBuffer__v1__      [@boost:/doc/html/boost_asio/reference/DynamicBuffer_v1.html ['DynamicBuffer_v1']]]
+[def __DynamicBuffer__v2__      [@boost:/doc/html/boost_asio/reference/DynamicBuffer_v2.html ['DynamicBuffer_v2']]]
 
 [/ Beast Named Requirements ]
 
@@ -94,6 +95,7 @@
 [def __BodyReader__             [link beast.concepts.BodyReader ['BodyReader]]]
 [def __BodyWriter__             [link beast.concepts.BodyWriter ['BodyWriter]]]
 [def __BufferSequence__         [link beast.concepts.BufferSequence ['BufferSequence]]]
+[def __BuffersGenerator__       [link beast.concepts.BufferSequence ['BuffersGenerator]]]
 [def __DynamicBuffer__          [link beast.concepts.DynamicBuffer ['DynamicBuffer]]]
 [def __Fields__                 [link beast.concepts.Fields ['Fields]]]
 [def __FieldsWriter__           [link beast.concepts.FieldsWriter ['FieldsWriter]]]
@@ -162,6 +164,7 @@
 [import ../../test/doc/websocket_8_notes.cpp]
 
 [import ../../include/boost/beast/core/detect_ssl.hpp]
+[import ../../include/boost/beast/version.hpp]
 [import ../../test/beast/core/rate_policy.cpp]
 
 __new__ indicates a new or updated section in this version.
@@ -183,6 +186,7 @@ __new__ indicates an item that was recently added.
 [block'''</reference>''']
 
 [include release_notes.qbk]
+[include version.qbk]
 
 [include 01_intro/_intro.qbk]
 [include 02_examples/_examples.qbk]
@@ -192,12 +196,5 @@ __new__ indicates an item that was recently added.
 [include 06_websocket/_websocket.qbk]
 [include 07_concepts/_concepts.qbk]
 [include 08_design/_design.qbk]
-
-[section:moved1 Release Notes (Moved)]
-The Release Notes have been moved to the top of the table of contents.
-[endsect]
-[section:moved2 Reference (Moved)]
-The Reference has been moved to the top of the table of contents.
-[endsect]
 
 [xinclude index.xml]

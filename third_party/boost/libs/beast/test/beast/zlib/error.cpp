@@ -23,8 +23,9 @@ public:
     void check(char const* name, error ev)
     {
         auto const ec = make_error_code(ev);
-        auto const& cat = make_error_code(
-            static_cast<zlib::error>(0)).category();
+        auto const ec_zlib = make_error_code(
+            static_cast<zlib::error>(0));
+        auto const& cat = ec_zlib.category();
         BEAST_EXPECT(std::string{ec.category().name()} == name);
         BEAST_EXPECT(! ec.message().empty());
         BEAST_EXPECT(
@@ -35,18 +36,21 @@ public:
                     static_cast<std::underlying_type<error>::type>(ev))));
         BEAST_EXPECT(cat.equivalent(ec,
             static_cast<std::underlying_type<error>::type>(ev)));
+
+        BEAST_EXPECT(ec.message() != "");
     }
 
     void run() override
     {
         check("boost.beast.zlib", error::need_buffers);
         check("boost.beast.zlib", error::end_of_stream);
+        check("boost.beast.zlib", error::need_dict);
         check("boost.beast.zlib", error::stream_error);
 
         check("boost.beast.zlib", error::invalid_block_type);
         check("boost.beast.zlib", error::invalid_stored_length);
         check("boost.beast.zlib", error::too_many_symbols);
-        check("boost.beast.zlib", error::invalid_code_lenths);
+        check("boost.beast.zlib", error::invalid_code_lengths);
         check("boost.beast.zlib", error::invalid_bit_length_repeat);
         check("boost.beast.zlib", error::missing_eob);
         check("boost.beast.zlib", error::invalid_literal_length);

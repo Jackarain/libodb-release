@@ -61,6 +61,7 @@
 .text
 .align  1
 .global make_fcontext
+.hidden make_fcontext
 .type   make_fcontext, %function
 make_fcontext:
     # shift address in a0 (allocated stack) to lower 16 byte boundary
@@ -75,7 +76,7 @@ make_fcontext:
 
     # save address of finish as return-address for context-function
     # will be entered after context-function returns (RA register)
-    la  a4, finish
+    lla  a4, finish
     sd  a4, 0xc0(a0)
 
     ret // return pointer to context-data (a0)
@@ -84,7 +85,7 @@ finish:
     # exit code is zero
     li  a0, 0
     # exit application
-    tail  _exit
+    tail  _exit@plt
 
 .size   make_fcontext,.-make_fcontext
 # Mark that we don't need executable stack.

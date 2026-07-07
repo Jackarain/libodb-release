@@ -1,5 +1,4 @@
 // file      : odb/pgsql/transaction-impl.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_PGSQL_TRANSACTION_IMPL_HXX
@@ -39,16 +38,11 @@ namespace odb
       virtual void
       rollback ();
 
-      connection_type&
-      connection ();
-
     private:
       connection_ptr connection_;
     };
   }
 }
-
-#include <odb/pgsql/transaction-impl.ixx>
 
 #include <odb/post.hxx>
 

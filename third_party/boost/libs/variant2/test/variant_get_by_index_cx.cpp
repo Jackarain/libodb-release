@@ -1,13 +1,17 @@
-
-// Copyright 2017 Peter Dimov.
-//
+// Copyright 2017, 2026 Peter Dimov.
 // Distributed under the Boost Software License, Version 1.0.
-//
-// See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt
+// https://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/variant2/variant.hpp>
 #include <boost/config.hpp>
+#include <boost/config/pragma_message.hpp>
+
+#if defined(BOOST_MSVC) && BOOST_MSVC < 1910
+
+BOOST_PRAGMA_MESSAGE( "Test skipped because BOOST_MSVC < 1910" )
+int main() {}
+
+#else
 
 using namespace boost::variant2;
 
@@ -58,7 +62,7 @@ int main()
     {
         constexpr variant<int, float> v( 3.14f );
 
-        STATIC_ASSERT( get<1>(v) == 3.14f );
+        STATIC_ASSERT( get<1>(v) == (float)3.14f ); // see FLT_EVAL_METHOD
 
         STATIC_ASSERT_IF( get_if<0>(&v) == nullptr );
         STATIC_ASSERT_IF( get_if<1>(&v) == &get<1>(v) );
@@ -87,10 +91,12 @@ int main()
     {
         constexpr variant<int, int, float> v( 3.14f );
 
-        STATIC_ASSERT( get<2>(v) == 3.14f );
+        STATIC_ASSERT( get<2>(v) == (float)3.14f );
 
         STATIC_ASSERT_IF( get_if<0>(&v) == nullptr );
         STATIC_ASSERT_IF( get_if<1>(&v) == nullptr );
         STATIC_ASSERT_IF( get_if<2>(&v) == &get<2>(v) );
     }
 }
+
+#endif

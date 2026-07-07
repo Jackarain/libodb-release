@@ -76,7 +76,7 @@ then the above call would look as follows::
               );
 
 The image_read_settings class will provide the user with image format
-independent reading setting but can also serves as a pointer for format
+independent reading setting but can also serve as a pointer for format
 dependent settings.
 Please see the specific image format sections
 [link gil.io.using_io.supported_image_formats Supported Image Formats]
@@ -151,7 +151,7 @@ Reading and writing in-memory buffers are supported as well. See as follows::
     write_view( out, view( dst ), tiff_tag() );
 
 In case the user is using his own stream classes he has to make sure it
-has the common interface read, write, seek, close, etc. Interface.
+has the common interface read, write, seek, close, etc. interface.
 
 Using IO
 --------
@@ -171,6 +171,8 @@ directly with the underlying image format. For that each reader or writer
 provides access to the so-called backend.
 
 For instance::
+
+    typedef bmp_tag tag_t;
 
     typedef get_reader_backend< const std::string
                               , tag_t
@@ -205,9 +207,10 @@ If that's the case the user has to use the xxx_and_convert_xxx variants.
 
 All functions take the filename or a device as the first parameter.
 The filename can be anything from a C-string, ``std::string``,
-``std::wstring`` and ``boost::filesystem`` path. When using the path
-object the user needs to define the ADD_FS_PATH_SUPPORT compiler symbol to
-include the boost::filesystem dependency.
+``std::wstring`` to ``std::filesystem`` and ``boost::filesystem`` path.
+The availability of the ``std::filesystem`` is detected automatically,
+unless ``BOOST_GIL_IO_USE_BOOST_FILESYSTEM`` macro is defined that forces
+preference of the Boost.Filesystem.
 Devices could be a ``FILE*``, ``std::ifstream``, and ``TIFF*`` for TIFF images.
 
 The second parameter is either an image or view type depending on the
@@ -215,11 +218,11 @@ The second parameter is either an image or view type depending on the
 The third and last parameter is either an instance of the
 ``image_read_settings<FormatTag>`` or just the ``FormatTag``.
 The settings can be various depending on the format which is being read.
-But the all share settings for reading a partial image area.
+But they all share settings for reading a partial image area.
 The first point describes the top left image coordinate whereas the second
 are the dimensions in x and y directions.
 
-Here an example of setting up partial read::
+Here is an example of setting up partial read::
 
     read_image( filename
               , img
@@ -240,13 +243,11 @@ several image types. The IO extension would then pick the matching image type
 to the current image file.
 The following example shows this feature::
 
-    typedef mpl::vector< gray8_image_t
-                       , gray16_image_t
-                       , rgb8_image_t
-                       , rgba_image_t
-                       > my_img_types;
-
-    any_image< my_img_types > runtime_image;
+    any_image< gray8_image_t
+             , gray16_image_t
+             , rgb8_image_t
+             , rgba8_image_t
+             > runtime_image;
 
     read_image( filename
               , runtime_image
@@ -267,7 +268,7 @@ The following code sample shows the usage::
                             , tag_t
                             > reader_t;
 
-    reader_t reader = make_scanline_reader( "C:/boost/libs/gil/io/test_images/tiff/test.tif", tag_t() );
+    reader_t reader = make_scanline_reader( "C:/boost/libs/gil/test/extension/io/images/tiff/test.tif", tag_t() );
 
     typedef rgba8_image_t image_t;
 
@@ -305,12 +306,13 @@ Write Interface
 There is only one function for writing out images, write_view.
 Similar to reading the first parameter is either a filename or a device.
 The filename can be anything from a C-string, ``std::string``,
-``std::wstring``, and ``boost::filesystem`` path. When using the path object
-the user needs to define the ``ADD_FS_PATH_SUPPORT`` compiler symbol to
-include the ``boost::filesystem`` dependency.
+``std::wstring`` to ``std::filesystem`` and ``boost::filesystem`` path.
+The availability of the ``std::filesystem`` is detected automatically,
+unless ``BOOST_GIL_IO_USE_BOOST_FILESYSTEM`` macro is defined that forces
+preference of the Boost.Filesystem.
 Devices could be ``FILE*``, ``std::ifstream``, and ``TIFF*`` for TIFF images.
 
-The second parameter is an view object to image being written.
+The second parameter is a view object to image being written.
 The third and last parameter is either a tag or an
 ``image_write_info<FormatTag>`` object containing more settings.
 One example for instance is the JPEG quality.
@@ -319,14 +321,11 @@ the possible settings.
 
 Writing an any_image<...> is supported. See the following example::
 
-    typedef mpl::vector< gray8_image_t
-                       , gray16_image_t
-                       , rgb8_image_t
-                       , rgba_image_t
-                       > my_img_types;
-
-
-    any_image< my_img_types > runtime_image;
+    any_image< gray8_image_t
+             , gray16_image_t
+             , rgb8_image_t
+             , rgba8_image_t
+             > runtime_image;
 
     // fill any_image
 
@@ -347,7 +346,6 @@ that can be set by the user:
    Symbol                                                   Description
 ======================================================== ========================================================
 BOOST_GIL_IO_ENABLE_GRAY_ALPHA                           Enable the color space "gray_alpha".
-BOOST_GIL_IO_ADD_FS_PATH_SUPPORT                         Enable boost::filesystem 3.0 library.
 BOOST_GIL_IO_PNG_FLOATING_POINT_SUPPORTED                Use libpng in floating point mode. This symbol is incompatible with BOOST_GIL_IO_PNG_FIXED_POINT_SUPPORTED.
 BOOST_GIL_IO_PNG_FIXED_POINT_SUPPORTED                   Use libpng in integer mode. This symbol is incompatible with BOOST_GIL_IO_PNG_FLOATING_POINT_SUPPORTED.
 BOOST_GIL_IO_PNG_DITHERING_SUPPORTED                     Look up "dithering" in libpng manual for explanation.
@@ -361,7 +359,6 @@ BOOST_GIL_IO_TEST_ALLOW_WRITING_IMAGES                   Allow images to be writ
 BOOST_GIL_IO_USE_BMP_TEST_SUITE_IMAGES                   Run tests using the bmp test images suite. See _BMP_TEST_FILES
 BOOST_GIL_IO_USE_PNG_TEST_SUITE_IMAGES                   Run tests using the png test images suite. See _PNG_TEST_FILES
 BOOST_GIL_IO_USE_PNM_TEST_SUITE_IMAGES                   Run tests using the pnm test images suite. Send me an email for accessing the files.
-BOOST_GIL_IO_USE_TARGA_FILEFORMAT_TEST_SUITE_IMAGES      Run tests using the targa file format test images suite. See _TARGA_TEST_FILES
 BOOST_GIL_IO_USE_TIFF_LIBTIFF_TEST_SUITE_IMAGES          Run tests using the targa file format test images suite. See _TIFF_LIB_TIFF_TEST_FILES
 BOOST_GIL_IO_USE_TIFF_GRAPHICSMAGICK_TEST_SUITE_IMAGES   Run tests using the targa file format test images suite. See _TIFF_GRAPHICSMAGICK_TEST_FILES
 ======================================================== ========================================================
@@ -376,14 +373,14 @@ For a general overview of the BMP image file format go to the
 following BMP_Wiki_.
 
 Please note, the code has not been tested on X Windows System variations
-of the BMP format which are usually referred to XBM and XPM formats.
+of the BMP format which are usually referred to as XBM and XPM formats.
 
 Here, only the MS Windows and OS/2 format is relevant.
 
 Currently the code is able to read and write the following image types:
 
-:Read: ``gray1_image_t``, ``gray4_image_t``, ``gray8_image_t``, ``rgb8_image_t`` and, ``rgba8_image_t``
-:Write: ``rgb8_image_t`` and, ``rgba8_image_t``
+:Read: ``gray1_image_t``, ``gray4_image_t``, ``gray8_image_t``, ``rgb8_image_t`` and ``rgba8_image_t``
+:Write: ``rgb8_image_t`` and ``rgba8_image_t``
 
 The lack of having an indexed image type in gil restricts the current
 interface to only write out non-indexed images.
@@ -411,7 +408,7 @@ Currently the code is able to read and write the following image types:
 
 Reading YCbCr or YCCK images is possible but might result in inaccuracies since
 both color spaces aren't available yet for gil.
-For now these color space are read as rgb images.
+For now these color spaces are read as rgb images.
 This is subject to change soon.
 
 PNG
@@ -434,18 +431,17 @@ Currently the code is able to read and write the following image types:
 :Read: gray1, gray2, gray4, gray8, gray16, gray_alpha_8, gray_alpha_16, rgb8, rgb16, rgba8, rgba16
 :Write: gray1, gray2, gray4, gray8, gray16, gray_alpha_8, gray_alpha_16, rgb8, rgb16, rgba8, rgba16
 
-For reading gray_alpha images the user has to enable the ``ENABLE_GRAY_ALPHA``
-compiler switch. This color space is defined in the toolbox by
-using ``gray_alpha.hpp``.
+For reading gray_alpha images the user has to compile application with ``BOOST_GIL_IO_ENABLE_GRAY_ALPHA``
+macro  defined. This color space is defined in the toolbox by using ``gray_alpha.hpp``.
 
 PNM
 +++
 
 For a general overview of the PNM image file format go to the
-following PNM_Wiki_.
+following PNM_Wiki_. No external library is needed for the pnm format.
 
-No external library is needed for the pnm format.
-Both ascii and binary formats are supported.
+The extension can read images in both flavours of the formats, ASCII and binary,
+that is types from P1 through P6; can write only binary formats.
 
 Currently the code is able to read and write the following image types:
 
@@ -502,7 +498,7 @@ For a complete set of options please consult the following websites:
 
 The author of this extension is not claiming all tiff formats are supported.
 This extension is likely to be a moving target adding new features with each
-new milestone. Here is an incomplete lists:
+new milestone. Here is an incomplete list:
 
 * Multi-page TIFF - read only
 * Strip TIFF - read and write support
@@ -525,8 +521,8 @@ straightforward. Before adding I would recommend to have a look at existing
 implementations and then trying to follow a couple of guidelines:
 
 * Create the following files for your new xxx format
-    * ``xxx_read.hpp`` - Only includes read code
-    * ``xxx_write.hpp`` - Only includes write code
+    * ``xxx_read.hpp`` - only includes read code
+    * ``xxx_write.hpp`` - only includes write code
     * ``xxx_all.hpp`` - includes xxx_read.hpp and xxx_write.hpp
 * Add the code to the ``boost::gil::detail`` namespace
 * Create a tag type for the new format. Like this::
@@ -534,13 +530,13 @@ implementations and then trying to follow a couple of guidelines:
     struct xxx_tag : format_tag {};
 
 * Create the image_read_info for the new format. It contains all the
-  information that are necessary to read an image. It should be filled
+  information that is necessary to read an image. It should be filled
   and returned by the ``get_info`` member of the reader class. See below::
 
     template<> struct image_read_info< xxx_tag > {};
 
 * Create the image_write_info for the new format. It contains all the
-  information that are necessary to write an image::
+  information that is necessary to write an image::
 
     template<> struct image_write_info< xxx_tag > {};
 
@@ -633,7 +629,6 @@ to enable the tests:
 :BMP:   BMP_TEST_FILES_                 -- BOOST_GIL_IO_USE_BMP_TEST_SUITE_IMAGES
 :PNG:   PNG_TEST_FILES_                 -- BOOST_GIL_IO_USE_PNG_TEST_SUITE_IMAGES
 :PNM:   request files from me           -- BOOST_GIL_IO_USE_PNM_TEST_SUITE_IMAGES
-:TARGA: TARGA_TEST_FILES_               -- BOOST_GIL_IO_USE_TARGA_FILEFORMAT_TEST_SUITE_IMAGES
 :TIFF:  TIFF_LIB_TIFF_TEST_FILES_       -- BOOST_GIL_IO_USE_TIFF_LIBTIFF_TEST_SUITE_IMAGES
 :TIFF:  TIFF_GRAPHICSMAGICK_TEST_FILES_ -- BOOST_GIL_IO_USE_TIFF_GRAPHICSMAGICK_TEST_SUITE_IMAGES
 

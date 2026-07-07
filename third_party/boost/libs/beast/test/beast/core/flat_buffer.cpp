@@ -26,7 +26,7 @@ namespace beast {
 class flat_buffer_test : public beast::unit_test::suite
 {
 public:
-    BOOST_STATIC_ASSERT(
+    BOOST_CORE_STATIC_ASSERT(
         is_mutable_dynamic_buffer<flat_buffer>::value);
 
     void
@@ -103,8 +103,8 @@ public:
                 ostream(b1) << "Hello";
                 a_neq_t a;
                 basic_flat_buffer<a_neq_t> b2{std::move(b1), a};
-                BEAST_EXPECT(b1.size() == 0);
-                BEAST_EXPECT(b1.capacity() == 0);
+                BEAST_EXPECT(b1.size() != 0);
+                BEAST_EXPECT(b1.capacity() != 0);
                 BEAST_EXPECT(buffers_to_string(b2.data()) == "Hello");
                 BEAST_EXPECT(b1.max_size() == b2.max_size());
             }
@@ -186,8 +186,8 @@ public:
                 basic_flat_buffer<na_t> b2;
                 b2 = std::move(b1);
                 BEAST_EXPECT(b1.get_allocator() != b2.get_allocator());
-                BEAST_EXPECT(b1.size() == 0);
-                BEAST_EXPECT(b1.capacity() == 0);
+                BEAST_EXPECT(b1.size() != 0);
+                BEAST_EXPECT(b1.capacity() != 0);
                 BEAST_EXPECT(buffers_to_string(b2.data()) == "Hello");
             }
             {
@@ -198,6 +198,7 @@ public:
                 ostream(b1) << "Hello";
                 basic_flat_buffer<pocma_t> b2;
                 b2 = std::move(b1);
+                BEAST_EXPECT(b1.get_allocator()->nmassign == 1);
                 BEAST_EXPECT(b1.size() == 0);
                 BEAST_EXPECT(buffers_to_string(b2.data()) == "Hello");
             }
@@ -209,6 +210,7 @@ public:
                 ostream(b1) << "Hello";
                 basic_flat_buffer<pocma_t> b2;
                 b2 = std::move(b1);
+                BEAST_EXPECT(b1.get_allocator()->nmassign == 0);
                 BEAST_EXPECT(b1.size() == 0);
                 BEAST_EXPECT(buffers_to_string(b2.data()) == "Hello");
             }
@@ -235,6 +237,7 @@ public:
                 ostream(b1) << "Hello";
                 basic_flat_buffer<pocca_t> b2;
                 b2 = b1;
+                BEAST_EXPECT(b1.get_allocator()->ncpassign == 1);
                 BEAST_EXPECT(buffers_to_string(b2.data()) == "Hello");
             }
             {
@@ -245,6 +248,7 @@ public:
                 ostream(b1) << "Hello";
                 basic_flat_buffer<pocca_t> b2;
                 b2 = b1;
+                BEAST_EXPECT(b1.get_allocator()->ncpassign == 0);
                 BEAST_EXPECT(buffers_to_string(b2.data()) == "Hello");
             }
         }
@@ -296,7 +300,7 @@ public:
         {
             basic_flat_buffer<a_t> b;
             auto a = b.get_allocator();
-            BOOST_STATIC_ASSERT(
+            BOOST_CORE_STATIC_ASSERT(
                 ! std::is_const<decltype(a)>::value);
             a->max_size = 30;
             try

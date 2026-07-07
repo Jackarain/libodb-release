@@ -18,8 +18,8 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include "histogram.hpp"
 #include "throw_exception.hpp"
-#include "utility_histogram.hpp"
 
 using namespace boost::histogram;
 
@@ -54,6 +54,22 @@ int main() {
     auto h3 = make_histogram(v2);
     BOOST_TEST_EQ(h3.axis(0), v2[0]);
     BOOST_TEST_EQ(h3.axis(1), v2[1]);
+  }
+
+  // too many axes
+  {
+    using I = axis::integer<int, axis::null_type, axis::option::none_t>;
+
+    // test edge case
+    auto av = std::vector<I>(BOOST_HISTOGRAM_DETAIL_AXES_LIMIT, I(0, 1));
+    auto h = make_histogram(av);
+    auto inputs = std::vector<std::vector<int>>(BOOST_HISTOGRAM_DETAIL_AXES_LIMIT,
+                                                std::vector<int>(1, 0));
+    h.fill(inputs); // should not crash
+
+    auto bad = std::vector<I>(BOOST_HISTOGRAM_DETAIL_AXES_LIMIT + 1, I(0, 1));
+    (void)bad;
+    BOOST_TEST_THROWS((void)make_histogram(bad), std::invalid_argument);
   }
 
   // bad fill

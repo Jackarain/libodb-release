@@ -10,7 +10,6 @@
 ///
 /// @remarks
 //-----------------------------------------------------------------------------
-#include <ciso646>
 #include <algorithm>
 #include <iostream>
 #include <cstdio>
@@ -61,12 +60,16 @@ void test1 ( )
         };
     };
     V2 = V1;
+    // test with 0 elements
+    spinsort (V1.end ( ), V1.end ( ), compare_t ( ));
+    
+    
     spinsort (V1.begin ( ), V1.end ( ), compare_t ( ));
     std::stable_sort (V2.begin ( ), V2.end ( ));
 
     BOOST_CHECK (V1.size ( ) == V2.size ( ));
     for (uint32_t i = 0; i < V1.size ( ); ++i) {
-        BOOST_CHECK (V1[ i ].num == V2[ i ].num and
+        BOOST_CHECK (V1[ i ].num == V2[ i ].num &&
                      V1[ i ].tail == V2[ i ].tail);
     };
 };
@@ -167,7 +170,7 @@ void test4 (void)
     };
     spinsort( V.begin() , V.end(), compare_t());
     for ( uint32_t i =0 ; i < ( NELEM * 10); ++i)
-    {   BOOST_CHECK ( V[i].num == (i / 10) and V[i].tail == (i %10) );
+    {   BOOST_CHECK ( V[i].num == (i / 10) && V[i].tail == (i %10) );
     };
 }
 int test_main (int, char *[])

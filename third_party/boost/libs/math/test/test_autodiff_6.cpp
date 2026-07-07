@@ -4,6 +4,7 @@
 //           https://www.boost.org/LICENSE_1_0.txt)
 
 #include "test_autodiff.hpp"
+#include <boost/math/special_functions.hpp>
 
 BOOST_AUTO_TEST_SUITE(test_autodiff_6)
 
@@ -23,11 +24,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_1_hpp, T, all_float_types) {
     auto phi = phi_sampler.next();
     BOOST_CHECK_CLOSE(boost::math::ellint_1(make_fvar<T, m>(k)).derivative(0u),
                       boost::math::ellint_1(k),
-                      2.5e3 * test_constants::pct_epsilon());
+                      T(2.5e3) * test_constants::pct_epsilon());
     BOOST_CHECK_CLOSE(
         boost::math::ellint_1(make_fvar<T, m>(k), make_fvar<T, m>(phi))
             .derivative(0u),
-        boost::math::ellint_1(k, phi), 1e4 * test_constants::pct_epsilon());
+        boost::math::ellint_1(k, phi), T(1e4) * test_constants::pct_epsilon());
   }
 }
 
@@ -47,7 +48,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_2_hpp, T, all_float_types) {
     BOOST_CHECK_CLOSE(
         boost::math::ellint_2(make_fvar<T, m>(k), make_fvar<T, m>(phi))
             .derivative(0u),
-        boost::math::ellint_2(k, phi), 2.5e3 * test_constants::pct_epsilon());
+        boost::math::ellint_2(k, phi), T(2.5e3) * test_constants::pct_epsilon());
   }
 }
 
@@ -77,7 +78,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_3_hpp, T, all_float_types) {
                                             make_fvar<T, m>(phi))
                           .derivative(0u),
                       boost::math::ellint_3(k, n, phi),
-                      2.5e3 * test_constants::pct_epsilon());
+                      T(2.5e3) * test_constants::pct_epsilon());
   }
 }
 
@@ -93,7 +94,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_d_hpp, T, all_float_types) {
     auto phi = phi_sampler.next();
     BOOST_CHECK_CLOSE(boost::math::ellint_d(make_fvar<T, m>(k)).derivative(0u),
                       boost::math::ellint_d(k),
-                      2.5e3 * test_constants::pct_epsilon());
+                      T(2.5e3) * test_constants::pct_epsilon());
     BOOST_CHECK_CLOSE(
         boost::math::ellint_d(make_fvar<T, m>(k), make_fvar<T, m>(phi))
             .derivative(0u),
@@ -125,7 +126,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_rf_hpp, T, all_float_types) {
         boost::math::ellint_rf(make_fvar<T, m>(x), make_fvar<T, m>(y),
                                make_fvar<T, m>(z))
             .derivative(0u),
-        boost::math::ellint_rf(x, y, z), 2.5e3 * test_constants::pct_epsilon());
+        boost::math::ellint_rf(x, y, z), T(2.5e3) * test_constants::pct_epsilon());
   }
 }
 
@@ -156,7 +157,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_rc_hpp, T, all_float_types) {
     BOOST_CHECK_CLOSE(
         boost::math::ellint_rc(make_fvar<T, m>(x), make_fvar<T, m>(y))
             .derivative(0u),
-        boost::math::ellint_rc(x, y), 2.5e3 * test_constants::pct_epsilon());
+        boost::math::ellint_rc(x, y), T(2.5e3) * test_constants::pct_epsilon());
   }
 }
 
@@ -215,7 +216,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ellint_rd_hpp, T, all_float_types) {
         boost::math::ellint_rd(make_fvar<T, m>(x), make_fvar<T, m>(y),
                                make_fvar<T, m>(z))
             .derivative(0u),
-        boost::math::ellint_rd(x, y, z), 2.5e3 * test_constants::pct_epsilon());
+        boost::math::ellint_rd(x, y, z), T(2.5e3) * test_constants::pct_epsilon());
   }
 }
 

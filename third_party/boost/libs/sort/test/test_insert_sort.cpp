@@ -10,7 +10,6 @@
 ///
 /// @remarks
 //-----------------------------------------------------------------------------
-#include <ciso646>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +22,6 @@
 
 using namespace boost::sort;
 using namespace std;
-using boost::sort::common::util::insert_sorted;
 
 void test01 (void)
 {
@@ -31,6 +29,10 @@ void test01 (void)
                     16, 6, 14, 21, 5,  1, 12, 19, 22, 25, 8};
 
     std::less< unsigned > comp;
+    
+    // Insertion Sort  sort an empty range
+    insert_sort (&A[ 0 ], &A[ 0 ], comp);
+    
     // Insertion Sort  Unordered, not repeated
     insert_sort (&A[ 0 ], &A[ 22 ], comp);
     for (unsigned i = 0; i < 21; i++) {
@@ -96,7 +98,7 @@ void test02 (void)
     {
         BOOST_CHECK ((*(it - 1)) <= (*it));
     };
-    BOOST_CHECK (A[ 998 ] == 0 and A[ 999 ] == 0 and A[ 1000 + NELEM ] == 0 and
+    BOOST_CHECK (A[ 998 ] == 0 && A[ 999 ] == 0 && A[ 1000 + NELEM ] == 0 &&
                  A[ 1001 + NELEM ] == 0);
 
 
@@ -112,52 +114,14 @@ void test02 (void)
     {
         BOOST_CHECK ((*(it - 1)) <= (*it));
     };
-    BOOST_CHECK (A[ 998 ] == 999999999 and A[ 999 ] == 999999999 and
-                 A[ 1000 + NELEM ] == 999999999 and
+    BOOST_CHECK (A[ 998 ] == 999999999 && A[ 999 ] == 999999999 &&
+                 A[ 1000 + NELEM ] == 999999999 &&
                  A[ 1001 + NELEM ] == 999999999);
 };
 
-
-void test03 ( void)
-{
-    std::vector<uint32_t> V {1,3,5,2,4};
-    std::less<uint32_t> comp ;
-    uint32_t aux[10] ;
-
-    insert_sorted ( V.begin() , V.begin()+3, V.end(), comp, aux);
-    //insert_partial_sort ( V.begin() , V.begin()+3, V.end() , comp);
-    for ( uint32_t i =0 ; i < V.size() ; ++i)
-        std::cout<<V[i]<<", ";
-    std::cout<<std::endl;
-
-    V ={3,5,7,9,11,13,15,17,19,8,6,10,4,2};
-    insert_sorted ( V.begin() , V.begin()+9, V.end() , comp, aux);
-    //insert_partial_sort ( V.begin() , V.begin()+9, V.end() , comp);
-    for ( uint32_t i =0 ; i < V.size() ; ++i)
-        std::cout<<V[i]<<", ";
-    std::cout<<std::endl;
-
-    V ={13,15,17,19,21,23,35,27,29,8,6,10,4,2};
-    insert_sorted ( V.begin() , V.begin()+9, V.end() , comp, aux);
-    //insert_partial_sort ( V.begin() , V.begin()+9, V.end() , comp);
-    for ( uint32_t i =0 ; i < V.size() ; ++i)
-        std::cout<<V[i]<<", ";
-    std::cout<<std::endl;
-
-    V ={3,5,7,9,11,13,15,17,19,28,26,30,24,22};
-    insert_sorted ( V.begin() , V.begin()+9, V.end() , comp, aux);
-    //insert_partial_sort ( V.begin() , V.begin()+9, V.end() , comp);
-    for ( uint32_t i =0 ; i < V.size() ; ++i)
-        std::cout<<V[i]<<", ";
-    std::cout<<std::endl;
-
-
-
-}
 int test_main (int, char *[])
 {
     test01 ( );
     test02 ( );
-    test03 ( );
     return 0;
 }

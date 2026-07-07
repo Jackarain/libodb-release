@@ -1,17 +1,42 @@
-// file      : odb/version.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
+// file      : odb/version.hxx.in
 // license   : GNU GPL v2; see accompanying LICENSE file
 
-#ifdef LIBODB_BUILD2
-#  include <odb/version-build2.hxx>
-#else
+#ifndef LIBODB_VERSION // Note: using the version macro itself.
 
-#ifndef ODB_VERSION_HXX
-#define ODB_VERSION_HXX
+// New numeric version format is AAAAABBBBBCCCCCDDDE where:
+//
+// AAAAA - major version number
+// BBBBB - minor version number
+// CCCCC - bugfix version number
+// DDD   - alpha / beta (DDD + 500) version number
+// E     - final (0) / snapshot (1)
+//
+// When DDDE is not 0, 1 is subtracted from AAAAABBBBBCCCCC. For example:
+//
+// Version      AAAAABBBBBCCCCCDDDE
+//
+// 0.1.0        0000000001000000000
+// 0.1.2        0000000001000020000
+// 1.2.3        0000100002000030000
+// 2.2.0-a.1    0000200001999990010
+// 3.0.0-b.2    0000299999999995020
+// 2.2.0-a.1.z  0000200001999990011
+//
+#define LIBODB_VERSION_FULL  200005000000000ULL
+#define LIBODB_VERSION_STR   "2.5.0"
+#define LIBODB_VERSION_ID    "2.5.0"
 
-#include <odb/pre.hxx>
+#define LIBODB_VERSION_MAJOR 2
+#define LIBODB_VERSION_MINOR 5
+#define LIBODB_VERSION_PATCH 0
 
-// Version format is AABBCCDD where
+#define LIBODB_PRE_RELEASE   false
+
+#define LIBODB_SNAPSHOT      0ULL
+#define LIBODB_SNAPSHOT_ID   ""
+
+
+// Old/deprecated numeric version format is AABBCCDD where:
 //
 // AA - major version number
 // BB - minor version number
@@ -30,15 +55,11 @@
 
 // ODB interface version: minor, major, and alpha/beta versions.
 //
-#define ODB_VERSION     20465
-#define ODB_VERSION_STR "2.5-b.15"
+#define ODB_VERSION     20500
+#define ODB_VERSION_STR "2.5"
 
 // libodb version: interface version plus the bugfix version.
 //
-#define LIBODB_VERSION     2049965
-#define LIBODB_VERSION_STR "2.5.0-b.15"
+#define LIBODB_VERSION 2050000
 
-#include <odb/post.hxx>
-
-#endif // ODB_VERSION_HXX
-#endif // LIBODB_BUILD2
+#endif // LIBODB_VERSION

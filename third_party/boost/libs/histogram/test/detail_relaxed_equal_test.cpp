@@ -7,21 +7,28 @@
 #include <boost/core/lightweight_test.hpp>
 #include <boost/core/lightweight_test_trait.hpp>
 #include <boost/histogram/detail/relaxed_equal.hpp>
-#include "std_ostream.hpp"
+#include "ostream.hpp"
 
 using namespace boost::histogram::detail;
 
 int main() {
-  struct A {};
-  A a, b;
+  struct Stateless {
+  } a, b;
 
-  struct B {
-    bool operator==(const B&) const { return false; }
-  };
-  B c, d;
+  struct Stateful {
+    int state; // has state
+  } c, d;
 
-  BOOST_TEST(relaxed_equal(a, b));
-  BOOST_TEST_NOT(relaxed_equal(c, d));
+  struct HasEqual {
+    int state;
+    bool operator==(const HasEqual& rhs) const { return state == rhs.state; }
+  } e{1}, f{1}, g{2};
+
+  BOOST_TEST(relaxed_equal{}(a, b));
+  BOOST_TEST_NOT(relaxed_equal{}(a, c));
+  BOOST_TEST_NOT(relaxed_equal{}(c, d));
+  BOOST_TEST(relaxed_equal{}(e, f));
+  BOOST_TEST_NOT(relaxed_equal{}(e, g));
 
   return boost::report_errors();
 }

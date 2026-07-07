@@ -16,12 +16,11 @@
 #include "example/common/root_certificates.hpp"
 
 #include <boost/beast/core.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/beast/websocket/ssl.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ssl/stream.hpp>
+#include <boost/asio/ssl.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -47,9 +46,9 @@ int main(int argc, char** argv)
                 "    websocket-client-sync-ssl echo.websocket.org 443 \"Hello, world!\"\n";
             return EXIT_FAILURE;
         }
-        auto const host = argv[1];
-        auto const port = argv[2];
-        auto const text = argv[3];
+        std::string host = argv[1];
+        auto const  port = argv[2];
+        auto const  text = argv[3];
 
         // The io_context is required for all I/O
         net::io_context ioc;
@@ -57,18 +56,37 @@ int main(int argc, char** argv)
         // The SSL context is required, and holds certificates
         ssl::context ctx{ssl::context::tlsv12_client};
 
+        // Verify the remote server's certificate
+        ctx.set_verify_mode(ssl::verify_peer);
+
         // This holds the root certificate used for verification
         load_root_certificates(ctx);
 
         // These objects perform our I/O
         tcp::resolver resolver{ioc};
-        websocket::stream<beast::ssl_stream<tcp::socket>> ws{ioc, ctx};
+        websocket::stream<ssl::stream<tcp::socket>> ws{ioc, ctx};
 
         // Look up the domain name
         auto const results = resolver.resolve(host, port);
 
         // Make the connection on the IP address we get from a lookup
-        net::connect(ws.next_layer().next_layer(), results.begin(), results.end());
+        auto ep = net::connect(beast::get_lowest_layer(ws), results);
+
+        // Set SNI Hostname (many hosts need this to handshake successfully)
+        if(! SSL_set_tlsext_host_name(ws.next_layer().native_handle(), host.c_str()))
+        {
+            throw beast::system_error(
+                static_cast<int>(::ERR_get_error()),
+                net::error::get_ssl_category());
+        }
+
+        // Set the expected hostname in the peer certificate for verification
+        ws.next_layer().set_verify_callback(ssl::host_name_verification(host));
+
+        // Update the host_ string. This will provide the value of the
+        // Host HTTP header during the WebSocket handshake.
+        // See https://tools.ietf.org/html/rfc7230#section-5.4
+        host += ':' + std::to_string(ep.port());
 
         // Perform the SSL handshake
         ws.next_layer().handshake(ssl::stream_base::client);

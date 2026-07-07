@@ -12,10 +12,15 @@
 
 #include <boost/beast/_experimental/test/stream.hpp>
 #include <boost/beast/_experimental/test/tcp.hpp>
+#include <boost/beast/_experimental/test/immediate_executor.hpp>
 #include "test.hpp"
 
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/strand.hpp>
+#include <boost/asio/bind_immediate_executor.hpp>
+#if BOOST_ASIO_HAS_CO_AWAIT
+#include <boost/asio/use_awaitable.hpp>
+#endif
 
 namespace boost {
 namespace beast {
@@ -642,7 +647,7 @@ public:
                         BOOST_THROW_EXCEPTION(
                             system_error{ec});
                     BEAST_EXPECT(n == s.size());
-                    BEAST_EXPECT(++count == 1);
+                    ++count;
                 });
             ws.async_ping({},
                 [&](error_code ec)
@@ -726,6 +731,55 @@ public:
         ws.async_close({}, move_only_handler{});
     }
 
+    void
+    testImmediate()
+    {
+        doFailLoop([&](test::fail_count& fc)
+        {
+            std::string const s = "Hello, world!";
+            multi_buffer b;
+            net::io_context ioc;
+            stream<test::stream> ws{ioc, fc};
+            std::size_t count = 0;
+            std::size_t ic = 0u;
+            test::immediate_executor imex{ic};
+
+            ws.async_read(b,
+                asio::bind_immediate_executor(imex,
+                    [&](error_code ec, std::size_t)
+                    {
+                        if(ec != net::error::operation_aborted)
+                            BOOST_THROW_EXCEPTION(
+                                system_error{ec});
+                        ++count;
+                    }));
+
+            ws.async_write(net::buffer(s),
+                asio::bind_immediate_executor(imex,
+                    [&](error_code ec, std::size_t)
+                    {
+                        if(ec != net::error::operation_aborted)
+                            BOOST_THROW_EXCEPTION(
+                                system_error{ec});
+                        ++count;
+                    }));
+            ws.async_ping({},
+                asio::bind_immediate_executor(imex,
+                    [&](error_code ec)
+                    {
+                        if(ec != net::error::operation_aborted)
+                            BOOST_THROW_EXCEPTION(
+                                system_error{ec});
+                        ++count;
+                    }));
+
+            BEAST_EXPECT(ioc.run() == 0);
+            BEAST_EXPECT(count == 3);
+            BEAST_EXPECT(ic == 3);
+        });
+    }
+
+
     struct copyable_handler
     {
         template<class... Args>
@@ -735,6 +789,15 @@ public:
         }
     };
 
+#if BOOST_ASIO_HAS_CO_AWAIT
+    void testAwaitableCompiles(stream<test::stream>& s, close_reason cr )
+    {
+        static_assert(std::is_same_v<
+            net::awaitable<void>, decltype(
+            s.async_close(cr, net::use_awaitable))>);
+    }
+#endif
+
     void
     run() override
     {
@@ -742,6 +805,10 @@ public:
         testTimeout();
         testSuspend();
         testMoveOnly();
+        testImmediate();
+#if BOOST_ASIO_HAS_CO_AWAIT
+        boost::ignore_unused(&close_test::testAwaitableCompiles);
+#endif
     }
 };
 

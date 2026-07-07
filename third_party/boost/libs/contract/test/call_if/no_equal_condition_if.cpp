@@ -6,11 +6,14 @@
 
 // Test assertions skipped when operations to check them missing (e.g., `==`).
 
+// C++17 warning from Boost.Bind.
+#define _SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING
+
 #include <boost/contract/function.hpp>
 #include <boost/contract/check.hpp>
 #include <boost/contract/assert.hpp>
 #include <boost/contract/call_if.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/type_traits/has_equal_to.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <functional>
@@ -35,9 +38,7 @@ void push_back(std::vector<T>& vect, T const& value) {
 }
 
 struct j { // Type without operator==.
-    explicit j(int i) : j_(i) {}
-private:
-    int j_;
+    explicit j(int /* i */) {}
 };
 
 int main() {

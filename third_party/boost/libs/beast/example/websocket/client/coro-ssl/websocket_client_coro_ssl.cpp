@@ -16,10 +16,10 @@
 #include "example/common/root_certificates.hpp"
 
 #include <boost/beast/core.hpp>
-#include <boost/beast/ssl.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/beast/websocket/ssl.hpp>
 #include <boost/asio/spawn.hpp>
+#include <boost/asio/ssl.hpp>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -44,7 +44,7 @@ fail(beast::error_code ec, char const* what)
 // Sends a WebSocket message and prints the response
 void
 do_session(
-    std::string const& host,
+    std::string host,
     std::string const& port,
     std::string const& text,
     net::io_context& ioc,
@@ -55,8 +55,7 @@ do_session(
 
     // These objects perform our I/O
     tcp::resolver resolver(ioc);
-    websocket::stream<
-        beast::ssl_stream<beast::tcp_stream>> ws(ioc, ctx);
+    websocket::stream<ssl::stream<beast::tcp_stream>> ws(ioc, ctx);
 
     // Look up the domain name
     auto const results = resolver.async_resolve(host, port, yield[ec]);
@@ -67,9 +66,24 @@ do_session(
     beast::get_lowest_layer(ws).expires_after(std::chrono::seconds(30));
 
     // Make the connection on the IP address we get from a lookup
-    beast::get_lowest_layer(ws).async_connect(results, yield[ec]);
+    auto ep = beast::get_lowest_layer(ws).async_connect(results, yield[ec]);
     if(ec)
         return fail(ec, "connect");
+
+    // Set SNI Hostname (many hosts need this to handshake successfully)
+    if(! SSL_set_tlsext_host_name(ws.next_layer().native_handle(), host.c_str()))
+    {
+        ec.assign(static_cast<int>(::ERR_get_error()), net::error::get_ssl_category());
+        return fail(ec, "connect");
+    }
+
+    // Set the expected hostname in the peer certificate for verification
+    ws.next_layer().set_verify_callback(ssl::host_name_verification(host));
+
+    // Update the host string. This will provide the value of the
+    // Host HTTP header during the WebSocket handshake.
+    // See https://tools.ietf.org/html/rfc7230#section-5.4
+    host += ':' + std::to_string(ep.port());
 
     // Set a timeout on the operation
     beast::get_lowest_layer(ws).expires_after(std::chrono::seconds(30));
@@ -149,6 +163,9 @@ int main(int argc, char** argv)
     // The SSL context is required, and holds certificates
     ssl::context ctx{ssl::context::tlsv12_client};
 
+    // Verify the remote server's certificate
+    ctx.set_verify_mode(ssl::verify_peer);
+
     // This holds the root certificate used for verification
     load_root_certificates(ctx);
 
@@ -160,7 +177,18 @@ int main(int argc, char** argv)
         std::string(text),
         std::ref(ioc),
         std::ref(ctx),
-        std::placeholders::_1));
+        std::placeholders::_1),
+            // on completion, spawn will call this function
+           [](std::exception_ptr ex)
+           {
+               // if an exception occurred in the coroutine,
+               // it's something critical, e.g. out of memory
+               // we capture normal errors in the ec
+               // so we just rethrow the exception here,
+               // which will cause `ioc.run()` to throw
+               if (ex)
+                   std::rethrow_exception(ex);
+           });
 
     // Run the I/O service. The call will return when
     // the socket is closed.

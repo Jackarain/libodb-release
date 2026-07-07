@@ -1,0 +1,8 @@
+# file      : test/build/bootstrap.build
+# copyright : not copyrighted - public domain
+
+project = # Unnamed subproject.
+
+using config
+using dist
+using test

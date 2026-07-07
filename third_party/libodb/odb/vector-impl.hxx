@@ -1,5 +1,4 @@
 // file      : odb/vector-impl.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_VECTOR_IMPL_HXX
@@ -46,7 +45,7 @@ namespace odb
     vector_impl (const vector_impl&);
 
 #ifdef ODB_CXX11
-    vector_impl (vector_impl&&);
+    vector_impl (vector_impl&&) noexcept;
 #endif
 
     void
@@ -196,7 +195,7 @@ namespace odb
     vector_base (const vector_base&);
 
 #ifdef ODB_CXX11
-    vector_base (vector_base&&);
+    vector_base (vector_base&&) noexcept;
 #endif
 
     void

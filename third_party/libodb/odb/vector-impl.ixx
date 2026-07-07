@@ -1,5 +1,4 @@
 // file      : odb/vector-impl.ixx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifdef ODB_CXX11
@@ -19,9 +18,19 @@ namespace odb
   {
   }
 
+  inline void vector_impl::
+  swap (vector_impl& x)
+  {
+    std::swap (state_, x.state_);
+    std::swap (size_, x.size_);
+    std::swap (tail_, x.tail_);
+    std::swap (capacity_, x.capacity_);
+    std::swap (data_, x.data_);
+  }
+
 #ifdef ODB_CXX11
   inline vector_impl::
-  vector_impl (vector_impl&& x)
+  vector_impl (vector_impl&& x) noexcept
       : state_ (state_not_tracking),
         size_ (0), tail_ (0), capacity_ (0), data_ (0)
   {
@@ -34,16 +43,6 @@ namespace odb
   {
     if (data_ != 0)
       operator delete (data_);
-  }
-
-  inline void vector_impl::
-  swap (vector_impl& x)
-  {
-    std::swap (state_, x.state_);
-    std::swap (size_, x.size_);
-    std::swap (tail_, x.tail_);
-    std::swap (capacity_, x.capacity_);
-    std::swap (data_, x.data_);
   }
 
   inline void vector_impl::
@@ -147,6 +146,17 @@ namespace odb
   inline vector_base::
   vector_base (): tran_ (0) {}
 
+  inline void vector_base::
+  _arm (transaction& t) const
+  {
+    tran_ = &t;
+    t.callback_register (&rollback,
+                         const_cast<vector_base*> (this),
+                         transaction::event_rollback,
+                         0,
+                         &tran_);
+  }
+
   inline vector_base::
   vector_base (const vector_base& x)
       : impl_ (x.impl_), tran_ (0)
@@ -168,12 +178,19 @@ namespace odb
 
 #ifdef ODB_CXX11
   inline vector_base::
-  vector_base (vector_base&& x)
+  vector_base (vector_base&& x) noexcept
       : impl_ (std::move (x.impl_)), tran_ (0)
   {
     if (x.tran_ != 0)
     {
       x.tran_->callback_unregister (&x);
+
+      // Note that _arm() can potentially throw bad_alloc while adding a new
+      // callback to the callbacks list of the transaction object. However, we
+      // assume that this will not happen since the new callback should be
+      // saved into an existing slot, freed by the above callback_unregister()
+      // call.
+      //
       _arm (*x.tran_);
     }
   }
@@ -189,16 +206,5 @@ namespace odb
   _tracking () const
   {
     return impl_.tracking ();
-  }
-
-  inline void vector_base::
-  _arm (transaction& t) const
-  {
-    tran_ = &t;
-    t.callback_register (&rollback,
-                         const_cast<vector_base*> (this),
-                         transaction::event_rollback,
-                         0,
-                         &tran_);
   }
 }

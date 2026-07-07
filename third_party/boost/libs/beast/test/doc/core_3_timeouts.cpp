@@ -18,7 +18,6 @@
 #include <boost/beast/core/stream_traits.hpp>
 #include <boost/beast/core/tcp_stream.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/beast/ssl/ssl_stream.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/read.hpp>
 #include <boost/asio/spawn.hpp>
@@ -205,7 +204,7 @@ core_3_timeouts_snippets()
         // if the choice of RatePolicy is not DefaultConstructible,
         // an instance of the type may be passed to the constructor.
 
-        basic_stream<net::ip::tcp, net::executor, simple_rate_policy> stream(ioc);
+        basic_stream<net::ip::tcp, net::any_io_executor, simple_rate_policy> stream(ioc);
 
         // The policy object, which is default constructed, or
         // decay-copied upon construction, is attached to the stream
@@ -311,8 +310,7 @@ https_get (std::string const& host, std::string const& target, error_code& ec)
     boost::asio::spawn(ioc,
     [&](boost::asio::yield_context yield)
     {
-        // We use the Beast ssl_stream wrapped around a beast tcp_stream.
-        ssl_stream<tcp_stream> stream(ioc, ctx);
+        net::ssl::stream<tcp_stream> stream(ioc, ctx);
 
         // The resolver will be used to look up the IP addresses for the host name
         net::ip::tcp::resolver resolver(ioc);
@@ -356,7 +354,7 @@ https_get (std::string const& host, std::string const& target, error_code& ec)
             req.method(http::verb::get);
             req.target(target);
             req.version(11);
-            req.set(http::field::server, host);
+            req.set(http::field::host, host);
             req.set(http::field::user_agent, "Beast");
             http::async_write(stream, req, yield[ec]);
             if(ec)
@@ -397,7 +395,10 @@ https_get (std::string const& host, std::string const& target, error_code& ec)
 
         // Set the string to return to the caller
         result = std::move(res.body());
-    });
+    },
+    // this will capture exceptions thrown by the coroutine,
+    // which we're ignoring, since we're using error_codes to capture them.
+    asio::detached);
 
     // `run` will dispatch completion handlers, and block until there is
     // no more "work" remaining. When this call returns, the operations
@@ -586,7 +587,7 @@ core_3_timeouts_snippets2()
     //[code_core_3_timeouts_9
 
         // This stream will use our new rate_gauge policy
-        basic_stream<net::ip::tcp, net::executor, rate_gauge> stream(ioc);
+        basic_stream<net::ip::tcp, net::any_io_executor, rate_gauge> stream(ioc);
 
         //...
 
@@ -599,8 +600,6 @@ core_3_timeouts_snippets2()
 }
 
 } // (anon)
-
-template class basic_stream<net::ip::tcp, net::executor, rate_gauge>;
 
 struct core_3_timeouts_test
     : public beast::unit_test::suite

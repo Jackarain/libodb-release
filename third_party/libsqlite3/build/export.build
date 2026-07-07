@@ -1,0 +1,9 @@
+# file      : build/export.build
+# copyright : not copyrighted - public domain
+
+$out_root/
+{
+  include libsqlite3/
+}
+
+export $out_root/libsqlite3/$import.target

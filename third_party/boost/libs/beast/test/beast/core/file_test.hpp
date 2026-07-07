@@ -15,36 +15,64 @@
 #include <boost/beast/core/file_base.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <cstdio>
+#include <boost/filesystem/fstream.hpp>
+#include <iterator>
 #include <string>
 #include <type_traits>
+#include <vector>
+
+#if defined(BOOST_GCC) && BOOST_GCC >= 130000
+#pragma GCC diagnostic ignored "-Wself-move"
+#endif
 
 namespace boost {
 namespace beast {
 
-template<class File>
+template<class File, bool append_unicode_suffix = false>
 void
 test_file()
 {
-    BOOST_STATIC_ASSERT(
+    BOOST_CORE_STATIC_ASSERT(
         is_file<File>::value);
-    BOOST_STATIC_ASSERT(
+    BOOST_CORE_STATIC_ASSERT(
         ! std::is_copy_constructible<File>::value);
-    BOOST_STATIC_ASSERT(
+    BOOST_CORE_STATIC_ASSERT(
         ! std::is_copy_assignable<File>::value);
 
     namespace fs = boost::filesystem;
 
+    static constexpr
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+    boost::winapi::WCHAR_ unicode_suffix[] = { 0xd83e, 0xdd84, 0x0000 }; // UTF-16-LE unicorn
+#else
+    char                  unicode_suffix[] = { '\xf0', '\x9f', '\xa6', '\x84', '\x00' }; // UTF-8 unicorn
+#endif
+
     class temp_path
     {
         fs::path path_;
-        std::string str_;
+        std::vector<char> utf8_str_;
 
     public:
         temp_path()
             : path_(fs::unique_path())
-            , str_(path_.string<std::string>())
         {
+            if (append_unicode_suffix)
+                path_ += unicode_suffix;
+#ifdef _WIN32
+            constexpr auto cp = boost::winapi::CP_UTF8_;
+            constexpr auto flags = boost::winapi::WC_ERR_INVALID_CHARS_;
+            auto sz = boost::winapi::WideCharToMultiByte(
+                cp, flags, path_.c_str(), -1, nullptr, 0,
+                nullptr, nullptr);
+            BEAST_EXPECT(sz != 0);
+            utf8_str_.resize(sz);
+            auto ret = boost::winapi::WideCharToMultiByte(
+                cp, flags, path_.c_str(), -1,
+                utf8_str_.data(), sz,
+                nullptr, nullptr);
+            BEAST_EXPECT(ret == sz);
+#endif
         }
 
         operator fs::path const&()
@@ -54,25 +82,43 @@ test_file()
 
         operator char const*()
         {
-            return str_.c_str();
+#ifdef _WIN32
+            return utf8_str_.data();
+#else
+            return path_.c_str();
+#endif
         }
     };
 
     auto const create =
-        [](fs::path const& path)
+        [](fs::path const& path, std::string const& data = "")
         {
-            auto const s =
-                path.string<std::string>();
             BEAST_EXPECT(! fs::exists(path));
-            FILE* f = ::fopen(s.c_str(), "w");
-            if( BEAST_EXPECT(f != nullptr))
-                ::fclose(f);
+            fs::ofstream out(path);
+            BEAST_EXPECT(out.is_open());
+            if (data.size())
+                out.write(data.c_str(), data.size());
         };
 
     auto const remove =
         [](fs::path const& path)
         {
             fs::remove(path);
+            BEAST_EXPECT(! fs::exists(path));
+        };
+
+    auto const consume_file =
+        [](fs::path const& path)
+        {
+            // no exceptions - failure will result in an empty string
+            fs::ifstream in;
+            in.open(path);
+            noskipws(in);
+            auto s = std::string(
+                std::istream_iterator<char>(in),
+                std::istream_iterator<char>());
+            in.close();
+            return s;
         };
 
     temp_path path;
@@ -205,7 +251,14 @@ test_file()
             f.open(path, file_mode::append, ec);
             BEAST_EXPECT(! ec);
             BEAST_EXPECT(fs::exists(path));
+            static const std::string extra = "the";
+            f.write(extra.c_str(), extra.size(), ec);
+            BEAST_EXPECT(!ec);
+            f.close(ec);
+            auto s = consume_file(path);
+            BEAST_EXPECT(s == "the");
         }
+
         {
             File f;
             error_code ec;
@@ -213,6 +266,12 @@ test_file()
             f.open(path, file_mode::append, ec);
             BEAST_EXPECT(! ec);
             BEAST_EXPECT(fs::exists(path));
+            static const std::string extra = " cat";
+            f.write(extra.c_str(), extra.size(), ec);
+            BEAST_EXPECT(!ec);
+            f.close(ec);
+            auto s = consume_file(path);
+            BEAST_EXPECTS(s == "the cat", s);
         }
         remove(path);
     }
@@ -231,10 +290,16 @@ test_file()
         {
             File f;
             error_code ec;
-            create(path);
-            BEAST_EXPECT(fs::exists(path));
+            create(path, "the cat");
             f.open(path, file_mode::append_existing, ec);
             BEAST_EXPECT(! ec);
+            static std::string const extra = " sat";
+            f.write(extra.c_str(), extra.size(), ec);
+            BEAST_EXPECT(!ec);
+            f.close(ec);
+            BEAST_EXPECT(!ec);
+            auto s = consume_file(path);
+            BEAST_EXPECTS(s == "the cat sat", s);
         }
         remove(path);
     }

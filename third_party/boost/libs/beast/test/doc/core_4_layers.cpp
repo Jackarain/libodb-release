@@ -243,11 +243,15 @@ public:
     }
 
     /// Read some data from the stream asynchronously
-    template <class MutableBufferSequence, class ReadHandler>
+    template<
+        class MutableBufferSequence,
+        class ReadHandler =
+            net::default_completion_token_t<executor_type>>
     BOOST_BEAST_ASYNC_RESULT2(ReadHandler)
     async_read_some(
         MutableBufferSequence const& buffers,
-        ReadHandler&& handler)
+        ReadHandler&& handler =
+            net::default_completion_token_t<executor_type>{})
     {
         return net::async_initiate<
             ReadHandler,
@@ -259,11 +263,16 @@ public:
     }
 
     /// Write some data to the stream asynchronously
-    template <class ConstBufferSequence, class WriteHandler>
+    template<
+        class ConstBufferSequence,
+        class WriteHandler =
+            net::default_completion_token_t<executor_type>>
     BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
     async_write_some(
         ConstBufferSequence const& buffers,
-        WriteHandler&& handler)
+        WriteHandler&& handler =
+            net::default_completion_token_t<
+                executor_type>{})
     {
         return net::async_initiate<
             WriteHandler,
@@ -278,10 +287,10 @@ public:
 
 template class counted_stream<test::stream>;
 
-BOOST_STATIC_ASSERT(is_sync_read_stream<counted_stream<test::stream>>::value);
-BOOST_STATIC_ASSERT(is_sync_write_stream<counted_stream<test::stream>>::value);
-BOOST_STATIC_ASSERT(is_async_read_stream<counted_stream<test::stream>>::value);
-BOOST_STATIC_ASSERT(is_async_write_stream<counted_stream<test::stream>>::value);
+BOOST_CORE_STATIC_ASSERT(is_sync_read_stream<counted_stream<test::stream>>::value);
+BOOST_CORE_STATIC_ASSERT(is_sync_write_stream<counted_stream<test::stream>>::value);
+BOOST_CORE_STATIC_ASSERT(is_async_read_stream<counted_stream<test::stream>>::value);
+BOOST_CORE_STATIC_ASSERT(is_async_write_stream<counted_stream<test::stream>>::value);
 
 struct core_4_layers_test
     : public beast::unit_test::suite

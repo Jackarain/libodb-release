@@ -19,7 +19,7 @@
 
 //[fft_sines_table_example_1
 
-/*`[h5 Using Boost.Multiprecision to generate a high-precision array of sine coefficents for use with FFT.]
+/*`[h5 Using Boost.Multiprecision to generate a high-precision array of sine coefficients for use with FFT.]
 
 The Boost.Multiprecision library can be used for computations requiring precision
 exceeding that of standard built-in types such as `float`, `double`
@@ -131,7 +131,7 @@ and a C++11 lambda function combined with `std::for_each()`.
 
 std::string fp_type = "double";
 
-std::cout << "Generating an `std::array` or `boost::array` for floating-point type: "
+std::cout << "Generating an `std::array` or `std::array` for floating-point type: "
   << fp_type << ". " << std::endl;
 
 /*`By default, output would only show the standard 6 decimal digits,

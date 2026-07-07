@@ -1,5 +1,5 @@
 /* Example use of std::error implicit conversion
-(C) 2018-2019 Niall Douglas <http://www.nedproductions.biz/> (5 commits)
+(C) 2018-2026 Niall Douglas <http://www.nedproductions.biz/> (5 commits)
 File Created: Sept 2018
 
 
@@ -33,6 +33,7 @@ DEALINGS IN THE SOFTWARE.
 
 #if !defined(__GNUC__) || __GNUC__ > 6  // GCC 6 chokes on this
 
+#include "../../../include/boost/outcome/experimental/status-code/nested_status_code.hpp"
 #include "../../../include/boost/outcome/experimental/status_result.hpp"
 
 /* Original note to WG21:
@@ -96,45 +97,57 @@ public:
   // unique id must be from a hard random number source
   // Use https://www.random.org/cgi-bin/randbyte?nbytes=8&format=h to get a hard random 64 bit id.
   // Do NOT make up your own value. Do NOT use zero.
-  constexpr explicit _file_io_error_domain(typename _base::unique_id_type id = 0x230f170194fcc6c7) noexcept : _base(id) {}
+  constexpr explicit _file_io_error_domain(typename _base::unique_id_type id = 0x230f170194fcc6c7) noexcept
+      : _base(id)
+  {
+  }
   static inline constexpr const _file_io_error_domain &get();
   //! [constructor]
   //! [string_ref]
   // Return the name of our custom code domain
-  virtual _base::string_ref name() const noexcept override final  // NOLINT
+  virtual int _do_name(_vtable_name_args &args) const noexcept override final
   {
-    static string_ref v("file i/o error domain");
-    return v;  // NOLINT
+    args.ret = string_ref("file i/o error domain");
+    return 0;  // errno value if failed
   }
   //! [string_ref]
   //! [message]
   // Return a string describing a specific code. We will return the
   // string returned by our POSIX code base domain, with the source
   // file and line number appended
-  virtual _base::string_ref _do_message(const outcome_e::status_code<void> &code) const noexcept override final  // NOLINT
+  virtual int _do_message(_vtable_message_args &args) const noexcept override final
   {
-    assert(code.domain() == *this);
+    assert(args.code.domain() == *this);
 
     // Fetch message from base domain (POSIX)
-    auto msg = _base::_do_message(code);
-    const auto &c1 = static_cast<const file_io_error &>(code);  // NOLINT
+    const int errcode = _base::_do_message(args);
+    if(errcode != 0)
+    {
+      return errcode;
+    }
+    const auto msg = std::move(args.ret);
+    const auto &c1 = static_cast<const file_io_error &>(args.code);  // NOLINT
     const value_type &v = c1.value();
 
     // Append my source file and line number
     if(v.file == nullptr)
     {
-      return msg;
+      args.ret = msg;
+      return 0;  // errno value if failed
     }
     size_t length = strlen(v.file) + 16 + msg.size();
     auto *p = static_cast<char *>(malloc(length));  // NOLINT
     if(p == nullptr)
     {
-      return _base::string_ref("failed to get message from system");
+      args.ret = _base::string_ref("failed to get message from system");
+      return ENOMEM;
     }
-    sprintf(p, "%s (%s:%d)", msg.data(), v.file, v.lineno);
+    snprintf(p, length, "%s (%s:%d)", msg.data(), v.file, v.lineno);
 
     // Return as atomically reference counted string
-    return _base::atomic_refcounted_string_ref(p, length);
+    args.ret = _base::atomic_refcounted_string_ref(p, length);
+    free(p);
+    return 0;  // errno value if failed
   }
 };
 //! [message]
@@ -154,14 +167,14 @@ inline constexpr const _file_io_error_domain &_file_io_error_domain::get()
 // which is discovered using ADL. `error` is an alias to the refinement
 // `status_code<erased<intptr_t>>` which is a status code whose value type
 // has been erased into an `intptr_t`. `status_code<erased<intptr_t>>`
-// (i.e. `error`) are move relocating (P1029) i.e. they are move-only
+// (i.e. `error`) are move bitcopying (P1029) i.e. they are move-only
 // types whose move operation is defined to leave the source in the same
 // representation as a default constructed instance, and for whose
 // non-trivial destructor when called upon a default constructed instance
 // is guaranteed to do nothing.
 inline outcome_e::system_code make_status_code(file_io_error v)
 {
-  // `make_status_code_ptr()` dynamically allocates memory to store an
+  // `make_nested_status_code()` dynamically allocates memory to store an
   // instance of `file_io_error`, then returns a status code whose domain
   // specifies that its value type is a pointer to `file_io_error`. The
   // domain is a templated instance which indirects all observers of the
@@ -171,8 +184,8 @@ inline outcome_e::system_code make_status_code(file_io_error v)
   // by definition fits into `intptr_t` and is trivially copyable.
   // Therefore `system_code` (which is also a type alias to
   // `status_code<erased<intptr_t>>`) is happy to implicitly construct
-  // from the status code returned by `make_status_code_ptr()`.
-  return make_status_code_ptr(std::move(v));
+  // from the status code returned by `make_nested_status_code()`.
+  return make_nested_status_code(std::move(v));
 }
 //! [implicit_conversion]
 
@@ -234,14 +247,16 @@ int main(void)
   {
     auto e = std::move(r).error();
     // A quick demonstration that the indirection works as indicated
-    printf("Returned error has a code domain of '%s', a message of '%s'\n", e.domain().name().c_str(), e.message().c_str());
-    printf("\nAnd semantically comparing it to 'errc::no_such_file_or_directory' = %d\n", e == outcome_e::errc::no_such_file_or_directory);
+    printf("Returned error has a code domain of '%s', a message of '%s'\n", e.domain().name().c_str(),
+           e.message().c_str());
+    printf("\nAnd semantically comparing it to 'errc::no_such_file_or_directory' = %d\n",
+           e == outcome_e::errc::no_such_file_or_directory);
   }
 }
 //! [open_file]
 
 #else
-  
+
 int main(void)
 {
   return 0;

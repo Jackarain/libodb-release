@@ -15,13 +15,15 @@
 # the run rule for each source, the result is a list of all
 # the run rules, which we can pass on to the test_suite rule:
 
+import testing ;
+
 rule test_all
 {
    local all_rules = ;
 
    for local fileb in [ glob *.cpp ]
    {
-      all_rules += [ run $(fileb) /boost/container//boost_container  /boost/timer//boost_timer
+      all_rules += [ run $(fileb) /boost/container//boost_container
       :  # additional args
       :  # test-files
       :  # requirements

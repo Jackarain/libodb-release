@@ -1,5 +1,4 @@
 // file      : odb/lazy-ptr.ixx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 namespace odb
@@ -520,7 +519,7 @@ namespace odb
 
   template <class T, class D>
   lazy_unique_ptr<T, D>::
-  lazy_unique_ptr (lazy_unique_ptr&& r)
+  lazy_unique_ptr (lazy_unique_ptr&& r) noexcept
       : p_ (std::move (r.p_)), i_ (std::move (r.i_)) {}
 
   template <class T, class D>
@@ -546,7 +545,7 @@ namespace odb
 
   template <class T, class D>
   lazy_unique_ptr<T, D>& lazy_unique_ptr<T, D>::
-  operator= (lazy_unique_ptr&& r)
+  operator= (lazy_unique_ptr&& r) noexcept
   {
     p_ = std::move (r.p_);
     i_ = std::move (r.i_);
@@ -923,7 +922,7 @@ namespace odb
 
   template <class T>
   inline lazy_shared_ptr<T>::
-  lazy_shared_ptr (lazy_shared_ptr&& r)
+  lazy_shared_ptr (lazy_shared_ptr&& r) noexcept
       : p_ (std::move (r.p_)), i_ (std::move (r.i_)) {}
 
   template <class T>
@@ -980,7 +979,7 @@ namespace odb
 
   template <class T>
   inline lazy_shared_ptr<T>& lazy_shared_ptr<T>::
-  operator= (lazy_shared_ptr&& r)
+  operator= (lazy_shared_ptr&& r) noexcept
   {
     p_ = std::move (r.p_);
     i_ = std::move (r.i_);

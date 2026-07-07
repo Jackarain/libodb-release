@@ -1,5 +1,4 @@
 // file      : odb/pgsql/no-id-object-statements.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_PGSQL_NO_ID_OBJECT_STATEMENTS_HXX
@@ -49,7 +48,10 @@ namespace odb
       // Object image.
       //
       image_type&
-      image () {return image_;}
+      image (std::size_t i = 0)
+      {
+        return image_[i];
+      }
 
       // Insert binding.
       //
@@ -113,7 +115,8 @@ namespace odb
       no_id_object_statements& operator= (const no_id_object_statements&);
 
     private:
-      image_type image_;
+      image_type image_[object_traits::batch];
+      unsigned long long status_[object_traits::batch];
 
       // Select binding.
       //

@@ -1,17 +1,18 @@
-// Copyright (c) 2018 Andrey Semashev
+// Copyright (c) 2018, 2024 Andrey Semashev
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+// https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_INTEGER_TEST_MULTIPRECISION_CONFIG_HPP_INCLUDED_
 #define BOOST_INTEGER_TEST_MULTIPRECISION_CONFIG_HPP_INCLUDED_
 
 #include <boost/config.hpp>
 
-#if (defined(BOOST_MSVC) && (BOOST_MSVC < 1500)) || \
-    (defined(__clang_major__) && (__clang_major__ == 3) && (__clang_minor__ < 2)) || \
-    (defined(BOOST_GCC) && defined(BOOST_GCC_CXX11) && BOOST_GCC < 40800)
+// Boost.Multiprecision requires a number of C++11 features, see boost/multiprecision/detail/check_cpp11_config.hpp.
+// Also, Boost.Multiprecision internally uses Boost.Math, which requires C++14 and a recent enough MSVC, see boost/math/tools/config.hpp.
+#if (BOOST_CXX_VERSION < 201402) || \
+    (defined(_MSC_VER) && (_MSC_VER <= 1900))
 #define DISABLE_MP_TESTS
 #endif
 

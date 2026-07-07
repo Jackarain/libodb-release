@@ -6,8 +6,14 @@
 #include <pch.hpp>
 
 #define BOOST_TEST_MAIN
+
+// See: https://github.com/boostorg/math/issues/1115
+#if __has_include(<X11/X.h>)
+#  include <X11/X.h>
+#endif
+
 #include <boost/test/unit_test.hpp>
-#include <boost/test/floating_point_comparison.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
 #include <boost/test/results_collector.hpp>
 #include <boost/math/special_functions/beta.hpp>
 #include <boost/math/distributions/skew_normal.hpp>
@@ -384,7 +390,7 @@ void test_inverses(const T& data)
          value_type inv = inverse_ibeta_halley(Real(data[i][0]), Real(data[i][1]), Real(data[i][5]));
          BOOST_CHECK_CLOSE_EX(Real(data[i][2]), inv, precision, i);
          inv = inverse_ibeta_halley_neg(Real(data[i][0]), Real(data[i][1]), Real(data[i][5]));
-         BOOST_ASSERT(boost::math::isfinite(inv));
+         BOOST_MATH_ASSERT(boost::math::isfinite(inv));
          BOOST_CHECK_CLOSE_EX(Real(data[i][2]), inv, precision, i);
          inv = inverse_ibeta_schroder(Real(data[i][0]), Real(data[i][1]), Real(data[i][5]));
          BOOST_CHECK_CLOSE_EX(Real(data[i][2]), inv, precision, i);
@@ -438,10 +444,10 @@ void test_beta(T, const char* /* name */)
 }
 
 #if !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS) && !defined(BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX) && !defined(BOOST_NO_CXX11_LAMBDAS)
-template <class Complex>
+template <class ComplexType>
 void test_complex_newton()
 {
-    typedef typename Complex::value_type Real;
+    typedef typename ComplexType::value_type Real;
     std::cout << "Testing complex Newton's Method on type " << boost::typeindex::type_id<Real>().pretty_name() << "\n";
     using std::abs;
     using std::sqrt;
@@ -451,61 +457,61 @@ void test_complex_newton()
 
     Real tol = std::numeric_limits<Real>::epsilon();
     // p(z) = z^2 + 1, roots: \pm i.
-    polynomial<Complex> p{{1,0}, {0, 0}, {1,0}};
-    Complex guess{1,1};
-    polynomial<Complex> p_prime = p.prime();
-    auto f = [&](Complex z) { return std::make_pair<Complex, Complex>(p(z), p_prime(z)); };
-    Complex root = complex_newton(f, guess);
+    polynomial<ComplexType> p{{1,0}, {0, 0}, {1,0}};
+    ComplexType guess{1,1};
+    polynomial<ComplexType> p_prime = p.prime();
+    auto f = [&](ComplexType z) { return std::make_pair<ComplexType, ComplexType>(p(z), p_prime(z)); };
+    ComplexType root = complex_newton(f, guess);
 
     BOOST_CHECK(abs(root.real()) <= tol);
-    BOOST_CHECK_CLOSE(root.imag(), 1, tol);
+    BOOST_CHECK_CLOSE(root.imag(), (Real)1, tol);
 
     guess = -guess;
     root = complex_newton(f, guess);
     BOOST_CHECK(abs(root.real()) <= tol);
-    BOOST_CHECK_CLOSE(root.imag(), -1, tol);
+    BOOST_CHECK_CLOSE(root.imag(), (Real)-1, tol);
 
     // Test that double roots are handled correctly-as correctly as possible.
     // Convergence at a double root is not quadratic.
     // This sets p = (z-i)^2:
-    p = polynomial<Complex>({{-1,0}, {0,-2}, {1,0}});
+    p = polynomial<ComplexType>({{-1,0}, {0,-2}, {1,0}});
     p_prime = p.prime();
     guess = -guess;
-    auto g = [&](Complex z) { return std::make_pair<Complex, Complex>(p(z), p_prime(z)); };
+    auto g = [&](ComplexType z) { return std::make_pair<ComplexType, ComplexType>(p(z), p_prime(z)); };
     root = complex_newton(g, guess);
     BOOST_CHECK(abs(root.real()) < 10*sqrt(tol));
-    BOOST_CHECK_CLOSE(root.imag(), 1, tol);
+    BOOST_CHECK_CLOSE(root.imag(), (Real)1, tol);
 
     // Test that zero derivatives are handled.
     // p(z) = z^2 + iz + 1
-    p = polynomial<Complex>({{1,0}, {0,1}, {1,0}});
+    p = polynomial<ComplexType>({{1,0}, {0,1}, {1,0}});
     // p'(z) = 2z + i
     p_prime = p.prime();
-    guess = Complex(0,-boost::math::constants::half<Real>());
-    auto g2 = [&](Complex z) { return std::make_pair<Complex, Complex>(p(z), p_prime(z)); };
+    guess = ComplexType(0,-boost::math::constants::half<Real>());
+    auto g2 = [&](ComplexType z) { return std::make_pair<ComplexType, ComplexType>(p(z), p_prime(z)); };
     root = complex_newton(g2, guess);
 
     // Here's the other root, in case code changes cause it to be found:
-    //Complex expected_root1{0, half<Real>()*(sqrt(static_cast<Real>(5)) - static_cast<Real>(1))};
-    Complex expected_root2{0, -half<Real>()*(sqrt(static_cast<Real>(5)) + static_cast<Real>(1))};
+    //ComplexType expected_root1{0, half<Real>()*(sqrt(static_cast<Real>(5)) - static_cast<Real>(1))};
+    ComplexType expected_root2{0, -half<Real>()*(sqrt(static_cast<Real>(5)) + static_cast<Real>(1))};
 
     BOOST_CHECK_CLOSE(expected_root2.imag(),root.imag(), tol);
     BOOST_CHECK(abs(root.real()) < tol);
 
     // Does a zero root pass the termination criteria?
-    p = polynomial<Complex>({{0,0}, {0,0}, {1,0}});
+    p = polynomial<ComplexType>({{0,0}, {0,0}, {1,0}});
     p_prime = p.prime();
-    guess = Complex(0, -boost::math::constants::half<Real>());
-    auto g3 = [&](Complex z) { return std::make_pair<Complex, Complex>(p(z), p_prime(z)); };
+    guess = ComplexType(0, -boost::math::constants::half<Real>());
+    auto g3 = [&](ComplexType z) { return std::make_pair<ComplexType, ComplexType>(p(z), p_prime(z)); };
     root = complex_newton(g3, guess);
     BOOST_CHECK(abs(root.real()) < tol);
 
     // Does a monstrous root pass?
     Real x = -pow(static_cast<Real>(10), 20);
-    p = polynomial<Complex>({{x, x}, {1,0}});
+    p = polynomial<ComplexType>({{x, x}, {1,0}});
     p_prime = p.prime();
-    guess = Complex(0, -boost::math::constants::half<Real>());
-    auto g4 = [&](Complex z) { return std::make_pair<Complex, Complex>(p(z), p_prime(z)); };
+    guess = ComplexType(0, -boost::math::constants::half<Real>());
+    auto g4 = [&](ComplexType z) { return std::make_pair<ComplexType, ComplexType>(p(z), p_prime(z)); };
     root = complex_newton(g4, guess);
     BOOST_CHECK(abs(root.real() + x) < tol);
     BOOST_CHECK(abs(root.imag() + x) < tol);
@@ -539,28 +545,39 @@ void test_daubechies_fails()
 template<class Real>
 void test_solve_real_quadratic()
 {
+    #ifndef __CYGWIN__
     Real tol = std::numeric_limits<Real>::epsilon();
+    #else
+    Real tol = 2*std::numeric_limits<Real>::epsilon();
+    #endif
+
     using boost::math::tools::quadratic_roots;
     auto [x0, x1] = quadratic_roots<Real>(1, 0, -1);
     BOOST_CHECK_CLOSE(x0, Real(-1), tol);
     BOOST_CHECK_CLOSE(x1, Real(1), tol);
 
-    auto p = quadratic_roots<Real>(7, 0, 0);
+    auto p = quadratic_roots((Real)7, (Real)0, (Real)0);
     BOOST_CHECK_SMALL(p.first, tol);
     BOOST_CHECK_SMALL(p.second, tol);
 
     // (x-7)^2 = x^2 - 14*x + 49:
-    p = quadratic_roots<Real>(1, -14, 49);
+    p = quadratic_roots((Real)1, (Real)-14, (Real)49);
     BOOST_CHECK_CLOSE(p.first, Real(7), tol);
     BOOST_CHECK_CLOSE(p.second, Real(7), tol);
 
+    // The following tests do not pass with Cygwin as it makes no attempt at having a correct FMA
+    // https://sourceware.org/git/gitweb.cgi?p=newlib-cygwin.git;a=blob;f=newlib/libm/common/s_fma.c
+    #ifndef __CYGWIN__
+    
     // This test does not pass in multiprecision,
     // due to the fact it does not have an fma:
     if (std::is_floating_point<Real>::value)
     {
         // (x-1)(x-1-eps) = x^2 + (-eps - 2)x + (1)(1+eps)
         Real eps = 2*std::numeric_limits<Real>::epsilon();
-        p = quadratic_roots<Real>(256, 256*(-2 - eps), 256*(1 + eps));
+        Real b = 256 * (-2 - eps);
+        Real c = 256 * (1 + eps);
+        p = quadratic_roots((Real)256, b, c);
         BOOST_CHECK_CLOSE(p.first, Real(1), tol);
         BOOST_CHECK_CLOSE(p.second, Real(1) + eps, tol);
     }
@@ -569,10 +586,12 @@ void test_solve_real_quadratic()
     {
         // Kahan's example: This is the test that demonstrates the necessity of the fma instruction.
         // https://en.wikipedia.org/wiki/Loss_of_significance#Instability_of_the_quadratic_equation
-        p = quadratic_roots<Real>(94906265.625, -189812534, 94906268.375);
+        p = quadratic_roots<Real>((Real)94906265.625, (Real )-189812534, (Real)94906268.375);
         BOOST_CHECK_CLOSE_FRACTION(p.first, Real(1), tol);
         BOOST_CHECK_CLOSE_FRACTION(p.second, 1.000000028975958, 4*tol);
     }
+    
+    #endif // __CYGWIN__
 }
 
 template<class Z>
@@ -594,36 +613,56 @@ void test_solve_int_quadratic()
     BOOST_CHECK_CLOSE(p.second, double(7), tol);
 }
 
-template<class Complex>
+template<class ComplexType>
 void test_solve_complex_quadratic()
 {
-    using Real = typename Complex::value_type;
+    using Real = typename ComplexType::value_type;
     Real tol = std::numeric_limits<Real>::epsilon();
     using boost::math::tools::quadratic_roots;
-    auto [x0, x1] = quadratic_roots<Complex>({1,0}, {0,0}, {-1,0});
+    auto [x0, x1] = quadratic_roots<ComplexType>({1,0}, {0,0}, {-1,0});
     BOOST_CHECK_CLOSE(x0.real(), Real(-1), tol);
     BOOST_CHECK_CLOSE(x1.real(), Real(1), tol);
     BOOST_CHECK_SMALL(x0.imag(), tol);
     BOOST_CHECK_SMALL(x1.imag(), tol);
 
-    auto p = quadratic_roots<Complex>({7,0}, {0,0}, {0,0});
+    auto p = quadratic_roots<ComplexType>({7,0}, {0,0}, {0,0});
     BOOST_CHECK_SMALL(p.first.real(), tol);
     BOOST_CHECK_SMALL(p.second.real(), tol);
 
     // (x-7)^2 = x^2 - 14*x + 49:
-    p = quadratic_roots<Complex>({1,0}, {-14,0}, {49,0});
+    p = quadratic_roots<ComplexType>({1,0}, {-14,0}, {49,0});
     BOOST_CHECK_CLOSE(p.first.real(), Real(7), tol);
     BOOST_CHECK_CLOSE(p.second.real(), Real(7), tol);
 
 }
 
-
 #endif
+
+void test_failures()
+{
+#if !defined(BOOST_NO_CXX11_LAMBDAS)
+   // There is no root:
+   BOOST_CHECK_THROW(boost::math::tools::newton_raphson_iterate([](double x) { return std::make_pair(x * x + 1, 2 * x); }, 10.0, -12.0, 12.0, 52), boost::math::evaluation_error);
+   BOOST_CHECK_THROW(boost::math::tools::newton_raphson_iterate([](double x) { return std::make_pair(x * x + 1, 2 * x); }, -10.0, -12.0, 12.0, 52), boost::math::evaluation_error);
+   // There is a root, but a bad guess takes us into a local minima:
+   BOOST_CHECK_THROW(boost::math::tools::newton_raphson_iterate([](double x) { return std::make_pair(boost::math::pow<6>(x) - 2 * boost::math::pow<4>(x) + x + 0.5, 6 * boost::math::pow<5>(x) - 8 * boost::math::pow<3>(x) + 1); }, 0.75, -20., 20., 52), boost::math::evaluation_error);
+
+   // There is no root:
+   BOOST_CHECK_THROW(boost::math::tools::halley_iterate([](double x) { return std::make_tuple(x * x + 1, 2 * x, 2); }, 10.0, -12.0, 12.0, 52), boost::math::evaluation_error);
+   BOOST_CHECK_THROW(boost::math::tools::halley_iterate([](double x) { return std::make_tuple(x * x + 1, 2 * x, 2); }, -10.0, -12.0, 12.0, 52), boost::math::evaluation_error);
+   // There is a root, but a bad guess takes us into a local minima:
+   BOOST_CHECK_THROW(boost::math::tools::halley_iterate([](double x) { return std::make_tuple(boost::math::pow<6>(x) - 2 * boost::math::pow<4>(x) + x + 0.5, 6 * boost::math::pow<5>(x) - 8 * boost::math::pow<3>(x) + 1, 30 * boost::math::pow<4>(x) - 24 * boost::math::pow<2>(x)); }, 0.75, -20., 20., 52), boost::math::evaluation_error);
+#endif
+}
 
 BOOST_AUTO_TEST_CASE( test_main )
 {
 
    test_beta(0.1, "double");
+
+   // bug reports:
+   boost::math::skew_normal_distribution<> dist(2.0, 1.0, -2.5);
+   BOOST_CHECK(boost::math::isfinite(quantile(dist, 0.075)));
 
 #if !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS) && !defined(BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX) && !defined(BOOST_NO_CXX11_LAMBDAS)
    test_complex_newton<std::complex<float>>();
@@ -641,5 +680,5 @@ BOOST_AUTO_TEST_CASE( test_main )
     test_solve_int_quadratic<int>();
     test_solve_complex_quadratic<std::complex<double>>();
 #endif
-
+    test_failures();
 }

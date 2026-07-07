@@ -35,13 +35,14 @@ public:
     std::string path;
     std::string reason;
     std::string body;
-    int got_on_begin       = 0;
-    int got_on_field       = 0;
-    int got_on_header      = 0;
-    int got_on_body        = 0;
-    int got_content_length = 0;
-    int got_on_chunk       = 0;
-    int got_on_complete    = 0;
+    int got_on_begin         = 0;
+    int got_on_field         = 0;
+    int got_on_trailer_field = 0;
+    int got_on_header        = 0;
+    int got_on_body          = 0;
+    int got_content_length   = 0;
+    int got_on_chunk         = 0;
+    int got_on_complete      = 0;
     std::unordered_map<
         std::string, std::string> fields;
 
@@ -92,6 +93,16 @@ public:
     }
 
     void
+    on_trailer_field_impl(field, string_view name,
+        string_view value, error_code& ec)
+    {
+        ++got_on_trailer_field;
+        if(fc_)
+            fc_->fail(ec);
+        fields[std::string(name)] = std::string(value);
+    }
+
+    void
     on_header_impl(error_code& ec)
     {
         ++got_on_header;
@@ -104,6 +115,8 @@ public:
         boost::optional<std::uint64_t> const& content_length_,
         error_code& ec)
     {
+        // The real implementation clears out the error code in basic_string_body::reader::init
+        ec = {};
         ++got_on_body;
         got_content_length =
             static_cast<bool>(content_length_);

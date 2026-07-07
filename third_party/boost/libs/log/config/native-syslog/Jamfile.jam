@@ -6,14 +6,14 @@
 #
 
 import project ;
-import log-platform-config ;
+import ../../build/log-platform-config ;
 
-project /boost/log/native-syslog
+project
     : source-location .
     : requirements
         <conditional>@log-platform-config.set-platform-defines
-
         <pch>off
     ;
 
 obj native_syslog : native_syslog.cpp ;
+explicit native_syslog ;

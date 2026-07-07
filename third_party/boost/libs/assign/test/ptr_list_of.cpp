@@ -11,7 +11,7 @@
 
 #include <boost/detail/workaround.hpp>
 
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+#if BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x564))
 #  pragma warn -8091 // suppress warning in Boost.Test
 #  pragma warn -8057 // unused argument argc/argv in Boost.Test
 #endif
@@ -23,7 +23,7 @@
 struct Foo
 {
     int i;
-    
+
     Foo() : i(0)
     { }
     Foo( int i ) : i(i)
@@ -49,7 +49,7 @@ void check_ptr_list_of_impl()
     PtrCont deq;
     deq = ptr_list_of<Foo>( 42 )()()( 3, 3 )( "foo", 2, 1 );
     BOOST_CHECK( deq.size() == 5 );
-    
+
 }
 
 void check_ptr_list_of()

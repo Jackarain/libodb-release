@@ -1,0 +1,20 @@
+SQLite is a C library that implements an in-process SQL database engine. A
+complete database is stored in a single file on disk. The code for SQLite is
+in the public domain. For more information see:
+
+https://sqlite.org/
+
+This package contains the original SQLite library source code overlaid with
+the build2-based build system and packaged for the build2 package manager
+(bpkg).
+
+See the INSTALL file for the prerequisites and installation instructions.
+
+Send questions, bug reports, or any other feedback about the library itself to
+the SQLite mailing lists. Send build system and packaging-related feedback to
+the packaging@build2.org mailing list (see https://lists.build2.org for
+posting guidelines, etc).
+
+The packaging of SQLite for build2 is tracked in a Git repository at:
+
+https://git.build2.org/cgit/packaging/sqlite/

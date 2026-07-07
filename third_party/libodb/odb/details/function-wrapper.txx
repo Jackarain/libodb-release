@@ -1,5 +1,4 @@
 // file      : odb/details/function-wrapper.txx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #include <utility> // std::swap, std::move
@@ -68,7 +67,10 @@ namespace odb
       }
       else
       {
-        function = reinterpret_cast<F*> (&caller_impl<F>::function);
+        function_wrapper<decltype (caller_impl<F>::function)> fw (
+          &caller_impl<F>::function);
+
+        function = fw.template cast<F*> ();
         deleter = &deleter_impl<F>;
         std_function = new std_function_type (std::move (sf));
       }

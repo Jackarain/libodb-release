@@ -8,6 +8,12 @@
 // benchmark for random_generators in different forms
 //
 
+// Boost.Timer isn't -Wshadow clean under GCC 4.x
+
+#if defined(__GNUC__) && __GNUC__ < 5
+# pragma GCC diagnostic ignored "-Wshadow"
+#endif
+
 #include <boost/core/ignore_unused.hpp>
 #include <boost/timer/timer.hpp>
 #include <boost/predef/os.h>
@@ -78,12 +84,12 @@ boost::timer::cpu_times timed_generator(size_t count)
     return t.elapsed();
 }
 
-int main(int, char*[])
+int main()
 {
     std::cout << "Operating system entropy provider: "
               << boost::uuids::detail::random_provider().name() << std::endl;
 
-#if !defined(BOOST_NO_STRESS_TEST)
+#if defined(BOOST_NO_STRESS_TEST)
 
     //
     // Determine the cutoff point where it is more wall-clock efficient to
@@ -183,5 +189,3 @@ int main(int, char*[])
 
     return 0;
 }
-
-

@@ -2,7 +2,7 @@
 // stream.cpp
 // ~~~~~~~~~~
 //
-// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2026 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -75,7 +75,15 @@ void test()
     ip::tcp::socket socket1(ioc, ip::tcp::v4());
     ssl::stream<ip::tcp::socket&> stream2(socket1, context);
 
-    // basic_io_object functions.
+    ssl::stream<ip::tcp::socket> stream3
+      = ssl::stream<ip::tcp::socket>(ioc, context);
+    ssl::stream<ip::tcp::socket> stream4(std::move(stream3));
+
+    // ssl::stream assignment.
+
+    stream3 = std::move(stream4);
+
+    // I/O object functions.
 
     ssl::stream<ip::tcp::socket>::executor_type ex = stream1.get_executor();
     (void)ex;
@@ -89,9 +97,9 @@ void test()
       = stream1.lowest_layer();
     (void)lowest_layer;
 
-    const ssl::stream<ip::tcp::socket>& stream3 = stream1;
+    const ssl::stream<ip::tcp::socket>& stream5 = stream1;
     const ssl::stream<ip::tcp::socket>::lowest_layer_type& lowest_layer2
-      = stream3.lowest_layer();
+      = stream5.lowest_layer();
     (void)lowest_layer2;
 
     stream1.set_verify_mode(ssl::verify_none);
@@ -187,5 +195,5 @@ void test()
 BOOST_ASIO_TEST_SUITE
 (
   "ssl/stream",
-  BOOST_ASIO_TEST_CASE(ssl_stream_compile::test)
+  BOOST_ASIO_COMPILE_TEST_CASE(ssl_stream_compile::test)
 )

@@ -22,11 +22,12 @@ local SOURCES =
     async_base.cpp
     basic_stream.cpp
     bind_handler.cpp
+    buffer_ref.cpp
     buffer_traits.cpp
     buffered_read_stream.cpp
-    buffers_adapter.cpp
     buffers_adaptor.cpp
     buffers_cat.cpp
+    buffers_generator.cpp
     buffers_prefix.cpp
     buffers_range.cpp
     buffers_suffix.cpp
@@ -38,6 +39,7 @@ local SOURCES =
     file_posix.cpp
     file_stdio.cpp
     file_win32.cpp
+    filtering_cancellation_slot.cpp
     flat_buffer.cpp
     flat_static_buffer.cpp
     flat_stream.cpp
@@ -53,7 +55,6 @@ local SOURCES =
     static_string.cpp
     stream_traits.cpp
     string.cpp
-    string_param.cpp
     tcp_stream.cpp
     ;
 

@@ -1,10 +1,14 @@
-//Copyright (c) 2008-2016 Emil Dotchevski and Reverge Studios, Inc.
+// Copyright 2008-2024 Emil Dotchevski and Reverge Studios, Inc.
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-//Distributed under the Boost Software License, Version 1.0. (See accompanying
-//file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#ifdef BOOST_QVM_TEST_SINGLE_HEADER
+#   include BOOST_QVM_TEST_SINGLE_HEADER
+#else
+#   include <boost/qvm/mat_operations.hpp>
+#   include <boost/qvm/mat.hpp>
+#endif
 
-#include <boost/qvm/mat_operations.hpp>
-#include <boost/qvm/mat.hpp>
 #include "test_qvm_matrix.hpp"
 
 namespace
@@ -33,12 +37,12 @@ namespace
         test_qvm::matrix<M1,Rows,Cols> m1=zero_mat<float,Rows,Cols>();
         for( int i=0; i!=Rows; ++i )
             for( int j=0; j!=Cols; ++j )
-                BOOST_TEST(!m1.a[i][j]);
+                BOOST_TEST_EQ(m1.a[i][j], 0);
         test_qvm::matrix<M2,Rows,Cols> m2(42,1);
         set_zero(m2);
         for( int i=0; i!=Rows; ++i )
             for( int j=0; j!=Cols; ++j )
-                BOOST_TEST(!m2.a[i][j]);
+                BOOST_TEST_EQ(m2.a[i][j], 0);
         check_deduction(mat<float,Rows,Cols>(),zero_mat<float,Rows,Cols>());
         check_deduction(mat<int,Rows,Cols>(),zero_mat<int,Rows,Cols>());
         }
@@ -51,7 +55,7 @@ namespace
         test_qvm::matrix<M1,Dim,Dim> m1=zero_mat<float,Dim>();
         for( int i=0; i!=Dim; ++i )
             for( int j=0; j!=Dim; ++j )
-                BOOST_TEST(!m1.a[i][j]);
+                BOOST_TEST_EQ(m1.a[i][j], 0);
         }
     }
 

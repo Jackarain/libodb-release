@@ -13,20 +13,31 @@
 #ifndef BOOST_INTRUSIVE_TEST_CONTAINER_HPP
 #define BOOST_INTRUSIVE_TEST_CONTAINER_HPP
 
-#include <boost/detail/lightweight_test.hpp>
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+
+#include <boost/core/lightweight_test.hpp>
 #include <boost/intrusive/detail/mpl.hpp>
 #include <boost/intrusive/detail/simple_disposers.hpp>
 #include <boost/intrusive/detail/iterator.hpp>
 #include <boost/move/utility_core.hpp>
 #include <boost/move/adl_move_swap.hpp>
 #include <boost/intrusive/detail/mpl.hpp>
-#include <boost/static_assert.hpp>
 #include "iterator_test.hpp"
 #include <cstdlib>
 
 namespace boost {
 namespace intrusive {
 namespace test {
+
+template< class Pointer >
+void noop_dispose(Pointer)
+{}
+
+template< class Pointer >
+void noop_dispose_noexcept(Pointer) BOOST_NOEXCEPT
+{}
 
 BOOST_INTRUSIVE_HAS_MEMBER_FUNC_CALLED(is_unordered, hasher)
 
@@ -147,6 +158,53 @@ void test_sequence_container(Container & c, Data & d)
 
       i = c.erase_and_dispose( c.begin(), detail::null_disposer() );
       BOOST_TEST( i == c.begin() );
+      BOOST_TEST( c.size() == 0 );
+
+      c.assign(d.begin(), d.end());
+
+      BOOST_TEST( c.size() == d.size() );
+
+      c.clear_and_dispose(detail::null_disposer());
+
+      BOOST_TEST( c.size() == 0 );
+      BOOST_TEST( c.empty() );
+
+      c.insert( c.begin(), *d.begin() );
+
+      BOOST_TEST( c.size() == 1 );
+
+      BOOST_TEST( c.begin() != c.end() );
+
+      i = c.erase_and_dispose( c.begin(), test::noop_dispose< typename Container::pointer > );
+      BOOST_TEST( i == c.begin() );
+      BOOST_TEST( c.size() == 0 );
+
+      c.assign(d.begin(), d.end());
+
+      BOOST_TEST( c.size() == d.size() );
+
+      c.clear_and_dispose(test::noop_dispose< typename Container::pointer >);
+
+      BOOST_TEST( c.size() == 0 );
+      BOOST_TEST( c.empty() );
+
+      c.insert( c.begin(), *d.begin() );
+
+      BOOST_TEST( c.size() == 1 );
+      BOOST_TEST( c.begin() != c.end() );
+
+      i = c.erase_and_dispose( c.begin(), test::noop_dispose_noexcept< typename Container::pointer > );
+      BOOST_TEST( i == c.begin() );
+      BOOST_TEST( c.size() == 0 );
+
+      c.assign(d.begin(), d.end());
+
+      BOOST_TEST( c.size() == d.size() );
+
+      c.clear_and_dispose(test::noop_dispose_noexcept< typename Container::pointer >);
+
+      BOOST_TEST( c.size() == 0 );
+      BOOST_TEST( c.empty() );
 
       c.assign(d.begin(), d.end());
 
@@ -235,29 +293,84 @@ void test_common_unordered_and_associative_container(Container & c, Data & d, bo
 
    BOOST_TEST( c.equal_range(key_of_value()(*da), c.hash_function(), c.key_eq()).first == c.end() );
 
+   c.insert(d.begin(), d.end());
+
+   c.clear_and_dispose(detail::null_disposer());
+
+   BOOST_TEST( c.empty() );
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.hash_function(), c.key_eq()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   BOOST_TEST( c.erase_and_dispose( key_of_value()(*da), c.hash_function(), c.key_eq(), test::noop_dispose< typename Container::pointer > ) == 1 );
+
+   BOOST_TEST( c.count(key_of_value()(*da), c.hash_function(), c.key_eq()) == 0 );
+   BOOST_TEST( c.count(key_of_value()(*db), c.hash_function(), c.key_eq()) != 0 );
+
+   BOOST_TEST( c.find(key_of_value()(*da), c.hash_function(), c.key_eq()) == c.end() );
+   BOOST_TEST( c.find(key_of_value()(*db), c.hash_function(), c.key_eq()) != c.end() );
+
+   BOOST_TEST( c.equal_range(key_of_value()(*db), c.hash_function(), c.key_eq()).first != c.end() );
+
+   c.clear();
+
+   c.insert(d.begin(), d.end());
+
+   c.clear_and_dispose(test::noop_dispose< typename Container::pointer >);
+
+   BOOST_TEST( c.empty() );
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.hash_function(), c.key_eq()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   BOOST_TEST( c.erase_and_dispose( key_of_value()(*da), c.hash_function(), c.key_eq(), test::noop_dispose_noexcept< typename Container::pointer > ) == 1 );
+
+   BOOST_TEST( c.count(key_of_value()(*da), c.hash_function(), c.key_eq()) == 0 );
+   BOOST_TEST( c.count(key_of_value()(*db), c.hash_function(), c.key_eq()) != 0 );
+
+   BOOST_TEST( c.find(key_of_value()(*da), c.hash_function(), c.key_eq()) == c.end() );
+   BOOST_TEST( c.find(key_of_value()(*db), c.hash_function(), c.key_eq()) != c.end() );
+
+   BOOST_TEST( c.equal_range(key_of_value()(*db), c.hash_function(), c.key_eq()).first != c.end() );
+
+   c.clear();
+
+   c.insert(d.begin(), d.end());
+
+   c.clear_and_dispose( test::noop_dispose_noexcept< typename Container::pointer > );
+
+   BOOST_TEST( c.empty() );
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.hash_function(), c.key_eq()).first == c.end() );
+
    //
    //suggested_upper_bucket_count
    //
    //Maximum fallbacks to the highest possible value
    typename Container::size_type sz = Container::suggested_upper_bucket_count(size_type(-1));
-   BOOST_TEST( sz > size_type(-1)/2 );
-   //In the rest of cases the upper bound is returned
-   sz = Container::suggested_upper_bucket_count(size_type(-1)/2);
-   BOOST_TEST( sz >= size_type(-1)/2 );
+   //If size_type is big enough the upper bound is returned
+   BOOST_IF_CONSTEXPR(sizeof(size_type) < sizeof(std::size_t)){
+      sz = Container::suggested_upper_bucket_count(size_type(-1)/2);
+      BOOST_TEST( sz > size_type(-1)/2 );
+   }
    sz = Container::suggested_upper_bucket_count(size_type(-1)/4);
-   BOOST_TEST( sz >= size_type(-1)/4 );
+   BOOST_TEST( sz > size_type(-1)/4 );
+   sz = Container::suggested_upper_bucket_count(size_type(-1) / 8);
+   BOOST_TEST(sz > size_type(-1) / 8);
    sz = Container::suggested_upper_bucket_count(0);
    BOOST_TEST( sz > 0 );
    //
    //suggested_lower_bucket_count
    //
-   sz = Container::suggested_lower_bucket_count(size_type(-1));
-   BOOST_TEST( sz <= size_type(-1) );
+   //If size_type is big enough the lower bound is returned
+   BOOST_IF_CONSTEXPR(sizeof(size_type) < sizeof(std::size_t)) {
+      sz = Container::suggested_lower_bucket_count(size_type(-1) / 2);
+      BOOST_TEST(sz >= size_type(-1) / 2);
+   }
    //In the rest of cases the lower bound is returned
-   sz = Container::suggested_lower_bucket_count(size_type(-1)/2);
-   BOOST_TEST( sz <= size_type(-1)/2 );
    sz = Container::suggested_lower_bucket_count(size_type(-1)/4);
-   BOOST_TEST( sz <= size_type(-1)/4 );
+   BOOST_TEST( sz >= size_type(-1)/4 );
+   sz = Container::suggested_lower_bucket_count(size_type(-1) / 8);
+   BOOST_TEST(sz >= size_type(-1) / 8);
    //Minimum fallbacks to the lowest possible value
    sz = Container::suggested_upper_bucket_count(0);
    BOOST_TEST( sz > 0 );
@@ -327,6 +440,51 @@ void test_common_unordered_and_associative_container(Container & c, Data & d, bo
    BOOST_TEST( c.equal_range(key_of_value()(*db), c.key_comp()).first != c.end() );
    c.clear();
    BOOST_TEST( c.equal_range(key_of_value()(*da), c.key_comp()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   c.clear_and_dispose(detail::null_disposer());
+
+   BOOST_TEST( c.empty() );
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.key_comp()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   BOOST_TEST( c.erase_and_dispose( key_of_value()(*da), c.key_comp(), test::noop_dispose< typename Container::pointer > ) == 1 );
+
+   BOOST_TEST( c.count(key_of_value()(*da), c.key_comp()) == 0 );
+   BOOST_TEST( c.count(key_of_value()(*db), c.key_comp()) != 0 );
+   BOOST_TEST( c.find(key_of_value()(*da), c.key_comp()) == c.end() );
+   BOOST_TEST( c.find(key_of_value()(*db), c.key_comp()) != c.end() );
+   BOOST_TEST( c.equal_range(key_of_value()(*db), c.key_comp()).first != c.end() );
+   c.clear();
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.key_comp()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   c.clear_and_dispose(test::noop_dispose< typename Container::pointer >);
+
+   BOOST_TEST( c.empty() );
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.key_comp()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   BOOST_TEST( c.erase_and_dispose( key_of_value()(*da), c.key_comp(), test::noop_dispose_noexcept< typename Container::pointer > ) == 1 );
+
+   BOOST_TEST( c.count(key_of_value()(*da), c.key_comp()) == 0 );
+   BOOST_TEST( c.count(key_of_value()(*db), c.key_comp()) != 0 );
+   BOOST_TEST( c.find(key_of_value()(*da), c.key_comp()) == c.end() );
+   BOOST_TEST( c.find(key_of_value()(*db), c.key_comp()) != c.end() );
+   BOOST_TEST( c.equal_range(key_of_value()(*db), c.key_comp()).first != c.end() );
+   c.clear();
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.key_comp()).first == c.end() );
+
+   c.insert(d.begin(), d.end());
+
+   c.clear_and_dispose(test::noop_dispose_noexcept< typename Container::pointer >);
+
+   BOOST_TEST( c.empty() );
+   BOOST_TEST( c.equal_range(key_of_value()(*da), c.key_comp()).first == c.end() );
 }
 
 template< class Container, class Data >
@@ -394,6 +552,69 @@ void test_common_unordered_and_associative_container(Container & c, Data & d)
 
       BOOST_TEST( c.equal_range(key_of_value()(*db)).first != c.end() );
       BOOST_TEST( c.equal_range(key_of_value()(*da)).first == c.equal_range(key_of_value()(*da)).second );
+
+      c.clear();
+      c.insert(d.begin(), d.end());
+
+      c.clear_and_dispose(detail::null_disposer());
+
+      BOOST_TEST( c.empty() );
+   }
+   {
+      c.clear();
+      c.insert(d.begin(), d.end());
+
+      typename Data::const_iterator db = d.begin();
+      typename Data::const_iterator da = db++;
+
+      size_type old_size = c.size();
+
+      BOOST_TEST( c.erase_and_dispose( key_of_value()(*da), test::noop_dispose< typename Container::pointer > ) == 1 );
+      BOOST_TEST( c.size() == old_size-1 );
+
+      BOOST_TEST( c.count(key_of_value()(*da)) == 0 );
+      BOOST_TEST( c.count(key_of_value()(*db)) != 0 );
+
+      BOOST_TEST( c.find(key_of_value()(*da)) == c.end() );
+      BOOST_TEST( c.find(key_of_value()(*db)) != c.end() );
+
+      BOOST_TEST( c.equal_range(key_of_value()(*db)).first != c.end() );
+      BOOST_TEST( c.equal_range(key_of_value()(*da)).first == c.equal_range(key_of_value()(*da)).second );
+
+      c.clear();
+      c.insert(d.begin(), d.end());
+
+      c.clear_and_dispose(test::noop_dispose< typename Container::pointer >);
+
+      BOOST_TEST( c.empty() );
+   }
+   {
+      c.clear();
+      c.insert(d.begin(), d.end());
+
+      typename Data::const_iterator db = d.begin();
+      typename Data::const_iterator da = db++;
+
+      size_type old_size = c.size();
+
+      BOOST_TEST( c.erase_and_dispose( key_of_value()(*da), test::noop_dispose_noexcept< typename Container::pointer > ) == 1 );
+      BOOST_TEST( c.size() == old_size-1 );
+
+      BOOST_TEST( c.count(key_of_value()(*da)) == 0 );
+      BOOST_TEST( c.count(key_of_value()(*db)) != 0 );
+
+      BOOST_TEST( c.find(key_of_value()(*da)) == c.end() );
+      BOOST_TEST( c.find(key_of_value()(*db)) != c.end() );
+
+      BOOST_TEST( c.equal_range(key_of_value()(*db)).first != c.end() );
+      BOOST_TEST( c.equal_range(key_of_value()(*da)).first == c.equal_range(key_of_value()(*da)).second );
+
+      c.clear();
+      c.insert(d.begin(), d.end());
+
+      c.clear_and_dispose(test::noop_dispose_noexcept< typename Container::pointer >);
+
+      BOOST_TEST( c.empty() );
    }
    {
       c.clear();
@@ -473,14 +694,14 @@ void test_unordered_associative_container_invariants(Container & c, Data & d)
       di != de ; ++di ){
       const_iterator i = c.find(key_of_value()(*di));
       size_type nb = c.bucket(key_of_value()(*i));
-      size_type bucket_elem = boost::intrusive::iterator_distance(c.begin(nb), c.end(nb));
+      size_type bucket_elem = (size_type) boost::intrusive::iterator_distance(c.begin(nb), c.end(nb));
       BOOST_TEST( bucket_elem ==  c.bucket_size(nb) );
       BOOST_TEST( &*c.local_iterator_to(*c.find(key_of_value()(*di))) == &*i );
       BOOST_TEST( &*c.local_iterator_to(*const_cast<const Container &>(c).find(key_of_value()(*di))) == &*i );
       BOOST_TEST( &*Container::s_local_iterator_to(*c.find(key_of_value()(*di))) == &*i );
       BOOST_TEST( &*Container::s_local_iterator_to(*const_cast<const Container &>(c).find(key_of_value()(*di))) == &*i );
       std::pair<const_iterator, const_iterator> er = c.equal_range(key_of_value()(*di));
-      size_type cnt = boost::intrusive::iterator_distance(er.first, er.second);
+      size_type cnt = (size_type) boost::intrusive::iterator_distance(er.first, er.second);
       BOOST_TEST( cnt == c.count(key_of_value()(*di)));
       if(cnt > 1){
          const_iterator n = er.first;
@@ -493,10 +714,10 @@ void test_unordered_associative_container_invariants(Container & c, Data & d)
       }
    }
 
-   size_type blen = c.bucket_count();
-   size_type total_objects = 0;
+   std::size_t blen = c.bucket_count();
+   std::size_t total_objects = 0;
    for(size_type i = 0; i < blen; ++i){
-      total_objects += c.bucket_size(i);
+      total_objects += std::size_t(c.bucket_size(i));
    }
    BOOST_TEST( total_objects ==  c.size() );
 }

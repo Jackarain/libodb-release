@@ -1,5 +1,4 @@
 // file      : odb/schema-catalog.cxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #include <map>
@@ -267,6 +266,9 @@ namespace odb
       throw unknown_schema_version (v);
 
     schema_version i (db.schema_version (name));
+
+    if (i > v)
+      throw unknown_schema_version (i); // Database too new.
 
     // If there is no schema, then "migrate" by creating it.
     //

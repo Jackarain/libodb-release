@@ -33,12 +33,35 @@ used to evaluate robustness. All asynchronous clients support timeouts.
         [[path_link example/http/client/async/http_client_async.cpp http_client_async.cpp]]
         [[path_link example/http/client/async-ssl/http_client_async_ssl.cpp http_client_async_ssl.cpp]]
 ][
+        [HTTP, asynchronous Unix domain sockets]
+        [[path_link example/http/client/async-local/http_client_async_local.cpp http_client_async_local.cpp]]
+        []
+][
+        [HTTP, asynchronous using __system_executor__]
+        []
+        [[path_link example/http/client/async-ssl-system-executor/http_client_async_ssl_system_executor.cpp http_client_async_ssl_system_executor.cpp]]
+][
         [HTTP, coroutine]
         [[path_link example/http/client/coro/http_client_coro.cpp http_client_coro.cpp]]
         [[path_link example/http/client/coro-ssl/http_client_coro_ssl.cpp http_client_coro_ssl.cpp]]
 ][
+        [HTTP, C++20 coroutine]
+        [[path_link example/http/client/awaitable/http_client_awaitable.cpp http_client_awaitable.cpp]]
+        [[path_link example/http/client/awaitable-ssl/http_client_awaitable_ssl.cpp http_client_awaitable_ssl.cpp]]
+][
         [HTTP crawl (asynchronous)]
         [[path_link example/http/client/crawl/http_crawl.cpp http_crawl.cpp]]
+        []
+][
+        [HTTP json_body (synchronous)]
+        [
+                [path_link example/http/client/body/json_body.hpp json_body.hpp]
+                [path_link example/http/client/body/json_client.cpp json_client.cpp]
+        ]
+        []
+][
+        [HTTP client for all methods (synchronous)]
+        [[path_link example/http/client/methods/http_client_methods.cpp http_client_methods.cpp]]
         []
 ]]
 
@@ -57,9 +80,21 @@ before disconnecting. All asynchronous clients support timeouts.
         [[path_link example/websocket/client/async/websocket_client_async.cpp websocket_client_async.cpp]]
         [[path_link example/websocket/client/async-ssl/websocket_client_async_ssl.cpp websocket_client_async_ssl.cpp]]
 ][
+        [WebSocket, asynchronous Unix domain sockets]
+        [[path_link example/websocket/client/async-local/websocket_client_async_local.cpp websocket_client_async_local.cpp]]
+        []
+][
+        [WebSocket, asynchronous using __system_executor__]
+        []
+        [[path_link example/websocket/client/async-ssl-system-executor/websocket_client_async_ssl_system_executor.cpp websocket_client_async_ssl_system_executor.cpp]]
+][
         [WebSocket, coroutine]
         [[path_link example/websocket/client/coro/websocket_client_coro.cpp websocket_client_coro.cpp]]
         [[path_link example/websocket/client/coro-ssl/websocket_client_coro_ssl.cpp websocket_client_coro_ssl.cpp]]
+][
+        [WebSocket, C++20 coroutine]
+        [[path_link example/websocket/client/awaitable/websocket_client_awaitable.cpp websocket_client_awaitable.cpp]]
+        []
 ]]
 
 [endsect]
@@ -82,6 +117,10 @@ command line. All asynchronous servers support timeouts.
         [[path_link example/http/server/async/http_server_async.cpp http_server_async.cpp]]
         [[path_link example/http/server/async-ssl/http_server_async_ssl.cpp http_server_async_ssl.cpp]]
 ][
+        [HTTP, asynchronous Unix domain sockets]
+        [[path_link example/http/server/async-local/http_server_async_local.cpp http_server_async_local.cpp]]
+        []
+][
         [HTTP, coroutine]
         [[path_link example/http/server/coro/http_server_coro.cpp http_server_coro.cpp]]
         [[path_link example/http/server/coro-ssl/http_server_coro_ssl.cpp http_server_coro_ssl.cpp]]
@@ -89,6 +128,9 @@ command line. All asynchronous servers support timeouts.
         [HTTP, stackless coroutine]
         [[path_link example/http/server/stackless/http_server_stackless.cpp http_server_stackless.cpp]]
         [[path_link example/http/server/stackless-ssl/http_server_stackless_ssl.cpp http_server_stackless_ssl.cpp]]
+][
+        [HTTP, C++ 20 coroutine]
+        [[path_link example/http/server/awaitable/http_server_awaitable.cpp http_server_awaitable.cpp]]
 ][
         [HTTP, fast (optimized for speed)]
         [[path_link example/http/server/fast/http_server_fast.cpp http_server_fast.cpp]]
@@ -118,6 +160,10 @@ support timeouts.
         [[path_link example/websocket/server/async/websocket_server_async.cpp websocket_server_async.cpp]]
         [[path_link example/websocket/server/async-ssl/websocket_server_async_ssl.cpp websocket_server_async_ssl.cpp]]
 ][
+        [WebSocket, asynchronous Unix domain sockets]
+        [[path_link example/websocket/server/async-local/websocket_server_async_local.cpp websocket_server_async_local.cpp]]
+        []
+][
         [WebSocket, coroutine]
         [[path_link example/websocket/server/coro/websocket_server_coro.cpp websocket_server_coro.cpp]]
         [[path_link example/websocket/server/coro-ssl/websocket_server_coro_ssl.cpp websocket_server_coro_ssl.cpp]]
@@ -125,6 +171,10 @@ support timeouts.
         [WebSocket, stackless coroutine]
         [[path_link example/websocket/server/stackless/websocket_server_stackless.cpp websocket_server_stackless.cpp]]
         [[path_link example/websocket/server/stackless-ssl/websocket_server_stackless_ssl.cpp websocket_server_stackless_ssl.cpp]]
+][
+        [WebSocket, C++ 20 coroutine]
+        [[path_link example/websocket/server/awaitable/websocket_server_awaitable.cpp websocket_server_awaitable.cpp]]
+        []
 ][
         [WebSocket, fast (suited for benchmarks)]
         [[path_link example/websocket/server/fast/websocket_server_fast.cpp websocket_server_fast.cpp]]
@@ -166,6 +216,19 @@ and illustrate the implementation of advanced features.
         ]]
         [[path_link example/advanced/server-flex/advanced_server_flex.cpp advanced_server_flex.cpp]]
 ][
+         [Advanced, flex (plain + SSL) with awaitable]
+         [[itemized_list
+             [Timeouts]
+             [Multi-threaded]
+             [HTTP pipelining]
+             [Parser-oriented HTTP reading]
+             [Dual protocols: HTTP and WebSocket]
+             [Flexible ports: plain and SSL on the same port]
+             [Clean exit via SIGINT (CTRL+C) or SIGTERM (kill)]
+             [Usage of cancellation_signals]
+         ]]
+         [[path_link example/advanced/server-flex-awaitable/advanced_server_flex_awaitable.cpp advanced_server_flex_awaitable.cpp]]
+ ][
         [Chat Server, multi-threaded]
         [[itemized_list
             [Multi-threaded]
@@ -176,7 +239,7 @@ and illustrate the implementation of advanced features.
             [Dual protocols: HTTP and WebSocket]
             [Clean exit via SIGINT (CTRL+C) or SIGTERM (kill)]
         ]]
-        [[path_link example/websocket/server/chat-mult chat-multi]]
+        [[path_link example/websocket/server/chat-multi chat-multi]]
 ]]
 
 [endsect]

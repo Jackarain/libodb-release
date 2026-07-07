@@ -1,5 +1,4 @@
 // file      : odb/database.cxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #include <odb/database.hxx>
@@ -20,7 +19,7 @@ namespace odb
   unsigned long long database::
   execute (const char* st, std::size_t n)
   {
-    connection_type& c (transaction::current ().connection ());
+    connection_type& c (transaction::current ().connection (*this));
     return c.execute (st, n);
   }
 

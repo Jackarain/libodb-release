@@ -1,5 +1,4 @@
 // file      : odb/pgsql/statement-cache.hxx
-// copyright : Copyright (c) 2005-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_PGSQL_STATEMENT_CACHE_HXX
@@ -29,7 +28,7 @@ namespace odb
     public:
       statement_cache (connection& conn)
         : conn_ (conn),
-          version_seq_ (conn.database ().schema_version_sequence ()) {}
+          version_seq_ (conn_.database ().schema_version_sequence ()) {}
 
       template <typename T>
       typename object_traits_impl<T, id_pgsql>::statements_type&

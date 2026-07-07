@@ -179,35 +179,35 @@ void test5()
     factor      = (+_d)[ push(stack, as<int>(_)) ] | group;
     term        = factor >> *(
                                 ('*' >> factor)
-                                    [ right = top(stack)
-                                    , pop(stack)
-                                    , left = top(stack)
-                                    , pop(stack)
-                                    , push(stack, left * right)
-                                    ]
+                                    [( right = top(stack)
+                                    ,  pop(stack)
+                                    ,  left = top(stack)
+                                    ,  pop(stack)
+                                    ,  push(stack, left * right)
+                                    )]
                               | ('/' >> factor)
-                                    [ right = top(stack)
-                                    , pop(stack)
-                                    , left = top(stack)
-                                    , pop(stack)
-                                    , push(stack, left / right)
-                                    ]
+                                    [( right = top(stack)
+                                    ,  pop(stack)
+                                    ,  left = top(stack)
+                                    ,  pop(stack)
+                                    ,  push(stack, left / right)
+                                    )]
                              );
     expression  = term >> *(
                                 ('+' >> term)
-                                    [ right = top(stack)
-                                    , pop(stack)
-                                    , left = top(stack)
-                                    , pop(stack)
-                                    , push(stack, left + right)
-                                    ]
+                                    [( right = top(stack)
+                                    ,  pop(stack)
+                                    ,  left = top(stack)
+                                    ,  pop(stack)
+                                    ,  push(stack, left + right)
+                                    )]
                               | ('-' >> term)
-                                    [ right = top(stack)
-                                    , pop(stack)
-                                    , left = top(stack)
-                                    , pop(stack)
-                                    , push(stack, left - right)
-                                    ]
+                                    [( right = top(stack)
+                                    ,  pop(stack)
+                                    ,  left = top(stack)
+                                    ,  pop(stack)
+                                    ,  push(stack, left - right)
+                                    )]
                              );
 
     if(!regex_match(str, expression))
@@ -229,6 +229,7 @@ void test5()
 //  Test as<>() with wide strings. Bug #4496.
 void test6()
 {
+#if !defined(BOOST_XPRESSIVE_NO_WREGEX)
     using namespace boost::xpressive;
 
     std::wstring version(L"0.9.500");
@@ -244,6 +245,7 @@ void test6()
     BOOST_CHECK_EQUAL(maj1.get(), 0);
     BOOST_CHECK_EQUAL(min1.get(), 9);
     BOOST_CHECK_EQUAL(build1.get(), 500);
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

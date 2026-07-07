@@ -13,6 +13,10 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/strand.hpp>
 
+#if BOOST_ASIO_HAS_CO_AWAIT
+#include <boost/asio/use_awaitable.hpp>
+#endif
+
 #include "test.hpp"
 
 namespace boost {
@@ -648,6 +652,92 @@ public:
     }
 
     /*
+        https://github.com/boostorg/beast/issues/227
+
+        intelligent compression.
+    */
+    void
+    testIssue226()
+    {
+        net::io_context ioc;
+        permessage_deflate pmd;
+        pmd.client_enable = true;
+        pmd.server_enable = true;
+        pmd.msg_size_threshold = 5;
+        stream<test::stream> ws0{ioc};
+        stream<test::stream> ws1{ioc};
+        ws0.next_layer().connect(ws1.next_layer());
+        ws0.set_option(pmd);
+        ws1.set_option(pmd);
+        ws1.async_accept(
+            [](error_code ec)
+            {
+                BEAST_EXPECTS(! ec, ec.message());
+            });
+        ws0.async_handshake("test", "/",
+            [](error_code ec)
+            {
+                BEAST_EXPECTS(! ec, ec.message());
+            });
+        ioc.run();
+        ioc.restart();
+        std::string s(256, '*');
+        auto const n0 =
+            ws0.next_layer().nwrite_bytes();
+        error_code ec;
+        BEAST_EXPECTS(! ec, ec.message());
+        ws1.compress(false);
+        ws1.write(net::buffer(s), ec);
+        ws1.compress(true);
+        auto const n1 =
+            ws0.next_layer().nwrite_bytes();
+        // Make sure the string was actually compressed
+        BEAST_EXPECT(n1 > n0 + s.size());
+    }
+
+    /*
+        https://github.com/boostorg/beast/issues/227
+
+        intelligent compression.
+    */
+    void
+    testIssue227()
+    {
+        net::io_context ioc;
+        permessage_deflate pmd;
+        pmd.client_enable = true;
+        pmd.server_enable = true;
+        pmd.msg_size_threshold = 260;
+        stream<test::stream> ws0{ioc};
+        stream<test::stream> ws1{ioc};
+        ws0.next_layer().connect(ws1.next_layer());
+        ws0.set_option(pmd);
+        ws1.set_option(pmd);
+        ws1.async_accept(
+            [](error_code ec)
+            {
+                BEAST_EXPECTS(! ec, ec.message());
+            });
+        ws0.async_handshake("test", "/",
+            [](error_code ec)
+            {
+                BEAST_EXPECTS(! ec, ec.message());
+            });
+        ioc.run();
+        ioc.restart();
+        std::string s(256, '*');
+        auto const n0 =
+            ws0.next_layer().nwrite_bytes();
+        error_code ec;
+        BEAST_EXPECTS(! ec, ec.message());
+        ws1.write(net::buffer(s), ec);
+        auto const n1 =
+            ws0.next_layer().nwrite_bytes();
+        // Make sure the string was actually compressed
+        BEAST_EXPECT(n1 > n0 + s.size());
+    }
+
+    /*
         https://github.com/boostorg/beast/issues/300
 
         Write a message as two individual frames
@@ -717,6 +807,51 @@ public:
     }
 
     void
+    testIssue2880()
+    {
+        for(auto fragment : {false, true})
+        {
+            net::io_context ioc;
+            stream<test::stream> wsc{ioc};
+            stream<test::stream> wss{ioc};
+            wsc.next_layer().connect(wss.next_layer());
+            wsc.async_handshake(
+                "localhost", "/", [](error_code){});
+            wss.async_accept([](error_code){});
+            ioc.run();
+            ioc.restart();
+            // limit the write size to be less than the header buffer
+            wsc.next_layer().write_size(3);
+            if(fragment)
+                wsc.write_buffer_bytes(8);
+            wsc.async_write(sbuf("*********"),
+                [&](error_code ec, std::size_t n)
+                {
+                    BEAST_EXPECTS(ec, ec.message());
+                    BEAST_EXPECT(n == 0);
+                });
+            wsc.next_layer().close();
+            ioc.run();
+        }
+    }
+
+#if BOOST_ASIO_HAS_CO_AWAIT
+    void testAwaitableCompiles(
+        stream<test::stream>& s,
+        net::mutable_buffer buf,
+        bool fin)
+    {
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            s.async_write(buf, net::use_awaitable))>);
+
+        static_assert(std::is_same_v<
+            net::awaitable<std::size_t>, decltype(
+            s.async_write_some(fin, buf, net::use_awaitable))>);
+    }
+#endif
+
+    void
     run() override
     {
         testWrite();
@@ -724,8 +859,14 @@ public:
         testWriteSuspend();
         testAsyncWriteFrame();
         testMoveOnly();
+        testIssue226();
+        testIssue227();
         testIssue300();
         testIssue1666();
+        testIssue2880();
+#if BOOST_ASIO_HAS_CO_AWAIT
+        boost::ignore_unused(&write_test::testAwaitableCompiles);
+#endif
     }
 };
 

@@ -23,21 +23,20 @@
     #define _SCL_SECURE_NO_WARNINGS
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
     // counting_iterator generates a warning about truncating an integer
     #pragma warning(push)
     #pragma warning(disable : 4244)
 #endif
 #include <boost/iterator/counting_iterator.hpp>
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
     template ::boost::counting_iterator<int>;
     #pragma warning(pop)
 #endif
 
 #include <boost/assign.hpp>
-#include <boost/config.hpp>    
+#include <boost/config.hpp>
 #include <boost/array.hpp>
-#include <boost/bind.hpp>
 #include <boost/range/numeric.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/value_type.hpp>

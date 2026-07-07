@@ -1,5 +1,4 @@
 // file      : odb/details/transfer-ptr.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_DETAILS_TRANSFER_PTR_HXX
@@ -50,7 +49,7 @@ namespace odb
       transfer_ptr& operator= (const transfer_ptr&);
 
     public:
-      transfer_ptr (transfer_ptr&& p): p_ (p.transfer ()) {}
+      transfer_ptr (transfer_ptr&& p) noexcept: p_ (p.transfer ()) {}
 #endif
 
       ~transfer_ptr () {delete p_;}

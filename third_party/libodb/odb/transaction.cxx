@@ -1,11 +1,11 @@
 // file      : odb/transaction.cxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #include <odb/transaction.hxx>
 #include <odb/exceptions.hxx>
 
 #include <odb/details/tls.hxx>
+#include <odb/details/unused.hxx>
 
 using namespace std;
 
@@ -95,7 +95,7 @@ namespace odb
     finalized_ = true;
     rollback_guard rg (*this);
 
-    impl_->connection ().transaction_tracer_ = 0;
+    impl_->tracer (0);
 
     if (tls_get (current_transaction) == this)
     {
@@ -119,7 +119,7 @@ namespace odb
     finalized_ = true;
     rollback_guard rg (*this);
 
-    impl_->connection ().transaction_tracer_ = 0;
+    impl_->tracer (0);
 
     if (tls_get (current_transaction) == this)
     {
@@ -331,5 +331,28 @@ namespace odb
   transaction_impl::
   ~transaction_impl ()
   {
+  }
+
+  connection& transaction_impl::
+  connection (database_type* db)
+  {
+    ODB_POTENTIALLY_UNUSED (db);
+    assert (db == 0 || db == &database_);
+    return *connection_;
+  }
+
+  // The transaction-specific tracer is stored in the connection. See the
+  // connection class for the reason.
+  //
+  void transaction_impl::
+  tracer (tracer_type* t)
+  {
+    connection_->transaction_tracer_ = t;
+  }
+
+  tracer* transaction_impl::
+  tracer () const
+  {
+    return connection_->transaction_tracer_;
   }
 }

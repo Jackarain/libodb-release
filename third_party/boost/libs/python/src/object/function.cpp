@@ -21,7 +21,7 @@
 #include <boost/python/detail/none.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <algorithm>
 #include <cstring>
@@ -107,7 +107,7 @@ function::function(
     PyObject* p = this;
     if (Py_TYPE(&function_type) == 0)
     {
-        Py_TYPE(&function_type) = &PyType_Type;
+        Py_SET_TYPE(&function_type, &PyType_Type);
         ::PyType_Ready(&function_type);
     }
     
@@ -161,7 +161,6 @@ PyObject* function::call(PyObject* args, PyObject* keywords) const
                     else
                     {
                         // build a new arg tuple, will adjust its size later
-                        assert(max_arity <= static_cast<std::size_t>(ssize_t_max));
                         inner_args = handle<>(
                             PyTuple_New(static_cast<ssize_t>(max_arity)));
 
@@ -419,6 +418,30 @@ namespace detail
     extern char cpp_signature_tag[];
 }
 
+object const& function::add_doc(object const& attribute, char const* doc)
+{
+    str _doc;
+
+    if (docstring_options::show_py_signatures_)
+    {
+        _doc += str(const_cast<const char*>(detail::py_signature_tag));
+    }
+    if (doc != 0 && docstring_options::show_user_defined_)
+        _doc += doc;
+
+    if (docstring_options::show_cpp_signatures_)
+    {
+        _doc += str(const_cast<const char*>(detail::cpp_signature_tag));
+    }
+    if(_doc)
+    {    
+        object mutable_attribute(attribute);
+        mutable_attribute.attr("__doc__")= _doc;
+    }
+
+    return attribute;
+}
+
 void function::add_to_namespace(
     object const& name_space, char const* name_, object const& attribute, char const* doc)
 {
@@ -489,11 +512,24 @@ void function::add_to_namespace(
 
         assert(!PyErr_Occurred());
         handle<> name_space_name(
-            allow_null(::PyObject_GetAttrString(name_space.ptr(), const_cast<char*>("__name__"))));
+            allow_null(::PyObject_GetAttrString(name_space.ptr(), const_cast<char*>(
+#if PY_VERSION_HEX < 0x03030000
+                "__name__"
+#else
+                "__qualname__"
+#endif
+            ))));
         PyErr_Clear();
         
         if (name_space_name)
             new_func->m_namespace = object(name_space_name);
+
+        object module_name(
+          PyObject_IsInstance(name_space.ptr(), upcast<PyObject>(&PyModule_Type))
+          ? object(name_space.attr("__name__"))
+          : api::getattr(name_space, "__module__", str())
+        );
+        new_func->m_module = module_name;
     }
 
     if (PyObject_SetAttr(ns, name.ptr(), attribute.ptr()) < 0)
@@ -532,24 +568,7 @@ void function::add_to_namespace(
           "C++ signature:", f->signature(true)));
     }
     */
-    str _doc;
-
-    if (docstring_options::show_py_signatures_)
-    {
-        _doc += str(const_cast<const char*>(detail::py_signature_tag));
-    }
-    if (doc != 0 && docstring_options::show_user_defined_)
-        _doc += doc;
-
-    if (docstring_options::show_cpp_signatures_)
-    {
-        _doc += str(const_cast<const char*>(detail::cpp_signature_tag));
-    }
-    if(_doc)
-    {    
-        object mutable_attribute(attribute);
-        mutable_attribute.attr("__doc__")= _doc;
-    }
+    add_doc(attribute, doc);
 }
 
 BOOST_PYTHON_DECL void add_to_namespace(
@@ -562,6 +581,18 @@ BOOST_PYTHON_DECL void add_to_namespace(
     object const& name_space, char const* name, object const& attribute, char const* doc)
 {
     function::add_to_namespace(name_space, name, attribute, doc);
+}
+
+BOOST_PYTHON_DECL object const& add_doc(object const& attribute, char const* doc)
+{
+#if PY_VERSION_HEX >= 0x03000000
+    if (PyInstanceMethod_Check(attribute.ptr())) {
+#else
+    if (PyMethod_Check(attribute.ptr())) {
+#endif
+        return attribute;
+    }
+    return function::add_doc(attribute, doc);
 }
 
 
@@ -670,7 +701,7 @@ extern "C"
     static PyObject* function_get_module(PyObject* op, void*)
     {
         function* f = downcast<function>(op);
-        object const& ns = f->get_namespace();
+        object const& ns = f->get_module();
         if (!ns.is_none()) {
             return python::incref(ns.ptr());
         }

@@ -1,5 +1,4 @@
 // file      : odb/query-dynamic.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_QUERY_DYNAMIC_HXX
@@ -361,10 +360,6 @@ namespace odb
     const void* column;
     void* param_factory;
   };
-
-  template <typename T>
-  const T&
-  type_instance ();
 
   // This class template has to remain POD since we rely on it being
   // 0-initialized before any dynamic initialization takes place in
@@ -893,7 +888,8 @@ namespace odb
     {
       // We can compare columns only if we can compare their C++ types.
       //
-      (void) (sizeof (type_instance<T> () == type_instance<T2> ()));
+      (void) (sizeof (decay_traits<T>::instance () ==
+                      decay_traits<T2>::instance ()));
 
       query_base q (native_info);
       q.append (c.native_info);
@@ -907,7 +903,8 @@ namespace odb
     {
       // We can compare columns only if we can compare their C++ types.
       //
-      (void) (sizeof (type_instance<T> () != type_instance<T2> ()));
+      (void) (sizeof (decay_traits<T>::instance () !=
+                      decay_traits<T2>::instance ()));
 
       query_base q (native_info);
       q.append (c.native_info);
@@ -921,7 +918,8 @@ namespace odb
     {
       // We can compare columns only if we can compare their C++ types.
       //
-      (void) (sizeof (type_instance<T> () < type_instance<T2> ()));
+      (void) (sizeof (decay_traits<T>::instance () <
+                      decay_traits<T2>::instance ()));
 
       query_base q (native_info);
       q.append (c.native_info);
@@ -935,7 +933,8 @@ namespace odb
     {
       // We can compare columns only if we can compare their C++ types.
       //
-      (void) (sizeof (type_instance<T> () > type_instance<T2> ()));
+      (void) (sizeof (decay_traits<T>::instance () >
+                      decay_traits<T2>::instance ()));
 
       query_base q (native_info);
       q.append (c.native_info);
@@ -949,7 +948,8 @@ namespace odb
     {
       // We can compare columns only if we can compare their C++ types.
       //
-      (void) (sizeof (type_instance<T> () <= type_instance<T2> ()));
+      (void) (sizeof (decay_traits<T>::instance () <=
+                      decay_traits<T2>::instance ()));
 
       query_base q (native_info);
       q.append (c.native_info);
@@ -963,7 +963,8 @@ namespace odb
     {
       // We can compare columns only if we can compare their C++ types.
       //
-      (void) (sizeof (type_instance<T> () >= type_instance<T2> ()));
+      (void) (sizeof (decay_traits<T>::instance () >=
+                      decay_traits<T2>::instance ()));
 
       query_base q (native_info);
       q.append (c.native_info);

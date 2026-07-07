@@ -1,5 +1,4 @@
 // file      : odb/result.hxx
-// copyright : Copyright (c) 2009-2019 Code Synthesis Tools CC
 // license   : GNU GPL v2; see accompanying LICENSE file
 
 #ifndef ODB_RESULT_HXX
