@@ -17,4 +17,10 @@ list(FILTER ODB_GENERATED EXCLUDE REGEX "\\.ixx$")
 
 add_executable(odbtest ${odbtest_SRCS} ${ODB_GENERATED})
 
-target_link_libraries(odbtest libodb libodb-pgsql libodb-boost ${PostgreSQL_LIBRARY})
+target_link_libraries(odbtest
+	Boost::date_time
+	libodb
+	libodb-pgsql
+	libodb-boost
+	${PostgreSQL_LIBRARY}
+)

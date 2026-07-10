@@ -17,4 +17,10 @@ list(FILTER ODB_GENERATED EXCLUDE REGEX "\\.ixx$")
 
 add_executable(sqlite_test ${sqlite_test_SRCS} ${ODB_GENERATED})
 
-target_link_libraries(sqlite_test libodb libodb-sqlite libodb-boost libsqlite3)
+target_link_libraries(sqlite_test
+	Boost::date_time
+	libodb
+	libodb-sqlite
+	libodb-boost
+	libsqlite3
+)
