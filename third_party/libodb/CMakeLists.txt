@@ -23,7 +23,12 @@ set(LIBODB_SOURCES
 add_library(libodb STATIC ${LIBODB_SOURCES})
 
 target_include_directories(libodb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(libodb PUBLIC -DLIBODB_STATIC_LIB -DLIBODB_BOOST_STATIC_LIB -DLIBODB_PGSQL_STATIC_LIB)
+# Windows 平台不定义 LIBODB_PGSQL_STATIC_LIB（未编译 libodb-pgsql）
+if(WIN32)
+    target_compile_definitions(libodb PUBLIC -DLIBODB_STATIC_LIB -DLIBODB_BOOST_STATIC_LIB)
+else()
+    target_compile_definitions(libodb PUBLIC -DLIBODB_STATIC_LIB -DLIBODB_BOOST_STATIC_LIB -DLIBODB_PGSQL_STATIC_LIB)
+endif()
 target_link_libraries(libodb Boost::date_time)
 set_target_properties(libodb PROPERTIES FOLDER "third_party")
 set_target_properties(libodb PROPERTIES OUTPUT_NAME odb PREFIX "lib" CLEAN_DIRECT_OUTPUT 1)
