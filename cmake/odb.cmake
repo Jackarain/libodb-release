@@ -14,6 +14,12 @@ if (NOT ODB_DB_TYPE)
 	set(ODB_DB_TYPE "pgsql")
 endif()
 
+# Build the boost include flags with proper -I prefix for each directory.
+set(_BOOST_INC_FLAGS "")
+foreach(_dir ${BOOST_INCLUDE_DIRS})
+	list(APPEND _BOOST_INC_FLAGS -I ${_dir})
+endforeach()
+
 # Database-specific options.
 if (ODB_DB_TYPE STREQUAL "pgsql")
 	set(ODB_DB_OPTIONS "--pgsql-server-version" "9.6")
@@ -21,14 +27,14 @@ if (ODB_DB_TYPE STREQUAL "pgsql")
 		-I ${ODB_LIB_DIR}
 		-I ${ODB_PGSQL_LIB_DIR}
 		-I ${ODB_BOOST_LIB_DIR}
-		-I ${BOOST_INCLUDE_DIRS})
+		${_BOOST_INC_FLAGS})
 elseif (ODB_DB_TYPE STREQUAL "sqlite")
 	set(ODB_DB_OPTIONS "")
 	set(ODB_INC_DIRS
 		-I ${ODB_LIB_DIR}
 		-I ${ODB_SQLITE_LIB_DIR}
 		-I ${ODB_BOOST_LIB_DIR}
-		-I ${BOOST_INCLUDE_DIRS})
+		${_BOOST_INC_FLAGS})
 else()
 	message(SEND_ERROR "unsupported database type: ${ODB_DB_TYPE}")
 endif()

@@ -18,7 +18,7 @@ else()
     set(ODB_COMPILER ${CMAKE_CURRENT_SOURCE_DIR}/third_party/odb-2.5.0-x86_64-linux-gnu/bin/odb)
 endif()
 
-set(BOOST_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost)
+file(GLOB BOOST_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/*/include)
 
 set(ODB_PGSQL_LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-pgsql)
 set(ODB_SQLITE_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-sqlite)
