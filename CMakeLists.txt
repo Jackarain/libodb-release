@@ -18,11 +18,39 @@ else()
     set(ODB_COMPILER ${CMAKE_CURRENT_SOURCE_DIR}/third_party/odb-2.5.0-x86_64-linux-gnu/bin/odb)
 endif()
 
-file(GLOB BOOST_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/*/include)
+set(BOOST_INCLUDE_DIRS
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/accumulators/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/algorithm/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/align/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/date_time/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/utility/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/config/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/core/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/exception/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/throw_exception/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/assert/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/type_traits/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/numeric/conversion/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mpl/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/preprocessor/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/uuid/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/optional/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/unordered/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mp11/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/container_hash/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/describe/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/multi_index/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/tuple/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/bind/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/integer/include/
+)
 
 set(ODB_PGSQL_LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-pgsql)
 set(ODB_SQLITE_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-sqlite)
 set(ODB_BOOST_LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-boost)
+
 set(ODB_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb)
 
 include(cmake/odb.cmake)
