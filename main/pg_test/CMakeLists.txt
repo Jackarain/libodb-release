@@ -19,6 +19,7 @@ add_executable(odbtest ${odbtest_SRCS} ${ODB_GENERATED})
 
 target_link_libraries(odbtest
 	Boost::date_time
+	Boost::multiprecision
 	libodb
 	libodb-pgsql
 	libodb-boost

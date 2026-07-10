@@ -22,29 +22,28 @@ set(BOOST_INCLUDE_DIRS
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/accumulators/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/algorithm/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/align/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/date_time/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/utility/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/config/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/core/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/exception/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/throw_exception/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/assert/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/type_traits/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/numeric/conversion/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mpl/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/preprocessor/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/uuid/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/optional/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/unordered/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mp11/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/container_hash/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/describe/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/multi_index/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/tuple/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/bind/include/
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/integer/include/
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/date_time/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/utility/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/config/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/core/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/exception/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/throw_exception/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/assert/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/type_traits/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/numeric/conversion/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mpl/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/preprocessor/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/uuid/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/optional/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/unordered/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mp11/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/container_hash/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/describe/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/multi_index/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/tuple/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/bind/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/integer/include
 )
 
 set(ODB_PGSQL_LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-pgsql)
@@ -87,7 +86,7 @@ set(BOOST_EXCLUDE_LIBRARIES
 	#"json"                   # JSON 解析
 	"locale"                 # 本地化与多语言支持
 	"log"                    # 日志框架
-	"math"                   # 数学公式与特殊函数
+	#"math"                   # 数学公式与特殊函数
 	"mpi"                    # 消息传递接口(分布式计算)
 	#"nowide"                 # Windows UTF-8 兼容库
 	"process"                # 进程管理
