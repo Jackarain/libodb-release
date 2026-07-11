@@ -106,7 +106,9 @@ set(boost_libs
 
 # 设置 Boost 库的 FOLDER 属性
 foreach(lib IN LISTS boost_libs)
-    set_property(TARGET ${lib} PROPERTY FOLDER "third_party/boost")
+    if(TARGET ${lib})
+        set_property(TARGET ${lib} PROPERTY FOLDER "third_party/boost")
+    endif()
 endforeach()
 
 # 收集所有 Boost 的 include 目录，主要用于 ODB 编译器命令中的 include 目录设置
