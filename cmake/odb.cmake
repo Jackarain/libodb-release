@@ -20,18 +20,20 @@ if (ODB_DB_TYPE STREQUAL "pgsql")
 	set(ODB_INC_DIRS
 		-I ${ODB_LIB_DIR}
 		-I ${ODB_PGSQL_LIB_DIR}
-		-I ${ODB_BOOST_LIB_DIR}
-		${BOOST_INCLUDE_DIRS})
+		-I ${ODB_BOOST_LIB_DIR})
 elseif (ODB_DB_TYPE STREQUAL "sqlite")
 	set(ODB_DB_OPTIONS "")
 	set(ODB_INC_DIRS
 		-I ${ODB_LIB_DIR}
 		-I ${ODB_SQLITE_LIB_DIR}
-		-I ${ODB_BOOST_LIB_DIR}
-		${BOOST_INCLUDE_DIRS})
+		-I ${ODB_BOOST_LIB_DIR})
 else()
 	message(SEND_ERROR "unsupported database type: ${ODB_DB_TYPE}")
 endif()
+
+foreach(dir IN LISTS BOOST_INCLUDE_DIRS)
+    list(APPEND ODB_INC_DIRS "-I${dir}")
+endforeach()
 
 add_custom_command(OUTPUT ${OUT_DIR}/${ODB_HEADER_BASE}.sql
 					COMMAND ${ODB_COMPILER} ARGS

@@ -97,6 +97,8 @@ set(boost_libs
     boost_random
     boost_openmethod
     boost_math
+    boost_uuid
+    boost_multi_index
     boost_json_regenerate_printers
     boost_interprocess
     boost_bloom
@@ -122,7 +124,7 @@ foreach(lib IN LISTS boost_libs)
             if(inc_dirs MATCHES [[^\$<BUILD_INTERFACE:(.+)?>;.*$]])
                 set(match "${CMAKE_MATCH_1}")
                 if(match)
-                    list(APPEND BOOST_INCLUDE_DIRS "-I ${match}")
+                    list(APPEND BOOST_INCLUDE_DIRS ${match})
                 endif()
             endif()
         endif()
@@ -136,7 +138,7 @@ foreach(lib IN LISTS boost_libs)
                         if(dep_inc MATCHES [[^\$<BUILD_INTERFACE:(.+)?>;.*$]])
                             set(match "${CMAKE_MATCH_1}")
                             if(match)
-                                list(APPEND BOOST_INCLUDE_DIRS "-I ${match}")
+                                list(APPEND BOOST_INCLUDE_DIRS ${match})
                             endif()
                         endif()
                     endif()
@@ -150,9 +152,10 @@ endforeach()
 list(SORT BOOST_INCLUDE_DIRS)
 list(REMOVE_DUPLICATES BOOST_INCLUDE_DIRS)
 
-#message(STATUS "=== Boost unique include directories ===")
-#foreach(dir IN LISTS BOOST_INCLUDE_DIRS)
-#    message(STATUS "  ${dir}")
+# 打印查看结果
+#message(STATUS "=== Boost unique include directories (-I format) ===")
+#foreach(item IN LISTS BOOST_INCLUDE_DIRS)
+#    message(STATUS "  ${item}")
 #endforeach()
 
 set(ODB_PGSQL_LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-pgsql)
