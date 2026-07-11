@@ -16,6 +16,7 @@ add_executable(sqlite_test ${sqlite_test_SRCS} ${ODB_GENERATED})
 
 target_link_libraries(sqlite_test
 	Boost::date_time
+	Boost::multiprecision
 	libodb
 	libodb-sqlite
 	libodb-boost
