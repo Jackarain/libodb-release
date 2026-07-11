@@ -8,6 +8,8 @@ include_directories(
 file(GLOB odbtest_SRCS
 	db.hpp
 	main.cpp
+	db_traits.hpp
+	traits-pgsql.hpp
 )
 
 # Filter out .ixx files from ODB_GENERATED because .ixx is treated as

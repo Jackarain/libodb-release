@@ -10,6 +10,8 @@ include_directories(
 file(GLOB sqlite_test_SRCS
 	db.hpp
 	main.cpp
+	db_traits.hpp
+	traits-sqlite.hpp
 )
 
 add_executable(sqlite_test ${sqlite_test_SRCS} ${ODB_GENERATED})
