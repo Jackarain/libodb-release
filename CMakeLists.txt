@@ -22,28 +22,49 @@ set(BOOST_INCLUDE_DIRS
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/accumulators/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/algorithm/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/align/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/date_time/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/utility/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/config/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/core/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/exception/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/throw_exception/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/array/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/assert/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/type_traits/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/numeric/conversion/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mpl/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/preprocessor/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/uuid/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/optional/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/unordered/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mp11/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/container_hash/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/describe/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/multi_index/include
-	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/tuple/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/bind/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/concept_check/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/config/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/container_hash/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/container/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/conversion/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/core/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/date_time/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/describe/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/detail/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/exception/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/functional/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/function/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/function_types/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/fusion/include
 	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/integer/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/intrusive/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/io/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/iterator/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/lexical_cast/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/move/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mp11/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/mpl/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/multi_index/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/numeric/conversion/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/optional/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/predef/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/preprocessor/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/range/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/regex/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/smart_ptr/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/static_assert/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/throw_exception/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/tokenizer/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/tuple/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/typeof/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/type_traits/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/unordered/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/utility/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/uuid/include
+	-I ${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost/libs/winapi/include
 )
 
 set(ODB_PGSQL_LIB_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libodb-pgsql)
