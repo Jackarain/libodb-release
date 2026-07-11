@@ -142,6 +142,15 @@ set_property(TARGET boost_thread PROPERTY FOLDER "third_party/boost")
 set_property(TARGET boost_variant2 PROPERTY FOLDER "third_party/boost")
 set_property(TARGET boost_unordered PROPERTY FOLDER "third_party/boost")
 set_property(TARGET boost_optional PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_timer  PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_random PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_openmethod PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_math PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_json_regenerate_printers PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_interprocess PROPERTY FOLDER "third_party/boost")
+set_property(TARGET boost_bloom PROPERTY FOLDER "third_party/boost")
+
+set_property(TARGET libsqlite3 PROPERTY FOLDER "third_party")
 
 # 构建主程序
 add_subdirectory(main)
